@@ -1,5 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/gradle,intellij,eclipse,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=gradle,intellij,eclipse,java
+.idea
+.application.yml
 
 ### Eclipse ###
 .metadata

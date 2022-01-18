@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -49,7 +50,7 @@ public class User {
     @NotNull
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    List<TechStack> techStacks = new ArrayList<>();
+    List<Stack> techStacks = new ArrayList<>();
 
     private String githubUrl;
 

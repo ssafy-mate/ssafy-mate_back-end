@@ -106,9 +106,6 @@ public class UserController {
             @RequestPart(value= "userRequestDto") UserRequestDto userRequestDto,
             @RequestPart(value= "file", required = false) MultipartFile multipartFile) throws Exception {
 
-        System.out.println(userRequestDto.toString());
-        System.out.println(multipartFile.getOriginalFilename());
-
         userService.userSave(userRequestDto, multipartFile);
 //        try {
 //            userService.userSave(userRequestDto, multipartFile);

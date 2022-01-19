@@ -1,4 +1,4 @@
-package com.ssafy.ssafymate.dto;
+package com.ssafy.ssafymate.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

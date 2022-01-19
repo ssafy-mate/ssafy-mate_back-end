@@ -2,9 +2,8 @@ package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.JWT.TokenProvider;
 import com.ssafy.ssafymate.common.BaseResponseBody;
-import com.ssafy.ssafymate.dto.LoginRequestDto;
-import com.ssafy.ssafymate.dto.LoginResponseDto;
-import com.ssafy.ssafymate.entity.Student;
+import com.ssafy.ssafymate.dto.request.LoginRequestDto;
+import com.ssafy.ssafymate.dto.response.LoginResponseDto;
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.service.UserService;
 import io.swagger.annotations.Api;

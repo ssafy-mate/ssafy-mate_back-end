@@ -2,9 +2,8 @@ package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.JWT.TokenProvider;
 import com.ssafy.ssafymate.common.BaseResponseBody;
-import com.ssafy.ssafymate.dto.LoginRequestDto;
-import com.ssafy.ssafymate.dto.LoginResponseDto;
-import com.ssafy.ssafymate.entity.Student;
+import com.ssafy.ssafymate.dto.request.LoginRequestDto;
+import com.ssafy.ssafymate.dto.response.LoginResponseDto;
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.service.UserService;
 import io.swagger.annotations.Api;
@@ -32,7 +31,7 @@ public class LoginContoller {
 
     // 로그인 시 토큰 생성
     @PostMapping("/signin")
-    @ApiOperation(value = "교육생 인증", notes = "이메일과 비밀번호를 받아서 확인한 뒤 토큰 생성")
+    @ApiOperation(value = "로그인", notes = "이메일과 비밀번호를 받아서 확인한 뒤 토큰 생성")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
@@ -44,10 +43,10 @@ public class LoginContoller {
 
         User user = userService.getUserByEmail(loginRequestDto.getEmail());
         if(user == null){
-            ResponseEntity.status(400).body(BaseResponseBody.of(400, false, "아이디 또는 비밀번호를 확인하세요."));
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, false, "아이디 또는 비밀번호를 확인하세요."));
         }
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-            ResponseEntity.status(400).body(BaseResponseBody.of(400, false, "아이디 또는 비밀번호를 확인하세요."));
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, false, "아이디 또는 비밀번호를 확인하세요."));
         }
         String token = tokenProvider.createToken(loginRequestDto.getEmail());
         return ResponseEntity.status(200).body(LoginResponseDto.of(200, true, "success", token));

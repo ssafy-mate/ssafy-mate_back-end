@@ -36,6 +36,10 @@ dependencies {
 	implementation 'org.springframework:spring-context-support:5.3.14'
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 test {

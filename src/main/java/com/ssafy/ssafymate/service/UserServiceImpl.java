@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 
 @Service("userService")
@@ -27,16 +28,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException {
 
+//        File file = new File();
+//        String absolutePath = new File("").getAbsolutePath() + "\\";
+
+//        String path = ""
+
         String profileImgUrl;
 
         if(multipartFile.isEmpty()) {
-            // 기본 이미지 경로 설정
-            profileImgUrl = "../src/main/resources/image/default_img.jpg";
+            // 기본 이미지 경로 설정 - 상대경로로 바꿔야함
+            profileImgUrl = "C:\\image\\default_img.jpg";
+//            profileImgUrl = "\\src\\main\\resources\\static\\image\\default_img.jpg";
         } else {
-            profileImgUrl = "../src/main/resources/image/" + multipartFile.getOriginalFilename();
+            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + multipartFile.getOriginalFilename();
+//            profileImgUrl = "\\src\\main\\resources\\static\\image\\" + multipartFile.getOriginalFilename();
 
-//            File file = new File(profileImgUrl);
-//            multipartFile.transferTo(file);
+            File file = new File(profileImgUrl);
+            multipartFile.transferTo(file);
         }
         User user = User.builder()
                 .campus(userRequestDto.getCampus())

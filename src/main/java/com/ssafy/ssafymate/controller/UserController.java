@@ -11,8 +11,11 @@ import com.ssafy.ssafymate.service.UserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
 
 @Api(value = "유저 API", tags = {"User"})
 @RestController
@@ -105,15 +108,19 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> signUp(
-            @RequestPart(value= "userRequestDto") UserRequestDto userRequestDto,
+            @RequestPart(value= "userRequestDto") @Valid UserRequestDto userRequestDto, BindingResult bindingResult,
             @RequestPart(value= "file", required = false) MultipartFile multipartFile) throws Exception {
 
-        userService.userSave(userRequestDto, multipartFile);
-//        try {
-//            userService.userSave(userRequestDto, multipartFile);
-//        } catch (Exception exception) {
-//            return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "필수 입력 사항이 모두 입력되지 않았습니다."));
-//        }
+        // @Valid 유효성 검사를 통과하지 못하면 500 에러 반환
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
+        }
+
+        try {
+            userService.userSave(userRequestDto, multipartFile);
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
+        }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
     }
 }

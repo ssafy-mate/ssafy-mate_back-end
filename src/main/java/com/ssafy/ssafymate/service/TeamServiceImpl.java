@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service("teamService")
 public class TeamServiceImpl implements TeamService{
@@ -26,6 +27,11 @@ public class TeamServiceImpl implements TeamService{
     @Autowired
     private TeamStackRepository teamStackRepository;
 
+
+    @Override
+    public Optional<Team> teamfind(Long teamId) {
+        return teamRepository.findById(teamId);
+    }
 
     // 팀 생성
     @Transactional
@@ -90,6 +96,18 @@ public class TeamServiceImpl implements TeamService{
         return ;
     }
 
+    @Override
+    public Optional<Team> belongToTeam(String selecteProject, Long userId) {
+        return teamRepository.belongToTeam(selecteProject,userId);
+    }
+
+    @Override
+    public Optional<List<Team>> teamSearch(String project, String projectTrack, List<String> teamStacks) {
+        Optional<List<Team>> teams = teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+        return teams;
+//        return teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+    }
+
 
     // teamrequestDto 와 이미지Url을 team 으로 빌드
     public Team teamBuilder(TeamRequestDto teamRequestDto, String teamImgUrl, User user){
@@ -105,7 +123,7 @@ public class TeamServiceImpl implements TeamService{
                 .totalRecruitment(teamRequestDto.getTotalRecruitment())
                 .frontendRecruitment(teamRequestDto.getFrontendRecruitment())
                 .backendRecruitment(teamRequestDto.getBackendRecruitment())
-                .user(user)
+                .owner(user)
                 .build();
         return team;
     }

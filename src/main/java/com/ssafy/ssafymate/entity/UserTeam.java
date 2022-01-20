@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -19,13 +20,14 @@ public class UserTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+        @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
 
     User user;
 
+    @JsonIgnore
     @NotNull
     @ManyToOne
     @JoinColumn(name = "team_id")

@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -13,12 +14,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamStack {
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String stackName;
+    private String techStackName;
 
+    @JsonIgnore
     @ManyToOne
     private Team team;
 

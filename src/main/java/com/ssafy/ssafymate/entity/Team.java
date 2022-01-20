@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
@@ -43,17 +44,17 @@ public class Team {
 
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     List<TeamStack> techStacks = new ArrayList<>();
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    User user;
+    User owner;
 
-    @OneToMany(mappedBy = "team")
-    List<UserTeam> userTeam = new ArrayList<>();
+    @OneToMany(mappedBy = "team",fetch = FetchType.LAZY)
+    List<UserTeam> members = new ArrayList<>();
 
     private String teamImg;
 

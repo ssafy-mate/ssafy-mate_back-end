@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team,Long> {
-    Team findByUserId (User user);
 
     @Query(value = "select * from team " +
             "where project=:project " +

@@ -39,9 +39,15 @@ public class TeamController {
     public ResponseEntity<? extends BaseResponseBody> findTeam(
             @PathVariable final Long teamId
     ){
-        Team team = teamService.teamfind(teamId).orElse(null);
+        Team teamdata;
 
-        return ResponseEntity.status(200).body(TeamResponseDto.of(200, true,  "success",team));
+        try {
+        teamdata = teamService.teamfind(teamId).orElse(null);
+
+        }catch (Exception exception){
+            return ResponseEntity.status(500).body(BaseResponseBody.of(400, false,  "Internal Server Error, 팀 상세 정보 조회 실패"));
+        }
+        return ResponseEntity.status(200).body(TeamResponseDto.of(200, true,  "success",teamdata));
     }
 
     @GetMapping("/userIn")
@@ -79,7 +85,7 @@ public class TeamController {
             Team team = teamService.teamSave(teamRequestDto, multipartFile,user);
             userTeamService.userTamSave(user,team);
         } catch (Exception exception) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "필수 입력 사항이 모두 입력되지 않았습니다."));
+            return ResponseEntity.status(400).body(BaseResponseBody.of(500, false,  "Internal Server, 팀 생성 실패"));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
     }
@@ -98,7 +104,7 @@ public class TeamController {
         try {
             teamService.teamModify(teamRequestDto, multipartFile, user, teamId);
         } catch (Exception exception) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "필수 입력 사항이 모두 입력되지 않았습니다."));
+            return ResponseEntity.status(400).body(BaseResponseBody.of(500, false,  "Internal Server, 팀 상세 정보 수정 실패"));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
     }

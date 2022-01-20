@@ -30,4 +30,11 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
     Optional<Team> belongToTeam(@Param("selectedProject") String selectedProject,
                                 @Param("userId") Long userId);
 
+    @Query(value = "select * from team " +
+            "where id = :teamId " +
+            "and owner_id = :userId "
+            ,nativeQuery = true)
+    Optional<Team> findByTeamIdAndUserIdJQL(@Param("teamId") Long teamId,
+                                            @Param("userId") Long userId);
+
 }

@@ -67,7 +67,7 @@ public class Team {
     @NotNull
     private int backendRecruitment;
 
-    @Column
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createDateTime;
 }

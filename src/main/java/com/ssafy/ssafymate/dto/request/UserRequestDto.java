@@ -3,6 +3,7 @@ package com.ssafy.ssafymate.dto.request;
 import com.ssafy.ssafymate.entity.UserStack;
 import lombok.*;
 
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class UserRequestDto {
 
     private String email;
 
+    @Pattern(regexp="^[a-zA-Z0-9]{6,12}$", message = "비밀번호는 영어와 숫자를 포함해서 6 ~ 12자리 이내로 입력해주세요.")
     private String password;
 
     // private MultipartFile profileImg;
@@ -33,7 +35,7 @@ public class UserRequestDto {
 
     private String job2;
 
-    List<UserStack> techUserStacks = new ArrayList<>();
+    List<UserStack> techStacks = new ArrayList<>();
 
     private String githubUrl;
 

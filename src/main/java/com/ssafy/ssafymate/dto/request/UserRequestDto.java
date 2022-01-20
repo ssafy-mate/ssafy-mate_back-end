@@ -33,7 +33,7 @@ public class UserRequestDto {
 
     private String job2;
 
-    List<UserStack> techUserStacks = new ArrayList<>();
+    List<UserStack> techStacks = new ArrayList<>();
 
     private String githubUrl;
 

@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
                 .selfIntroduction(userRequestDto.getSelfIntroduction())
                 .job1(userRequestDto.getJob1())
                 .job2(userRequestDto.getJob2())
-                .techUserStacks(userRequestDto.getTechUserStacks())
+                .techUserStacks(userRequestDto.getTechStacks())
                 .githubUrl(userRequestDto.getGithubUrl())
                 .etcUrl(userRequestDto.getEtcUrl())
                 .agreement(userRequestDto.getAgreement())

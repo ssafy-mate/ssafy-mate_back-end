@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class TeamRequestDto {
+
+    private Long Id;
 
     private String campus;
 

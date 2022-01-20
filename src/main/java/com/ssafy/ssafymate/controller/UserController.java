@@ -88,7 +88,7 @@ public class UserController {
         try {
             emailAuth = emailService.getUserIdByCode(email, code);
         } catch (EmailCodeException exception) {
-            return ResponseEntity.status(401).body(BaseResponseBody.of(401, false,  "인증정보가 잘못되었습니다."));
+            return ResponseEntity.status(401).body(BaseResponseBody.of(401, false,  "올바른 인증 코드가 아닙니다."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
     }

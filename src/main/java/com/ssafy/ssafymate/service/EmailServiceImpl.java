@@ -19,7 +19,7 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     JavaMailSender emailSender;
 
-    public static String ePw;
+    public static String emailVerificationCode;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -28,9 +28,9 @@ public class EmailServiceImpl implements EmailService {
     private EmailProperties emailProperties;
 
     private MimeMessage createMessage(String to) throws Exception {
-        ePw = createKey();
+        emailVerificationCode = createKey();
         System.out.println("보내는 대상 : " + to);
-        System.out.println("인증 번호 : " + ePw);
+        System.out.println("인증 번호 : " + emailVerificationCode);
         MimeMessage message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);// 보내는 대상
@@ -48,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
         msgg += "<h3 style='color:blue;'>회원가입 코드입니다.</h3>";
         msgg += "<div style='font-size:130%'>";
         msgg += "CODE : <strong>";
-        msgg += ePw + "</strong><div><br/> ";
+        msgg += emailVerificationCode + "</strong><div><br/> ";
         msgg += "</div>";
         message.setText(msgg, "utf-8", "html");// 내용
         message.setFrom(new InternetAddress("dudqo225@gmail.com", "SSAFY MATE"));// 보내는 사람
@@ -87,19 +87,20 @@ public class EmailServiceImpl implements EmailService {
 
         MimeMessage message = createMessage(to);
         try {
-            redisUtil.setDataExpire(ePw, to, 180); // 인증코드 유효시간 3분
+            redisUtil.setDataExpire(to, emailVerificationCode, 180); // 인증코드 유효시간 3분
             emailSender.send(message);
         } catch (MailException es) {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return ePw;
+        return emailVerificationCode;
     }
 
     @Override
-    public Long getUserIdByCode(String email, String ePw) {
-        String storedEmail = redisUtil.getData(ePw);
-        if (!email.equals(storedEmail)) {
+    public Long getUserIdByCode(String email, String emailVerificationCode) {
+        String storedCode = redisUtil.getData(email);
+
+        if (!emailVerificationCode.equals(storedCode)) {
             throw new EmailCodeException();
         }
         return 1L;

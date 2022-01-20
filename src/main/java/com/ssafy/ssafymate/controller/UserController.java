@@ -89,6 +89,8 @@ public class UserController {
             emailAuth = emailService.getUserIdByCode(email, code);
         } catch (EmailCodeException exception) {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, false,  "올바른 인증 코드가 아닙니다."));
+        } catch (NullPointerException exception) {
+            return ResponseEntity.status(403).body(BaseResponseBody.of(403, false,  "입력 유효 시간이 초과되었습니다."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
     }

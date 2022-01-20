@@ -87,7 +87,7 @@ public class EmailServiceImpl implements EmailService {
 
         MimeMessage message = createMessage(to);
         try {
-            redisUtil.setDataExpire(to, emailVerificationCode, 180); // 인증코드 유효시간 3분
+            redisUtil.setDataExpire(to, emailVerificationCode, 30); // 인증코드 유효시간 3분
             emailSender.send(message);
         } catch (MailException es) {
             es.printStackTrace();
@@ -99,7 +99,11 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public Long getUserIdByCode(String email, String emailVerificationCode) {
         String storedCode = redisUtil.getData(email);
+        System.out.println(storedCode);
 
+        if (storedCode==null) {
+            throw new NullPointerException();
+        }
         if (!emailVerificationCode.equals(storedCode)) {
             throw new EmailCodeException();
         }

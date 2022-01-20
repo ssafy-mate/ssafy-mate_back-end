@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
             profileImgUrl = "C:\\image\\default_img.jpg";
 //            profileImgUrl = "\\src\\main\\resources\\static\\image\\default_img.jpg";
         } else {
-            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + multipartFile.getOriginalFilename();
+            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
 //            profileImgUrl = "\\src\\main\\resources\\static\\image\\" + multipartFile.getOriginalFilename();
 
             File file = new File(profileImgUrl);
@@ -57,11 +57,19 @@ public class UserServiceImpl implements UserService {
                 .selfIntroduction(userRequestDto.getSelfIntroduction())
                 .job1(userRequestDto.getJob1())
                 .job2(userRequestDto.getJob2())
-                .techUserStacks(userRequestDto.getTechStacks())
+                .techStacks(userRequestDto.getTechStacks())
                 .githubUrl(userRequestDto.getGithubUrl())
                 .etcUrl(userRequestDto.getEtcUrl())
                 .agreement(userRequestDto.getAgreement())
                 .build();
         return userRepository.save(user);
+    }
+
+    // 아이디 찾기
+    @Override
+    public String getEmailByStudentNumberAndStudentName(String studentNumber, String studentName) {
+        User user = userRepository.findEmailByStudentNumberAndStudentName(studentNumber, studentName).orElse(null);
+        String email = user.getEmail();
+        return email;
     }
 }

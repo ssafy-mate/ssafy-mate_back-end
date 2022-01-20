@@ -16,9 +16,9 @@ public class UserStack {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String stackName;
+    private String techStackName;
 
-    private String stackLevel;
+    private String techStackLevel;
 
     @ManyToOne
     private User user;

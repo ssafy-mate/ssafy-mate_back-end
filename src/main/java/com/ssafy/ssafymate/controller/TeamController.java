@@ -58,8 +58,6 @@ public class TeamController {
             @RequestParam final Long userId,
             @RequestParam final String selectedProject){
 
-
-
         Boolean belongToTeam = false;
 
         try {
@@ -122,7 +120,7 @@ public class TeamController {
             @RequestParam final Long userId
     ){
         try {
-            Team team = teamService.ownTeam(teamId,userId).orElse(null);
+            Team team = teamService.ownTeam(teamId, userId).orElse(null);
             if(team==null){
                 return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "팀 삭제에 권한이 없습니다."));
             }

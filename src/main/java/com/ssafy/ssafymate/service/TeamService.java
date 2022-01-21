@@ -18,6 +18,9 @@ public interface TeamService {
 
     Optional<Team> belongToTeam(String selecteProject,Long userId);
 
+    Optional<Team> ownTeam(Long teamId, Long userId);
+
     Optional<List<Team>> teamSearch(String project, String projectTrack, List<String> teamStacks);
+    Optional<List<Team>> teamSearch(String project, String projectTrack);
 
 }

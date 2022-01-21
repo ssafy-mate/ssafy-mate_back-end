@@ -30,8 +30,9 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public Optional<Team> teamfind(Long teamId) {
-        return teamRepository.findById(teamId);
+        return teamRepository.findByIdJQL(teamId);
     }
+
 
     // 팀 생성
     @Transactional
@@ -102,10 +103,22 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
+    public Optional<Team> ownTeam(Long teamId, Long userId) {
+        System.out.println(teamId+" "+ userId);
+        return teamRepository.findByTeamIdAndUserIdJQL(teamId,userId);
+    }
+
+    @Override
     public Optional<List<Team>> teamSearch(String project, String projectTrack, List<String> teamStacks) {
-        Optional<List<Team>> teams = teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+        Optional<List<Team>> teams = teamRepository.findALLByteamStackJQL(project,projectTrack,teamStacks);
         return teams;
 //        return teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+    }
+
+    @Override
+    public Optional<List<Team>> teamSearch(String project, String projectTrack) {
+        Optional<List<Team>> teams = teamRepository.findALLJQL(project,projectTrack);
+        return teams;
     }
 
 

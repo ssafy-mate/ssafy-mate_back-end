@@ -36,16 +36,19 @@ public class TeamController {
 
 
     @GetMapping("/{teamId}")
-    public ResponseEntity<? extends BaseResponseBody> findTeam(
+    public ResponseEntity<?> findTeam(
             @PathVariable final Long teamId
     ){
         Team teamdata;
 
         try {
         teamdata = teamService.teamfind(teamId).orElse(null);
+        if(teamdata==null){
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "팀 정보 없음"));
+        }
 
         }catch (Exception exception){
-            return ResponseEntity.status(500).body(BaseResponseBody.of(400, false,  "Internal Server Error, 팀 상세 정보 조회 실패"));
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  "Internal Server Error, 팀 상세 정보 조회 실패"));
         }
         return ResponseEntity.status(200).body(TeamResponseDto.of(200, true,  "success",teamdata));
     }
@@ -65,7 +68,7 @@ public class TeamController {
                     belongToTeam = true;
                 }
         }catch (Exception exception){
-            return ResponseEntity.status(500).body(BaseResponseBody.of(400, false,  ""));
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  ""));
         }
 
         return ResponseEntity.status(200).body(BelongToTeam.of(200, true,  "success",belongToTeam));
@@ -85,7 +88,7 @@ public class TeamController {
             Team team = teamService.teamSave(teamRequestDto, multipartFile,user);
             userTeamService.userTamSave(user,team);
         } catch (Exception exception) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(500, false,  "Internal Server, 팀 생성 실패"));
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  "Internal Server, 팀 생성 실패"));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
     }
@@ -102,21 +105,30 @@ public class TeamController {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, false, "팀 수정 권한 없음"));
         }
         try {
+            Team team = teamService.ownTeam(teamId,user.getId()).orElse(null);
+            if(team==null){
+                return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "팀 삭제에 권한이 없습니다."));
+            }
             teamService.teamModify(teamRequestDto, multipartFile, user, teamId);
         } catch (Exception exception) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(500, false,  "Internal Server, 팀 상세 정보 수정 실패"));
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  "Internal Server, 팀 상세 정보 수정 실패"));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
     }
 
     @DeleteMapping("/{teamId}")
     public ResponseEntity<? extends BaseResponseBody> deleteTeam(
-            @PathVariable final Long teamId
+            @PathVariable final Long teamId,
+            @RequestParam final Long userId
     ){
         try {
+            Team team = teamService.ownTeam(teamId,userId).orElse(null);
+            if(team==null){
+                return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "팀 삭제에 권한이 없습니다."));
+            }
             teamService.teamDelete(teamId);
         } catch (Exception exception) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "팀 삭제에 실패하였습니다."));
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  "팀 삭제에 실패하였습니다."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
     }
@@ -127,7 +139,14 @@ public class TeamController {
             ){
         List<Team> teams;
         try {
-            teams = teamService.teamSearch(teamListReuestDto.getProject(),teamListReuestDto.getProjectTrack(),teamListReuestDto.getTeamStacks()).orElse(null);
+            if((teamListReuestDto.getProjectTrack().length() > 0) || (teamListReuestDto.getProjectTrack()==null)) {
+                System.out.println("not stack");
+                teams = teamService.teamSearch(teamListReuestDto.getProject(), teamListReuestDto.getProjectTrack()).orElse(null);
+            }
+            else{
+                System.out.println("stack");
+                teams = teamService.teamSearch(teamListReuestDto.getProject(), teamListReuestDto.getProjectTrack(), teamListReuestDto.getTeamStacks()).orElse(null);
+            }
         }catch (Exception exception){
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "팀 조회에 실패하였습니다.."));
         }

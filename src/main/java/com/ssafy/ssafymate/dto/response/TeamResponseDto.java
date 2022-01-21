@@ -2,9 +2,10 @@ package com.ssafy.ssafymate.dto.response;
 
 import com.ssafy.ssafymate.common.BaseResponseBody;
 import com.ssafy.ssafymate.entity.Team;
+import lombok.Getter;
 import lombok.Setter;
 
-
+@Getter
 @Setter
 public class TeamResponseDto extends BaseResponseBody {
     Team teamData;

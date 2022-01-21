@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.service;
 
+import com.ssafy.ssafymate.dto.request.PwModifyRequestDto;
 import com.ssafy.ssafymate.dto.request.UserRequestDto;
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.repository.UserRepository;
@@ -19,6 +20,13 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Override
+    public User getUserById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return user;
+    }
+
     @Override
     public User getUserByEmail(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
@@ -27,11 +35,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException {
-
-//        File file = new File();
-//        String absolutePath = new File("").getAbsolutePath() + "\\";
-
-//        String path = ""
 
         String profileImgUrl;
 
@@ -71,5 +74,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findEmailByStudentNumberAndStudentName(studentNumber, studentName).orElse(null);
         String email = user.getEmail();
         return email;
+    }
+
+    // 비밀번호 재설정
+    @Override
+    public User passwordModify(PwModifyRequestDto pwModifyRequestDto, User user) {
+//        Long userId = user.getId();
+        user.setPassword(passwordEncoder.encode(pwModifyRequestDto.getPassword()));
+        return userRepository.save(user);
     }
 }

@@ -63,4 +63,7 @@ public class User {
     @NotNull
     private Boolean agreement;
 
+    @NotNull
+    @OneToMany(mappedBy = "user")
+    List<ChattingHistory> chattingHistory = new ArrayList<>();
 }

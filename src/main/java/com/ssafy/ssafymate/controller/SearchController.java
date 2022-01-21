@@ -2,8 +2,6 @@ package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.common.BaseResponseBody;
 import com.ssafy.ssafymate.dto.response.EmailResponseDto;
-import com.ssafy.ssafymate.dto.response.LoginResponseDto;
-import com.ssafy.ssafymate.entity.Student;
 import com.ssafy.ssafymate.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,5 +41,7 @@ public class SearchController {
         }
         return ResponseEntity.status(200).body(EmailResponseDto.of(200, true, "success", email));
     }
+
+    // 비밀번호 찾기
 
 }

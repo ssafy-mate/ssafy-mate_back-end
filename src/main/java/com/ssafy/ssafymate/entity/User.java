@@ -66,4 +66,7 @@ public class User {
     @NotNull
     @OneToMany(mappedBy = "user")
     List<ChattingHistory> chattingHistory = new ArrayList<>();
+
+    @NotNull
+    private String role;
 }

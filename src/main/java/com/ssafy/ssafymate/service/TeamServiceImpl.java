@@ -98,8 +98,8 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public Optional<Team> belongToTeam(String selecteProject, Long userId) {
-        return teamRepository.belongToTeam(selecteProject,userId);
+    public Optional<Team> belongToTeam(String selectedProject, Long userId) {
+        return teamRepository.belongToTeam(selectedProject,userId);
     }
 
     @Override

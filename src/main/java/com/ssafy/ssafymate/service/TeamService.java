@@ -16,7 +16,7 @@ public interface TeamService {
     Team teamModify(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user, Long teamId) throws IOException;
     void teamDelete(Long team_id);
 
-    Optional<Team> belongToTeam(String selecteProject,Long userId);
+    Optional<Team> belongToTeam(String selectedProject,Long userId);
 
     Optional<Team> ownTeam(Long teamId, Long userId);
 

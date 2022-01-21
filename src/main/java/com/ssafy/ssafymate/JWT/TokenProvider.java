@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +15,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 /* 
     토큰을 생성하고, 유요성 검사하는 클래스
@@ -67,9 +65,9 @@ public class TokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    // Request의 Header에서 token 값을 가져옵니다. "SSAFY-MATE-TOKEN" : "TOKEN값'
+    // Request의 Header에서 token 값을 가져옵니다. "jwt" : "TOKEN값'
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("SSAFY-MATE-TOKEN");
+        return request.getHeader("jwt");
     }
 
     // 토큰의 유효성 + 만료일자 확인

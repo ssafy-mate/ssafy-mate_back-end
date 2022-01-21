@@ -24,7 +24,7 @@ public class LoginResponseDto{
         body.message = message;
         body.statusCode = statusCode;
         body.success = success;
-        body.token = token;
+        body.token = "Bearer " + token;
         return body;
     }
 }

@@ -54,7 +54,7 @@ public class User {
     @NotNull
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    List<UserStack> techUserStacks = new ArrayList<>();
+    List<UserStack> techStacks = new ArrayList<>();
 
     private String githubUrl;
 
@@ -63,4 +63,7 @@ public class User {
     @NotNull
     private Boolean agreement;
 
+    @NotNull
+    @OneToMany(mappedBy = "user")
+    List<ChattingHistory> chattingHistory = new ArrayList<>();
 }

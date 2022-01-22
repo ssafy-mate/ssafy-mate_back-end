@@ -24,6 +24,16 @@ public class ChattingRoom {
     private String roomId;
 
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id1", referencedColumnName = "id")
+    private User userId1;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id2", referencedColumnName = "id")
+    private User userId2;
+
+    @NotNull
     @OneToMany(mappedBy = "chattingRoom")
     List<ChattingHistory> chattingHistory = new ArrayList<>();
 }

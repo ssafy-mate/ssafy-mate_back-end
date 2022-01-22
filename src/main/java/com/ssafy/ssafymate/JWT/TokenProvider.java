@@ -17,17 +17,17 @@ import java.util.Base64;
 import java.util.Date;
 
 /* 
-    토큰을 생성하고, 유요성 검사하는 클래스
+    토큰을 생성하고, 유효성 검사하는 클래스
 
     @RequiredArgsConstructor
-    => 초기화 되지않은 final 필드나, @NonNull 이 붙은 필드에 대해 생성자를 생성해 줍니다.
-    주로 의존성 주입(Dependency Injection) 편의성을 위해서 사용되곤 합니다.
+    => 초기화 되지않은 final 필드나, @NotNull 이 붙은 필드에 대해 생성자를 생성함
+    주로 의존성 주입(Dependency Injection) 편의성을 위해서 사용.
  */
 @RequiredArgsConstructor
 @Component
 public class TokenProvider {
 
-    private String secretKey = "SSAFYMATE";
+    private String secretKey = "tkvlapdlxmvmfhwprxmfmfwlsgodgkaustjtlzbflxltlzmfltzlfmfaksemfrhwkgksek";
 
     // 토큰 유효 시간 1시간
     private long tokenValidTime = 60 * 60 * 1000L;
@@ -43,7 +43,7 @@ public class TokenProvider {
     // JWT 토큰 생성
     public String createToken(String userPk) { // , List<String> roles => 추후 관리자 추가할 때 작성
         Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위
-//        claims.put("roles", roles); // 정보는 key / value 쌍으로 저장된다.
+        claims.put("roles", "ROLE_USER"); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -57,7 +57,7 @@ public class TokenProvider {
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     // 토큰에서 회원 정보 추출
@@ -65,9 +65,10 @@ public class TokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    // Request의 Header에서 token 값을 가져옵니다. "jwt" : "TOKEN값'
+    // Request의 Header에서 token 값을 가져온다. "Authentication" : "TOKEN 값'
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("jwt");
+
+        return request.getHeader("Authentication");
     }
 
     // 토큰의 유효성 + 만료일자 확인

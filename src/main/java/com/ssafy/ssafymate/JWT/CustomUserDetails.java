@@ -1,6 +1,7 @@
 package com.ssafy.ssafymate.JWT;
 
 import com.ssafy.ssafymate.entity.User;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,14 +10,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Data
 public class CustomUserDetails implements UserDetails {
 
     @Autowired
-    User user;
-    boolean accountNonExpired;
-    boolean accountNonLocked;
-    boolean credentialNonExpired;
-    boolean enabled = false;
+    private User user;
+    boolean accountNonExpired = true;
+    boolean accountNonLocked = true;
+    boolean credentialNonExpired = true;
+    boolean enabled = true;
+
     List<GrantedAuthority> roles = new ArrayList<>();
 
     public CustomUserDetails(User user){
@@ -26,11 +29,16 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        user.getRoleList().forEach(r-> {
+            authorities.add(() -> r);
+        });
+        return authorities;
     }
-    public void setAuthorities(List<GrantedAuthority> roles) {
-        this.roles = roles;
-    }
+
+//    public void setAuthorities(List<GrantedAuthority> roles) {
+//        this.roles = roles;
+//    }
 
     public User getUser(){
         return this.user;
@@ -38,12 +46,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.user.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.user.getEmail();
+        return user.getEmail();
     }
 
     @Override

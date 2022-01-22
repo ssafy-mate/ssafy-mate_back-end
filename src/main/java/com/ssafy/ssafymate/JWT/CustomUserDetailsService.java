@@ -16,9 +16,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userService;
 
-//    @Autowired
-//    private CustomUserDetailsImpl userDetails;
-
     // DB에서 사용자가 있는지 확인
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

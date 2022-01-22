@@ -33,8 +33,6 @@ public class TeamServiceImpl implements TeamService{
         return teamRepository.findByIdJQL(teamId);
     }
 
-
-    // 팀 생성
     @Transactional
     @Override
     public Team teamSave(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user) throws IOException {
@@ -43,7 +41,9 @@ public class TeamServiceImpl implements TeamService{
             // 기본 이미지 경로 설정
             teamImgUrl = "C:\\image\\team_image\\default_img.jpg";
         } else {
-            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+//            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+            teamImgUrl = "../" +  "image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+
 
             File file = new File(teamImgUrl);
             multipartFile.transferTo(file);
@@ -59,7 +59,6 @@ public class TeamServiceImpl implements TeamService{
     }
 
 
-    //팀 수정
     @Transactional
     @Modifying
     @Override

@@ -30,10 +30,9 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public Optional<Team> teamfind(Long teamId) {
-        return teamRepository.findById(teamId);
+        return teamRepository.findByIdJQL(teamId);
     }
 
-    // 팀 생성
     @Transactional
     @Override
     public Team teamSave(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user) throws IOException {
@@ -42,7 +41,9 @@ public class TeamServiceImpl implements TeamService{
             // 기본 이미지 경로 설정
             teamImgUrl = "C:\\image\\team_image\\default_img.jpg";
         } else {
-            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+//            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+            teamImgUrl = "../" +  "image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+
 
             File file = new File(teamImgUrl);
             multipartFile.transferTo(file);
@@ -58,7 +59,6 @@ public class TeamServiceImpl implements TeamService{
     }
 
 
-    //팀 수정
     @Transactional
     @Modifying
     @Override
@@ -97,15 +97,27 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public Optional<Team> belongToTeam(String selecteProject, Long userId) {
-        return teamRepository.belongToTeam(selecteProject,userId);
+    public Optional<Team> belongToTeam(String selectedProject, Long userId) {
+        return teamRepository.belongToTeam(selectedProject,userId);
+    }
+
+    @Override
+    public Optional<Team> ownTeam(Long teamId, Long userId) {
+        System.out.println(teamId+" "+ userId);
+        return teamRepository.findByTeamIdAndUserIdJQL(teamId,userId);
     }
 
     @Override
     public Optional<List<Team>> teamSearch(String project, String projectTrack, List<String> teamStacks) {
-        Optional<List<Team>> teams = teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+        Optional<List<Team>> teams = teamRepository.findALLByteamStackJQL(project,projectTrack,teamStacks);
         return teams;
 //        return teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+    }
+
+    @Override
+    public Optional<List<Team>> teamSearch(String project, String projectTrack) {
+        Optional<List<Team>> teams = teamRepository.findALLJQL(project,projectTrack);
+        return teams;
     }
 
 

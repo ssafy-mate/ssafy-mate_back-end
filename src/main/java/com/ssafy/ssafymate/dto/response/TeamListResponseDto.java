@@ -3,6 +3,7 @@ package com.ssafy.ssafymate.dto.response;
 import com.ssafy.ssafymate.common.BaseResponseBody;
 import com.ssafy.ssafymate.entity.Team;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Setter
 @ApiModel("TeamList")
 public class TeamListResponseDto extends BaseResponseBody {
+    @ApiModelProperty(name="팀 리스트", example = "teams :[]")
     List<Team> teams;
 
     public static TeamListResponseDto of(Integer statusCode, Boolean success, String message, List<Team> teams){

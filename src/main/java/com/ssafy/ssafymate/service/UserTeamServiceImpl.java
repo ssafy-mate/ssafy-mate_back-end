@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("userTeamService")
-public class UserTeamServieImpl implements UserTeamService{
+public class UserTeamServiceImpl implements UserTeamService{
 
     @Autowired
     private UserTeamRepository userTeamRepository;

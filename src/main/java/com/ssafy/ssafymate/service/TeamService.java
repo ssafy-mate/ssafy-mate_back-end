@@ -11,13 +11,28 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TeamService {
+    // 팀 상세 조회
     Optional<Team> teamfind(Long teamId);
+
+    // 팀 생성
     Team teamSave(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user) throws IOException;
+
+    // 팀 수정
     Team teamModify(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user, Long teamId) throws IOException;
+
+    // 팀 삭제
     void teamDelete(Long team_id);
 
-    Optional<Team> belongToTeam(String selecteProject,Long userId);
+    // 팀 참여 여부 조회
+    Optional<Team> belongToTeam(String selectedProject,Long userId);
 
+    //팀장 여부 조회
+    Optional<Team> ownTeam(Long teamId, Long userId);
+
+    // 팀 리스트 검색(전체)
+    Optional<List<Team>> teamSearch(String project, String projectTrack);
+
+    // 팀 리스트 검색(기술 스택)
     Optional<List<Team>> teamSearch(String project, String projectTrack, List<String> teamStacks);
 
 }

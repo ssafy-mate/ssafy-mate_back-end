@@ -2,11 +2,14 @@ package com.ssafy.ssafymate.dto.response;
 
 import com.ssafy.ssafymate.common.BaseResponseBody;
 import com.ssafy.ssafymate.entity.Team;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
 import lombok.Setter;
 
-
+@Getter
 @Setter
 public class TeamResponseDto extends BaseResponseBody {
+    @ApiModelProperty(name="팀 상세정보", example = "team :{}")
     Team teamData;
 
     public static TeamResponseDto of(Integer statusCode, Boolean success, String message,Team team){

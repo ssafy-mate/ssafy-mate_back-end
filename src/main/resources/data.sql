@@ -32,3 +32,12 @@ INSERT INTO team_stack (tech_stack_name, team_id) values ('Python',1);
 INSERT INTO team_stack (tech_stack_name, team_id) values ('SpringBoot',1);
 
 INSERT INTO user_team (user_id, team_id) values (1,1);
+
+INSERT INTO chatting_room (room_id, user_id1, user_id2) values ('1-2', 1, 2);
+INSERT INTO chatting_room (room_id, user_id1, user_id2) values ('2-3', 2, 3);
+INSERT INTO chatting_room (room_id, user_id1, user_id2) values ('3-4', 3, 4);
+
+INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (1, '1-2', 2, '나는 조원빈', '2022-01-17T17:03:37.336763');
+INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (2, '1-2', 1, '나는 손영배', '2022-01-17T17:03:36.336763');
+INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (3, '2-3', 2, '나는 손영배', '2022-01-17T17:03:35.336763');
+INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (4, '3-4', 4, '나는 박정환', '2022-01-17T17:03:34.336763');

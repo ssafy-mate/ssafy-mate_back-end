@@ -22,6 +22,7 @@ public class UserStack {
 
     private String techStackLevel;
 
+    @JsonIgnore
     @ManyToOne
     private User user;
 }

@@ -1,13 +1,17 @@
 package com.ssafy.ssafymate.dto.ChatDto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatMessageDto {
+
+    private MessageType type;
 
     private String roomId;
 

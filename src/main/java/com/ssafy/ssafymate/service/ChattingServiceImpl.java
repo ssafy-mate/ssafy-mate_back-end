@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.service;
 
+import com.ssafy.ssafymate.dto.ChatDto.ChatMessageDto;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import com.ssafy.ssafymate.entity.ChattingHistory;
@@ -46,5 +47,20 @@ public class ChattingServiceImpl implements ChattingService{
     public void saveRoom(String roomId, Long userId1, Long userId2) {
 
         chattingRoomRepository.saveRoom(roomId, userId1, userId2);
+    }
+
+    @Override
+    public int saveHistory(ChatMessageDto chatMessageDto) {
+
+        int temp = chattingHistoryRepository.saveHistory(
+                chatMessageDto.getRoomId(),
+                chatMessageDto.getSenderId(),
+                chatMessageDto.getSentTime(),
+                chatMessageDto.getContent()
+        );
+        if(temp == 1){
+            return temp;
+        }
+        return 0;
     }
 }

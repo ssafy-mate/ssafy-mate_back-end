@@ -3,13 +3,18 @@ package com.ssafy.ssafymate.dto.ChatDto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class ChatMessageDto {
 
     private String roomId;
 
-    private String writer;
+    private Long senderId;
 
-    private String message;
+    private String content;
+
+    private LocalDateTime sentTime;
+
 }

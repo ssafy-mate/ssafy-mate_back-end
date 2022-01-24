@@ -20,7 +20,8 @@ public class UserTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-        @NotNull
+    @JsonIgnore
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

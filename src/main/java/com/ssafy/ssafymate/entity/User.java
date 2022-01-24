@@ -55,6 +55,9 @@ public class User {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     List<UserStack> techStacks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    List<UserTeam> teams = new ArrayList<>();
+
     private String githubUrl;
 
     private String etcUrl;

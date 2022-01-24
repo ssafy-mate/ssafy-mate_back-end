@@ -13,7 +13,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class UserStack {
 
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

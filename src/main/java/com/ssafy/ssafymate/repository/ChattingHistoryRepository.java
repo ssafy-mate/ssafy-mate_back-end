@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface ChattingHistoryRepository extends JpaRepository<ChattingHistory, Long> {
 
-    @Query(value = "select CH.sender_id, U.student_name username, CH.content, CH.sent_time, U.profile_img\n" +
+    @Query(value = "select CH.id, CH.sender_id, U.student_name username, CH.content, CH.sent_time\n" +
             "from chatting_history AS CH\n" +
             "join user as U\n" +
             "on U.id = CH.sender_id\n" +
@@ -26,5 +26,5 @@ public interface ChattingHistoryRepository extends JpaRepository<ChattingHistory
     @Modifying
     @Query(value = "insert into chatting_history(chatting_room_id, sender_id, sent_time, content) values (:roomId, :senderId, :sentTime, :content)", nativeQuery = true)
     @Transactional
-    int saveHistory(@Param("roomId") String roomId, @Param("senderId") Long senderId, @Param("sentTime") LocalDateTime sentTime, @Param("content") String content);
+    int saveHistory(@Param("roomId") String roomId, @Param("senderId") Long senderId, @Param("sentTime") String sentTime, @Param("content") String content);
 }

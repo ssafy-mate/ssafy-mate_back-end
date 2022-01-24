@@ -35,6 +35,7 @@ dependencies {
 	implementation 'com.sun.mail:javax.mail:1.6.2'
 	implementation 'org.springframework:spring-context-support:5.3.14'
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
+	implementation 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt

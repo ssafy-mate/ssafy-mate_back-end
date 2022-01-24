@@ -24,7 +24,7 @@ public interface ChattingHistoryRepository extends JpaRepository<ChattingHistory
     Optional<List<ContentList>> getHistoryList(@Param("roomId") String roomId);
 
     @Modifying
-    @Query(value = "insert into chatting_history(room_id, sender_id, sent_time, content) values (:roomId, :senderId, :sentTime, :content)", nativeQuery = true)
+    @Query(value = "insert into chatting_history(chatting_room_id, sender_id, sent_time, content) values (:roomId, :senderId, :sentTime, :content)", nativeQuery = true)
     @Transactional
     int saveHistory(@Param("roomId") String roomId, @Param("senderId") Long senderId, @Param("sentTime") LocalDateTime sentTime, @Param("content") String content);
 }

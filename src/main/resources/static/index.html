@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Spring Boot WebSocket Chat Application</title>
     <link rel="stylesheet" href="/css/main.css" />
@@ -16,11 +16,15 @@
                 <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
             </div>
             <div class="form-group">
+                <input type="text" id="romId" placeholder="RomId" autocomplete="off" class="form-control" />
+            </div>
+            <div class="form-group">
                 <button type="submit" class="accent username-submit">채팅 시작하기</button>
             </div>
         </form>
     </div>
 </div>
+
 
 <div id="chat-page" class="hidden">
     <div class="chat-container">

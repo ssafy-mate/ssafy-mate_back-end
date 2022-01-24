@@ -1,0 +1,63 @@
+{
+  "properties": [
+    {
+      "name": "spring.server.port",
+      "type": "java.lang.String",
+      "description": "Description for spring.server.port."
+    },
+    {
+      "name": "spring.redis",
+      "type": "java.lang.String",
+      "description": "Description for spring.redis."
+    },
+    {
+      "name": "spring.AdminMail.password",
+      "type": "java.lang.String",
+      "description": "Description for spring.AdminMail.password."
+    },
+    {
+      "name": "spring.AdminMail.id",
+      "type": "java.lang.String",
+      "description": "Description for spring.AdminMail.id."
+    },
+    {
+      "name": "spring.mail.smtp.socketFactory.class",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.smtp.socketFactory.class."
+    },
+    {
+      "name": "spring.mail.smtp.socketFactory.fallback",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.smtp.socketFactory.fallback."
+    },
+    {
+      "name": "spring.mail.smtp.socketFactory.port",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.smtp.socketFactory.port."
+    },
+    {
+      "name": "spring.mail.smtp.starttls.required",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.smtp.starttls.required."
+    },
+    {
+      "name": "spring.mail.smtp.starttls.enable",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.smtp.starttls.enable."
+    },
+    {
+      "name": "spring.mail.smtp.port",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.smtp.port."
+    },
+    {
+      "name": "spring.mail.smtp.auth",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.smtp.auth."
+    },
+    {
+      "name": "spring.file.path",
+      "type": "java.lang.String",
+      "description": "Description for spring.file.path."
+    }
+  ] }

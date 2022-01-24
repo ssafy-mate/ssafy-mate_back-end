@@ -38,6 +38,8 @@ INSERT INTO chatting_room (room_id, user_id1, user_id2) values ('2-3', 2, 3);
 INSERT INTO chatting_room (room_id, user_id1, user_id2) values ('3-4', 3, 4);
 
 INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (1, '1-2', 2, '나는 조원빈', '2022-01-17T17:03:37.336763');
-INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (2, '1-2', 1, '나는 손영배', '2022-01-17T17:03:36.336763');
+INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (5, '1-2', 2, '추가 데이터1', '2022-01-17T17:03:39.336763');
+INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (6, '1-2', 2, '추가 데이터2', '2022-01-17T17:03:40.336763');
+INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (2, '1-2', 1, '나는 손영배', '2022-01-17T17:03:38.336763');
 INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (3, '2-3', 2, '나는 손영배', '2022-01-17T17:03:35.336763');
 INSERT INTO chatting_history (id, chatting_room_id, sender_id, content, sent_time) values (4, '3-4', 4, '나는 박정환', '2022-01-17T17:03:34.336763');

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(value = "팀 API", tags = {"Team"})
 @RestController
@@ -72,7 +73,7 @@ public class TeamController {
             @RequestParam final Long userId,
             @RequestParam final String selectedProject){
 
-        Boolean belongToTeam = false;
+        boolean belongToTeam = false;
 
         try {
                 Team team = teamService.belongToTeam(selectedProject,userId).orElse(null);
@@ -96,22 +97,16 @@ public class TeamController {
     public ResponseEntity<? extends BaseResponseBody> createTeam(
                 @RequestPart(value= "teamRequestDto")TeamRequestDto teamRequestDto,
             @RequestPart(value= "file", required = false) MultipartFile multipartFile,
-                @RequestPart(value = "userId") String email) throws Exception {
-        System.out.println(1);
+                @RequestPart(value = "userId") String email)  {
         User user = userService.getUserByEmail(email);
-        System.out.println(2);
         if (user == null) {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, false, "사용자 정보가 없습니다."));
         }
-        System.out.println(3);
         try {
 
             Team team = teamService.teamSave(teamRequestDto, multipartFile,user);
-            System.out.println(4);
             userTeamService.userTamSave(user,team);
-            System.out.println(5);
         } catch (Exception exception) {
-            System.out.println(exception);
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  "Internal Server, 팀 생성 실패"));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
@@ -182,13 +177,14 @@ public class TeamController {
             ){
         List<Team> teams;
         try {
-            if((teamListReuestDto.getProjectTrack().length() > 0) || (teamListReuestDto.getProjectTrack()==null)) {
+            if((teamListReuestDto.getProjectTrack().length() == 0) || (teamListReuestDto.getProjectTrack()==null)) {
                 System.out.println("not stack");
                 teams = teamService.teamSearch(teamListReuestDto.getProject(), teamListReuestDto.getProjectTrack()).orElse(null);
             }
             else{
                 System.out.println("stack");
-                teams = teamService.teamSearch(teamListReuestDto.getProject(), teamListReuestDto.getProjectTrack(), teamListReuestDto.getTeamStacks()).orElse(null);
+                List<String> teamstacks = teamListReuestDto.getTechStacks().stream().map(e -> e.getTechStackName()).collect(Collectors.toList());
+                teams = teamService.teamSearch(teamListReuestDto.getProject(), teamListReuestDto.getProjectTrack(),teamstacks ).orElse(null);
             }
         }catch (Exception exception){
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, false,  "팀 조회에 실패하였습니다.."));

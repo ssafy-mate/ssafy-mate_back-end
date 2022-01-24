@@ -20,7 +20,8 @@ public class ChattingHistory {
     @NotNull
     private String content;
 
-    private LocalDateTime sentTime;
+    @NotNull
+    private String sentTime;
 
     @ManyToOne
     @JoinColumn(name = "chatting_room_id",referencedColumnName = "room_id")

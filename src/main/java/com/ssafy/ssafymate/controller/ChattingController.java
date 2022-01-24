@@ -31,7 +31,7 @@ public class ChattingController {
         return ResponseEntity.status(200).body(ChatRoomResponseDto.of(200, true, "", roomList));
     }
 
-    @GetMapping("/log")
+    @PostMapping("/log")
     public  ResponseEntity<?> getHistoryList(@RequestBody ChatRequestDto chatRequestDto){
         String roomId;
         if(chatRequestDto.getUserId1() > chatRequestDto.getUserId2()){

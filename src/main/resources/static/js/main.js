@@ -34,10 +34,10 @@ function connect(event) {
 
 function onConnected() {
     // Subscribe to the Public Topic
-    stompClient.subscribe('/queue/public/'+romId, onMessageReceived);
+    stompClient.subscribe('/queue/ssafymate/chat/'+romId, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/chat.addUser/"+romId,
+    stompClient.send("/app/ssafymate/chat/addUser/"+romId,
         {},
         JSON.stringify({
             type: 'JOIN',
@@ -75,7 +75,7 @@ function sendMessage(event) {
                 content: messageInput.value,
                 sentTime : new Date()
             };
-        stompClient.send("/app/chat.sendMessage/"+romId, {}, JSON.stringify(chatMessage));
+        stompClient.send("/app/ssafymate/chat/sendMessage/"+romId, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();

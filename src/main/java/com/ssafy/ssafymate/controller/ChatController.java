@@ -39,15 +39,15 @@ public class ChatController {
     @Autowired
     private ChattingService chattingService;
 
-    @MessageMapping("/chat.sendMessage/{roomId}")
-    @SendTo("/queue/public/{roomId}")
+    @MessageMapping("/ssafymate/chat/sendMessage/{roomId}")
+    @SendTo("/queue/ssafymate/chat/{roomId}")
     public ChatMessageDto sendMessage(@Payload ChatMessageDto chatMessage) {
         chattingService.saveHistory(chatMessage);
         return chatMessage;
     }
 
-    @MessageMapping("/chat.addUser/{roomId}")
-    @SendTo("/queue/public/{roomId}")
+    @MessageMapping("/ssafymate/chat/addUser/{roomId}")
+    @SendTo("/queue/ssafymate/chat/{roomId}")
     public ChatMessageDto addUser(@Payload ChatMessageDto chatMessage, SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("senderId", chatMessage.getSenderId());
         return chatMessage;

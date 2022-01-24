@@ -18,4 +18,10 @@ public class TeamListReuestDto {
     @ApiModelProperty(value = "기술 스택")
     List<TeamStack> techStacks = new ArrayList<>();
 
+    @ApiModelProperty(value = "팀 이름", example = "우수상")
+    private String teamName;
+
+    @ApiModelProperty(value = "희망 직무", example = "프론트엔드(Front-end)")
+    private String job;
+
 }

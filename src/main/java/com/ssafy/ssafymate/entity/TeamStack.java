@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamStack {
-    @JsonIgnore
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

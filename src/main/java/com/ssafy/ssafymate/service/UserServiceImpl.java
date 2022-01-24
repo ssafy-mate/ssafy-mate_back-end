@@ -39,10 +39,10 @@ public class UserServiceImpl implements UserService {
 
         if(multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정 - 상대경로로 바꿔야함
-            profileImgUrl = "C:\\image\\default_img.jpg";
+            profileImgUrl = "\\ssafy-mate\\image\\default_img.jpg";
 //            profileImgUrl = "\\src\\main\\resources\\static\\image\\default_img.jpg";
         } else {
-            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+            profileImgUrl = "\\ssafy-mate\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
 //            profileImgUrl = "\\src\\main\\resources\\static\\image\\" + multipartFile.getOriginalFilename();
 
             File file = new File(profileImgUrl);

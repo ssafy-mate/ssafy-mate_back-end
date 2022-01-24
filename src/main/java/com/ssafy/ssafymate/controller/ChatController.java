@@ -4,11 +4,13 @@ import com.ssafy.ssafymate.dto.ChatDto.ChatMessageDto;
 import com.ssafy.ssafymate.service.ChattingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,17 +44,16 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage/{roomId}")
     @SendTo("/queue/public/{roomId}")
-    public ChatMessageDto sendMessage(@Payload ChatMessageDto chatMessage) {
-
-        return chatMessage;
+    public ChatMessageDto sendMessage(@Payload ChatMessageDto chatMessageDto, @DestinationVariable("roomId") String roomId) {
+        int temp = chattingService.saveHistory(chatMessageDto);
+        return chatMessageDto;
     }
 
     @MessageMapping("/chat.addUser/{roomId}")
     @SendTo("/queue/public/{roomId}")
-    public ChatMessageDto addUser(@Payload ChatMessageDto chatMessageDto, SimpMessageHeaderAccessor headerAccessor, @PathVariable("roomId") String roomId) {
-        headerAccessor.getSessionAttributes().put("senderId", chatMessageDto.getSenderId());
+    public ChatMessageDto addUser(@Payload ChatMessageDto chatMessageDto, SimpMessageHeaderAccessor headerAccessor, @DestinationVariable("roomId") String roomId) {
+        headerAccessor.getSessionAttributes().put("roomId", chatMessageDto.getRoomId());
 
-        int temp = chattingService.saveHistory(chatMessageDto);
         return chatMessageDto;
     }
 }

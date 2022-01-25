@@ -37,8 +37,6 @@ public class UserRequestDto {
     @Pattern(regexp="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]{6,20}$", message = "비밀번호는 영어와 숫자를 포함해서 6 ~ 12자리 이내로 입력해주세요.")
     private String password;
 
-    // private MultipartFile profileImg;
-
     @ApiModelProperty(value = "자기소개", example = "안녕하세요...")
     private String selfIntroduction;
 

@@ -4,6 +4,7 @@ import com.ssafy.ssafymate.dto.request.PwModifyRequestDto;
 import com.ssafy.ssafymate.dto.request.UserRequestDto;
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,10 @@ import java.io.File;
 import java.io.IOException;
 
 @Service("userService")
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     UserRepository userRepository;
@@ -39,11 +41,11 @@ public class UserServiceImpl implements UserService {
 
         if(multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정 - 상대경로로 바꿔야함
-            profileImgUrl = "\\ssafy-mate\\image\\default_img.jpg";
+            profileImgUrl = "/var/webapps/upload/default_img.jpg";
 //            profileImgUrl = "\\src\\main\\resources\\static\\image\\default_img.jpg";
         } else {
-            profileImgUrl = "\\ssafy-mate\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-//            profileImgUrl = "\\src\\main\\resources\\static\\image\\" + multipartFile.getOriginalFilename();
+            profileImgUrl = "/var/webapps/upload/" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+//            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
 
             File file = new File(profileImgUrl);
             multipartFile.transferTo(file);
@@ -63,6 +65,7 @@ public class UserServiceImpl implements UserService {
                 .githubUrl(userRequestDto.getGithubUrl())
                 .etcUrl(userRequestDto.getEtcUrl())
                 .agreement(userRequestDto.getAgreement())
+                .roles("ROLE_USER")
                 .build();
         return userRepository.save(user);
     }

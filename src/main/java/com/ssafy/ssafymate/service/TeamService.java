@@ -30,9 +30,9 @@ public interface TeamService {
     Optional<Team> ownTeam(Long teamId, Long userId);
 
     // 팀 리스트 검색(전체)
-    Optional<List<Team>> teamSearch(String project, String projectTrack);
+    Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName);
 
     // 팀 리스트 검색(기술 스택)
-    Optional<List<Team>> teamSearch(String project, String projectTrack, List<String> teamStacks);
+    Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, List<String> teamStacks);
 
 }

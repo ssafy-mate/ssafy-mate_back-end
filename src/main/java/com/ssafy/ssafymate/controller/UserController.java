@@ -4,7 +4,6 @@ import com.ssafy.ssafymate.common.BaseResponseBody;
 import com.ssafy.ssafymate.dto.request.PwModifyRequestDto;
 import com.ssafy.ssafymate.dto.request.UserRequestDto;
 import com.ssafy.ssafymate.dto.response.EmailResponseDto;
-import com.ssafy.ssafymate.dto.response.UserResponseDto;
 import com.ssafy.ssafymate.entity.Student;
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.exception.EmailCodeException;
@@ -213,7 +212,5 @@ public class UserController {
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));
     }
-
-
 
 }

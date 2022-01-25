@@ -22,18 +22,23 @@ public class User {
     private Long id;
 
     @NotNull
+    @Column(updatable = false)
     private String campus;
 
     @NotNull
+    @Column(updatable = false)
     private String ssafyTrack;
 
     @NotNull
+    @Column(updatable = false)
     private String studentNumber;
 
     @NotNull
+    @Column(updatable = false)
     private String studentName;
 
     @NotNull
+    @Column(unique = true, updatable = false)
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -70,6 +75,7 @@ public class User {
     List<ChattingHistory> chattingHistory = new ArrayList<>();
 
 
+    @Column(updatable = false)
     private String roles; // USER, ADMIN
 
     public List<String> getRoleList() {

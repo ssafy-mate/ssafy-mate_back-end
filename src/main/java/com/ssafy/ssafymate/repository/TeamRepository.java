@@ -53,7 +53,8 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
     @Query(value = "select t.ID ,  t.BACKEND_RECRUITMENT,  t.CAMPUS,  t.CREATE_DATE_TIME,   t.FRONTEND_RECRUITMENT,  t.INTRODUCTION,  t.NOTICE,  t.PROJECT," +
             "  t.PROJECT_TRACK,  t.TEAM_IMG,  t.TEAM_NAME,  t.TOTAL_RECRUITMENT,  t.OWNER_ID, uut.FRONTEND_HEADCOUNT,  uut.BACKEND_HEADCOUNT,  uut.TOTAL_HEADCOUNT " +
             " from (select * from team where project=:project " +
-            "            and project_track=:projectTrack) t " +
+            "            and project_track=:projectTrack " +
+            "            and team_name like %:teamName%) t " +
             "join \n" +
                 "(select ut.team_id, \n" +
                 "count(case when u.job1 like '%Front%' then 1 end) as frontend_headcount, " +
@@ -66,13 +67,15 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             "on t.id = uut.team_id"
             ,nativeQuery = true)
     Optional<List<Team>> findALLJQL(@Param("project") String project,
-                                               @Param("projectTrack") String projectTrack);
+                                    @Param("projectTrack") String projectTrack,
+                                    @Param("teamName") String teamName);
 
     // 팀 리스트 조회(스택 검색)
     @Query(value = "select t.ID ,  t.BACKEND_RECRUITMENT,  t.CAMPUS,  t.CREATE_DATE_TIME,   t.FRONTEND_RECRUITMENT,  t.INTRODUCTION,  t.NOTICE,  t.PROJECT," +
             "  t.PROJECT_TRACK,  t.TEAM_IMG,  t.TEAM_NAME,  t.TOTAL_RECRUITMENT,  t.OWNER_ID, uut.FRONTEND_HEADCOUNT,  uut.BACKEND_HEADCOUNT,  uut.TOTAL_HEADCOUNT" +
             " from (select * from team where project=:project " +
             "            and project_track=:projectTrack " +
+            "            and team_name like %:teamName% " +
             "            and id in " +
             "            (select team_id from team_stack where tech_stack_name in (:teamStacks))) t " +
             "join \n" +
@@ -88,6 +91,7 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             ,nativeQuery = true)
     Optional<List<Team>> findALLByteamStackJQL(@Param("project") String project,
                                                @Param("projectTrack") String projectTrack,
+                                               @Param("teamName") String teamName,
                                                @Param("teamStacks") List<String> teamStacks);
 
 }

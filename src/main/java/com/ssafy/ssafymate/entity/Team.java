@@ -28,9 +28,11 @@ public class Team {
     private Long id;
 
     @NotNull
+    @Column(updatable = false)
     private String campus;
 
     @NotNull
+    @Column(updatable = false)
     private String project;
 
     @NotNull

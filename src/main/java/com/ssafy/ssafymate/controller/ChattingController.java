@@ -1,19 +1,17 @@
 package com.ssafy.ssafymate.controller;
 
-import com.fasterxml.jackson.databind.ser.std.ObjectArraySerializer;
 import com.ssafy.ssafymate.common.BaseResponseBody;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import com.ssafy.ssafymate.dto.request.ChatRequestDto;
 import com.ssafy.ssafymate.dto.response.ChatHistoryResponseDto;
+import com.ssafy.ssafymate.dto.response.ChatHistoryTotalPagesResponseDto;
 import com.ssafy.ssafymate.dto.response.ChatRoomResponseDto;
-import com.ssafy.ssafymate.entity.ChattingHistory;
 import com.ssafy.ssafymate.service.ChattingService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,9 +35,9 @@ public class ChattingController {
             @ApiResponse(code = 400, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> getRoomList(@PathVariable Long userId){
+    public ResponseEntity<?> getRoomList(@PathVariable Long userId) {
         List<RoomList> roomList = chattingService.getRoomList(userId);
-        if(roomList == null){
+        if (roomList == null) {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, false, "방이 비어있습니다."));
         }
         return ResponseEntity.status(200).body(ChatRoomResponseDto.of(roomList));
@@ -52,24 +50,34 @@ public class ChattingController {
             @ApiResponse(code = 403, message = "방 생성 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public  ResponseEntity<?> getHistoryList(@RequestBody ChatRequestDto chatRequestDto, @RequestParam("nowPage") int nowPage){
+    public ResponseEntity<?> getHistoryList(@RequestBody ChatRequestDto chatRequestDto, @RequestParam(required = false, defaultValue = "1", value = "nowPage") int nowPage) {
         String roomId;
-        if(chatRequestDto.getUserId1() > chatRequestDto.getUserId2()){
-            roomId = chatRequestDto.getUserId2() + "-"+ chatRequestDto.getUserId1();
-        }else{
-            roomId = chatRequestDto.getUserId1() + "-"+ chatRequestDto.getUserId2();
+        if (chatRequestDto.getUserId1() > chatRequestDto.getUserId2()) {
+            roomId = chatRequestDto.getUserId2() + "-" + chatRequestDto.getUserId1();
+        } else {
+            roomId = chatRequestDto.getUserId1() + "-" + chatRequestDto.getUserId2();
         }
 
-        if(chattingService.findRoom(roomId) == null){
+        if (chattingService.findRoom(roomId) == null) {
             int temp = chattingService.saveRoom(roomId, chatRequestDto.getUserId1(), chatRequestDto.getUserId2());
-            if(temp == 0){
+            if (temp == 0) {
                 return ResponseEntity.status(403).body(BaseResponseBody.of(403, false, "방 생성에 실패하였습니다."));
             }
         }
-        Pageable pageable = PageRequest.of(nowPage-1, 5, Sort.Direction.DESC, "CH.id");
+        int size = 5;
+        Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "CH.id");
+
+        if (nowPage == 1) {
+            int totalLogCount = chattingService.getTotalLogCount(roomId);
+            int totalPages = totalLogCount / size;
+            if (totalLogCount % size != 0) {
+                totalPages += 1;
+            }
+            List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId);
+            return ResponseEntity.status(200).body(ChatHistoryTotalPagesResponseDto.of(contentList, totalPages));
+        }
 
         List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId);
-
         return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(contentList));
     }
 }

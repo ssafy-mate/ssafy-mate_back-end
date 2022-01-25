@@ -10,15 +10,19 @@ import java.util.List;
 
 @Getter
 @Setter
-@ApiModel("ChatHistoryResponseDto")
-public class ChatHistoryResponseDto {
+@ApiModel("ChatHistoryTotalPagesResponseDto")
+public class ChatHistoryTotalPagesResponseDto {
 
     @ApiModelProperty(name = "대화내용 리스트", example = "contentLists: []")
     List<ContentList> contentList;
 
-    public static ChatHistoryResponseDto of(List<ContentList> contentList) {
-        ChatHistoryResponseDto res = new ChatHistoryResponseDto();
+    @ApiModelProperty(name = "전체 페이지 수", example = "3")
+    int totalPages;
+
+    public static ChatHistoryTotalPagesResponseDto of(List<ContentList> contentList, int totalPages) {
+        ChatHistoryTotalPagesResponseDto res = new ChatHistoryTotalPagesResponseDto();
         res.setContentList(contentList);
+        res.setTotalPages(totalPages);
         return res;
     }
 }

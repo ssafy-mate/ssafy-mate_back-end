@@ -39,6 +39,11 @@ public class ChattingServiceImpl implements ChattingService{
     }
 
     @Override
+    public int getTotalLogCount(String roomId) {
+        return chattingHistoryRepository.countByChattingRoomId(roomId);
+    }
+
+    @Override
     public ChattingRoom findRoom(String roomId) {
 
         ChattingRoom room = chattingRoomRepository.findByRoomId(roomId).orElse(null);

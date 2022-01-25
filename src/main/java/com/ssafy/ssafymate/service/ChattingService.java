@@ -18,7 +18,7 @@ public interface ChattingService {
 
     ChattingRoom findRoom(String roomId);
 
-    void saveRoom(String roomId, Long userId1, Long userId2);
+    int saveRoom(String roomId, Long userId1, Long userId2);
 
     int saveHistory(ChatMessageDto chatMessageDto);
 }

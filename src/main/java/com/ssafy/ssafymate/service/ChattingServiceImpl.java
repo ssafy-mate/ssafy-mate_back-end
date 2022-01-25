@@ -47,9 +47,10 @@ public class ChattingServiceImpl implements ChattingService{
     }
 
     @Override
-    public void saveRoom(String roomId, Long userId1, Long userId2) {
+    public int saveRoom(String roomId, Long userId1, Long userId2) {
 
-        chattingRoomRepository.saveRoom(roomId, userId1, userId2);
+        return chattingRoomRepository.saveRoom(roomId, userId1, userId2);
+
     }
 
     @Override

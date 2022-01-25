@@ -46,5 +46,5 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Stri
     @Modifying
     @Query(value = "insert into chatting_room (room_id, user_id1, user_id2) values (:roomId, :userId1, :userId2)", nativeQuery = true)
     @Transactional
-    void saveRoom(@Param("roomId") String roomId, @Param("userId1") Long userId1, @Param("userId2") Long userId2);
+    int saveRoom(@Param("roomId") String roomId, @Param("userId1") Long userId1, @Param("userId2") Long userId2);
 }

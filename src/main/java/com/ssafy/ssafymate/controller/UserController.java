@@ -111,11 +111,13 @@ public class UserController {
             @RequestPart(value= "file", required = false) MultipartFile multipartFile) throws Exception {
         // @Valid 유효성 검사를 통과하지 못하면 500 에러 반환
         if (bindingResult.hasErrors()) {
+            System.out.println("valid 체크 통과 못함");
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
         }
         try {
             userService.userSave(userRequestDto, multipartFile);
         } catch (Exception exception) {
+            System.out.println("예외 캐치");
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, true,  "success"));

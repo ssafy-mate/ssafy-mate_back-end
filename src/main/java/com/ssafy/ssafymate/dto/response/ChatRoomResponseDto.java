@@ -9,15 +9,12 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ChatRoomResponseDto extends BaseResponseBody {
+public class ChatRoomResponseDto{
 
     List<RoomList> roomLists;
 
-    public static ChatRoomResponseDto of(Integer statusCode, Boolean success, String message, List<RoomList> roomList){
+    public static ChatRoomResponseDto of(List<RoomList> roomList){
         ChatRoomResponseDto res = new ChatRoomResponseDto();
-        res.setStatusCode(statusCode);
-        res.setSuccess(success);
-        res.setMessage(message);
         res.setRoomLists(roomList);
         return res;
     }

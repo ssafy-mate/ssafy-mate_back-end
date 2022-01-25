@@ -10,6 +10,10 @@ import com.ssafy.ssafymate.dto.response.ChatRoomResponseDto;
 import com.ssafy.ssafymate.entity.ChattingHistory;
 import com.ssafy.ssafymate.service.ChattingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +36,7 @@ public class ChattingController {
     }
 
     @PostMapping("/log")
-    public  ResponseEntity<?> getHistoryList(@RequestBody ChatRequestDto chatRequestDto){
+    public  ResponseEntity<?> getHistoryList(@RequestBody ChatRequestDto chatRequestDto, @RequestParam("nowPage") int nowPage){
         String roomId;
         if(chatRequestDto.getUserId1() > chatRequestDto.getUserId2()){
             roomId = chatRequestDto.getUserId2() + "-"+ chatRequestDto.getUserId1();
@@ -44,8 +48,11 @@ public class ChattingController {
             chattingService.saveRoom(roomId, chatRequestDto.getUserId1(), chatRequestDto.getUserId2());
 //                return ResponseEntity.status(403).body(BaseResponseBody.of(403, false, "저장 실패"));
         }
+//        int nowPage = 1;
+        Pageable pageable = PageRequest.of(nowPage-1, 5, Sort.Direction.DESC, "CH.id");
+//        Pageable pageable = PageRequest.of(nowPage-1, 5, Sort.Direction.DESC, "newsNo");
 
-        List<ContentList> contentList = chattingService.getHistoryList(roomId);
+        List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId);
 
         return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(200, true, "", contentList));
     }

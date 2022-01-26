@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TeamDetail {
-    private Long id;
+    private Long teamId;
     TeamDetailOwnerDto owner;
     private String teamImgUrl;
     private String campus;
@@ -38,7 +38,7 @@ public class TeamDetail {
 
     public static TeamDetail of(Team team){
         TeamDetail res = new TeamDetail();
-        res.setId(team.getId());
+        res.setTeamId(team.getId());
         res.setCampus(team.getCampus());
         res.setProject(team.getProject());
         res.setProjectTrack(team.getProjectTrack());

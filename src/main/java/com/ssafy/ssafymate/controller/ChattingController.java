@@ -1,6 +1,6 @@
 package com.ssafy.ssafymate.controller;
 
-import com.ssafy.ssafymate.common.BaseResponseBody;
+import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import com.ssafy.ssafymate.dto.request.ChatRequestDto;
@@ -37,8 +37,9 @@ public class ChattingController {
     })
     public ResponseEntity<?> getRoomList(@PathVariable Long userId) {
         List<RoomList> roomList = chattingService.getRoomList(userId);
-        if (roomList == null) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, false, "방이 비어있습니다."));
+
+        if(roomList == null){
+            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "방이 비어있습니다."));
         }
         return ResponseEntity.status(200).body(ChatRoomResponseDto.of(roomList));
     }
@@ -79,15 +80,6 @@ public class ChattingController {
             return ResponseEntity.status(200).body(ChatHistoryTotalPagesResponseDto.of(contentList, totalPages));
         }
 
-//        if (nowPage == 1) {
-//            int totalLogCount = chattingService.getTotalLogCount(roomId);
-//            int totalPages = totalLogCount / size;
-//            if (totalLogCount % size != 0) {
-//                totalPages += 1;
-//            }
-//            List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId);
-//            return ResponseEntity.status(200).body(ChatHistoryTotalPagesResponseDto.of(contentList, totalPages));
-//        }
         List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
         return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(contentList));
     }

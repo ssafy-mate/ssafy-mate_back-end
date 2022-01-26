@@ -1,6 +1,5 @@
 package com.ssafy.ssafymate.dto.response;
 
-import com.ssafy.ssafymate.common.BaseResponseBody;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

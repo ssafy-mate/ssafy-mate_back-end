@@ -108,15 +108,15 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public Optional<List<Team>> teamSearch(String project, String projectTrack, List<String> teamStacks) {
-        Optional<List<Team>> teams = teamRepository.findALLByteamStackJQL(project,projectTrack,teamStacks);
+    public Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, List<String> teamStacks) {
+        Optional<List<Team>> teams = teamRepository.findALLByteamStackJQL(project,projectTrack,teamName, teamStacks);
         return teams;
 //        return teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
     }
 
     @Override
-    public Optional<List<Team>> teamSearch(String project, String projectTrack) {
-        Optional<List<Team>> teams = teamRepository.findALLJQL(project,projectTrack);
+    public Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName) {
+        Optional<List<Team>> teams = teamRepository.findALLJQL(project,projectTrack, teamName);
         return teams;
     }
 

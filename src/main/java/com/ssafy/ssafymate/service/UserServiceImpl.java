@@ -74,7 +74,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getEmailByStudentNumberAndStudentName(String studentNumber, String studentName) {
         User user = userRepository.findEmailByStudentNumberAndStudentName(studentNumber, studentName).orElse(null);
-        String email = user.getEmail();
+        String email = null;
+        if(user != null)
+            email = user.getEmail();
+
         return email;
     }
 

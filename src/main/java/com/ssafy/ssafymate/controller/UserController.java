@@ -126,13 +126,17 @@ public class UserController {
         // @Valid 유효성 검사를 통과하지 못하면 500 에러 반환
         if (bindingResult.hasErrors()) {
             System.out.println("valid 체크 통과 못함");
+
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "계정 생성이 실패하였습니다."));
+
         }
         try {
             userService.userSave(userRequestDto, profileImg);
         } catch (Exception exception) {
             System.out.println("예외 캐치");
+
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
+
         }
         return ResponseEntity.status(200).body(MessageBody.of("계정 생성이 완료되었습니다."));
     }

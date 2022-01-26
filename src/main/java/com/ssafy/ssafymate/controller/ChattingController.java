@@ -44,25 +44,27 @@ public class ChattingController {
         return ResponseEntity.status(200).body(ChatRoomResponseDto.of(roomList));
     }
 
-    @PostMapping("/log")
+    @GetMapping("/log")
     @ApiOperation(value = "대화 내용 불러오기", notes = "대화 내용을 페이징하여 보내준다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 403, message = "방 생성 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> getHistoryList(@RequestBody ChatRequestDto chatRequestDto,
+    public ResponseEntity<?> getHistoryList(
+                                            @RequestParam("userId1") Long userId1,
+                                            @RequestParam("userId2") Long userId2,
                                             @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage,
                                             @RequestParam("entryTime") String entryTime) {
         String roomId;
-        if (chatRequestDto.getUserId1() > chatRequestDto.getUserId2()) {
-            roomId = chatRequestDto.getUserId2() + "-" + chatRequestDto.getUserId1();
+        if (userId1 > userId2) {
+            roomId = userId2 + "-" + userId1;
         } else {
-            roomId = chatRequestDto.getUserId1() + "-" + chatRequestDto.getUserId2();
+            roomId = userId1 + "-" + userId2;
         }
 
         if (chattingService.findRoom(roomId) == null) {
-            int temp = chattingService.saveRoom(roomId, chatRequestDto.getUserId1(), chatRequestDto.getUserId2());
+            int temp = chattingService.saveRoom(roomId, userId1, userId2);
             if (temp == 0) {
                 return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "방 생성에 실패하였습니다."));
             }

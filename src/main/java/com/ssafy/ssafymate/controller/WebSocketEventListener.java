@@ -52,7 +52,7 @@ public class WebSocketEventListener {
 					.senderId(senderId)
 					.build();
 			
-			messagingTemplate.convertAndSend("/queue/public/"+roomId, chatMessageDto);
+			messagingTemplate.convertAndSend("/queue/"+roomId, chatMessageDto);
 
 		}
 	}

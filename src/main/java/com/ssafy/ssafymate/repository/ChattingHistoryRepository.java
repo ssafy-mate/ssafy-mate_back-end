@@ -22,8 +22,8 @@ public interface ChattingHistoryRepository extends JpaRepository<ChattingHistory
             "from chatting_history AS CH\n" +
             "join user as U\n" +
             "on U.id = CH.sender_id\n" +
-            "WHERE CH.chatting_room_id = :roomId", nativeQuery = true)
-    List<ContentList> getHistoryList(Pageable pageable, @Param("roomId") String roomId);
+            "WHERE CH.chatting_room_id = :roomId AND CH.sent_time < :entryTime", nativeQuery = true)
+    List<ContentList> getHistoryList(Pageable pageable, @Param("roomId") String roomId, @Param("entryTime") String entryTime);
 //    Optional<List<ContentList>> getHistoryList(@Param("roomId") String roomId);
 
     @Query(value = "select count(*) from chatting_history where chatting_room_id = :roomId", nativeQuery = true)

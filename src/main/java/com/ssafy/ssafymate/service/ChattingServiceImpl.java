@@ -31,10 +31,10 @@ public class ChattingServiceImpl implements ChattingService{
     }
 
     @Override
-    public List<ContentList> getHistoryList(Pageable pageable, String roomId) {
+    public List<ContentList> getHistoryList(Pageable pageable, String roomId, String entryTime) {
 
 //        List<ContentList> list = chattingHistoryRepository.getHistoryList(roomId).orElse(null);
-        List<ContentList> list = chattingHistoryRepository.getHistoryList(pageable, roomId);
+        List<ContentList> list = chattingHistoryRepository.getHistoryList(pageable, roomId, entryTime);
         return list;
     }
 

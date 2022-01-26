@@ -119,7 +119,7 @@ public class EmailServiceImpl implements EmailService {
 
         MimeMessage message = createMessage(to);
         try {
-            redisUtil.setDataExpire(to, emailVerificationCode, 30); // 인증코드 유효시간 3분
+            redisUtil.setDataExpire(to, emailVerificationCode, 180); // 인증코드 유효시간 3분
             emailSender.send(message);
         } catch (MailException es) {
             es.printStackTrace();
@@ -133,7 +133,7 @@ public class EmailServiceImpl implements EmailService {
     public String sendPwSimpleMessage(String to) throws Exception {
         MimeMessage message = pwSearchMessage(to);
         try {
-            redisUtil.setDataExpire(to, emailVerificationCode, 30); // 인증코드 유효시간 3분
+            redisUtil.setDataExpire(to, emailVerificationCode, 180); // 인증코드 유효시간 3분
             emailSender.send(message);
         } catch (MailException es) {
             es.printStackTrace();

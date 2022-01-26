@@ -59,7 +59,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// 외장 톰캣 사용
-	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+//	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 
 test {

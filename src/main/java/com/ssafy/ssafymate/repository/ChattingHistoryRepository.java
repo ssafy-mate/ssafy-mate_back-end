@@ -3,13 +3,15 @@ package com.ssafy.ssafymate.repository;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.entity.ChattingHistory;
 import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +22,12 @@ public interface ChattingHistoryRepository extends JpaRepository<ChattingHistory
             "from chatting_history AS CH\n" +
             "join user as U\n" +
             "on U.id = CH.sender_id\n" +
-            "WHERE CH.chatting_room_id = :roomId", nativeQuery = true)
-    Optional<List<ContentList>> getHistoryList(@Param("roomId") String roomId);
+            "WHERE CH.chatting_room_id = :roomId AND CH.sent_time < :entryTime", nativeQuery = true)
+    List<ContentList> getHistoryList(Pageable pageable, @Param("roomId") String roomId, @Param("entryTime") String entryTime);
+//    Optional<List<ContentList>> getHistoryList(@Param("roomId") String roomId);
+
+    @Query(value = "select count(*) from chatting_history where chatting_room_id = :roomId", nativeQuery = true)
+    int countByChattingRoomId(@Param("roomId") String roomId);
 
     @Modifying
     @Query(value = "insert into chatting_history(chatting_room_id, sender_id, sent_time, content) values (:roomId, :senderId, :sentTime, :content)", nativeQuery = true)

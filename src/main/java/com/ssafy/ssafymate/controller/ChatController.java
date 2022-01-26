@@ -36,8 +36,7 @@ public class ChatController {
 
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
-    @Autowired
-    private ChattingService chattingService;
+    private final ChattingService chattingService;
 
     @MessageMapping("/ssafymate/chat/sendMessage/{roomId}")
     @SendTo("/queue/ssafymate/chat/{roomId}")

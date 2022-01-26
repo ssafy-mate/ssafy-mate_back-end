@@ -8,6 +8,8 @@ import com.ssafy.ssafymate.entity.ChattingRoom;
 import com.ssafy.ssafymate.repository.ChattingHistoryRepository;
 import com.ssafy.ssafymate.repository.ChattingRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,10 +31,16 @@ public class ChattingServiceImpl implements ChattingService{
     }
 
     @Override
-    public List<ContentList> getHistoryList(String roomId) {
+    public List<ContentList> getHistoryList(Pageable pageable, String roomId, String entryTime) {
 
-        List<ContentList> list = chattingHistoryRepository.getHistoryList(roomId).orElse(null);
+//        List<ContentList> list = chattingHistoryRepository.getHistoryList(roomId).orElse(null);
+        List<ContentList> list = chattingHistoryRepository.getHistoryList(pageable, roomId, entryTime);
         return list;
+    }
+
+    @Override
+    public int getTotalLogCount(String roomId) {
+        return chattingHistoryRepository.countByChattingRoomId(roomId);
     }
 
     @Override
@@ -44,9 +52,10 @@ public class ChattingServiceImpl implements ChattingService{
     }
 
     @Override
-    public void saveRoom(String roomId, Long userId1, Long userId2) {
+    public int saveRoom(String roomId, Long userId1, Long userId2) {
 
-        chattingRoomRepository.saveRoom(roomId, userId1, userId2);
+        return chattingRoomRepository.saveRoom(roomId, userId1, userId2);
+
     }
 
     @Override

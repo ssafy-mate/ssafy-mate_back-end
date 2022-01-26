@@ -7,5 +7,4 @@ public interface ContentList {
     String getUsername();
     String getContent();
     String getSent_time();
-
 }

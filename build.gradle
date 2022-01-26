@@ -36,8 +36,10 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-//	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'mysql:mysql-connector-java'
+
+	runtimeOnly 'com.h2database:h2'
+//	runtimeOnly 'mysql:mysql-connector-java'
+
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -46,6 +48,7 @@ dependencies {
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
 	implementation 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
 
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
 	implementation 'javax.xml.bind:jaxb-api'

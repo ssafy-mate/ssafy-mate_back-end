@@ -1,6 +1,6 @@
 package com.ssafy.ssafymate.dto.response;
 
-import com.ssafy.ssafymate.common.BaseResponseBody;
+import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ChatRoomResponseDto extends BaseResponseBody {
+public class ChatRoomResponseDto extends ErrorResponseBody {
 
     List<RoomList> roomLists;
 

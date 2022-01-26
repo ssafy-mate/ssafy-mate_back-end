@@ -1,6 +1,6 @@
 package com.ssafy.ssafymate.dto.response;
 
-import com.ssafy.ssafymate.common.BaseResponseBody;
+import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ChatHistoryResponseDto extends BaseResponseBody {
+public class ChatHistoryResponseDto extends ErrorResponseBody {
 
     List<ContentList> contentList;
 

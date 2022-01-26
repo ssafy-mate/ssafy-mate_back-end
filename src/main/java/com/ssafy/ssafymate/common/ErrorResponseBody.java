@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ApiModel("BaseResponseBody")
-public class BaseResponseBody {
+@ApiModel("ErrorResponseBody")
+public class ErrorResponseBody{
     @ApiModelProperty(name="응답 메시지", example = "정상")
     String message = null;
     @ApiModelProperty(name="응답 코드", example = "200")
@@ -16,19 +16,19 @@ public class BaseResponseBody {
     @ApiModelProperty(name="응답 상태", example = "true")
     Boolean success = false;
 
-    public BaseResponseBody() {}
+    public ErrorResponseBody() {}
 
-    public BaseResponseBody(Integer statusCode){
+    public ErrorResponseBody(Integer statusCode){
         this.statusCode = statusCode;
     }
 
-    public BaseResponseBody(Integer statusCode, String message){
+    public ErrorResponseBody(Integer statusCode, String message){
         this.statusCode = statusCode;
         this.message = message;
     }
 
-    public static BaseResponseBody of(Integer statusCode, Boolean success, String message) {
-        BaseResponseBody body = new BaseResponseBody();
+    public static ErrorResponseBody of(Integer statusCode, Boolean success, String message) {
+        ErrorResponseBody body = new ErrorResponseBody();
         body.message = message;
         body.statusCode = statusCode;
         body.success = success;

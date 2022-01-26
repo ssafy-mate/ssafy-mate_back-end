@@ -1,13 +1,11 @@
 package com.ssafy.ssafymate.controller;
 
-import com.fasterxml.jackson.databind.ser.std.ObjectArraySerializer;
-import com.ssafy.ssafymate.common.BaseResponseBody;
+import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import com.ssafy.ssafymate.dto.request.ChatRequestDto;
 import com.ssafy.ssafymate.dto.response.ChatHistoryResponseDto;
 import com.ssafy.ssafymate.dto.response.ChatRoomResponseDto;
-import com.ssafy.ssafymate.entity.ChattingHistory;
 import com.ssafy.ssafymate.service.ChattingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +24,7 @@ public class ChattingController {
     public ResponseEntity<?> getRoomList(@PathVariable Long userId){
         List<RoomList> roomList = chattingService.getRoomList(userId);
         if(roomList == null){
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, false, "방이 비어있습니다."));
+            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "방이 비어있습니다."));
         }
         return ResponseEntity.status(200).body(ChatRoomResponseDto.of(200, true, "", roomList));
     }

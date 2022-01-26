@@ -64,11 +64,11 @@ public class ChattingController {
         if (chattingService.findRoom(roomId) == null) {
             int temp = chattingService.saveRoom(roomId, chatRequestDto.getUserId1(), chatRequestDto.getUserId2());
             if (temp == 0) {
-                return ResponseEntity.status(403).body(BaseResponseBody.of(403, false, "방 생성에 실패하였습니다."));
+                return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "방 생성에 실패하였습니다."));
             }
         }
         int size = 5;
-        Pageable pageable = PageRequest.of(nowPage-1, 5, Sort.Direction.DESC, "CH.id");
+        Pageable pageable = PageRequest.of(nowPage-1, size, Sort.Direction.DESC, "CH.id");
 
         if (nowPage == 1) {
             int totalLogCount = chattingService.getTotalLogCount(roomId);

@@ -68,7 +68,7 @@ public class User {
     private String etcUrl;
 
     @NotNull
-    private Boolean agreement;
+    private String agreement;
 
     @OneToMany(mappedBy = "user")
     List<ChattingHistory> chattingHistory = new ArrayList<>();

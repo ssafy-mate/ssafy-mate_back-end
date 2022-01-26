@@ -36,6 +36,8 @@ function onConnected() {
     // Subscribe to the Public Topic
     stompClient.subscribe('/queue/ssafymate/chat/'+romId, onMessageReceived);
 
+    stompClient.subscribe('/queue/ssafymate/chat/'+romId+'/'+username, onMessageReceived);
+
     // Tell your username to the server
     stompClient.send("/app/ssafymate/chat/addUser/"+romId,
         {},
@@ -93,7 +95,11 @@ function onMessageReceived(payload) {
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.senderId + ' left!';
-    } else {
+    } else if (message.type === 'ERROR'){
+        messageElement.classList.add('event-message');
+        message.content = message.senderId +'님이 보낸 메세지에 오류가 발생했습니다.';
+    }
+    else {
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');

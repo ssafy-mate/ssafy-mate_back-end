@@ -7,5 +7,5 @@ public interface RoomList {
     String getSent_time();
     Long getUser_id();
     String getProfile_img();
-    String getStudent_name();
+    String getUsername();
 }

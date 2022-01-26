@@ -1,6 +1,7 @@
 package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.dto.ChatDto.ChatMessageDto;
+import com.ssafy.ssafymate.dto.ChatDto.MessageType;
 import com.ssafy.ssafymate.service.ChattingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,19 @@ public class ChatController {
     @MessageMapping("/ssafymate/chat/sendMessage/{roomId}")
     @SendTo("/queue/ssafymate/chat/{roomId}")
     public ChatMessageDto sendMessage(@Payload ChatMessageDto chatMessage) {
-        chattingService.saveHistory(chatMessage);
+        try {
+            chattingService.saveHistory(chatMessage);
+        }catch (Exception e){
+           ErrorMessage(chatMessage);
+        }
+        return chatMessage;
+    }
+
+    @SendTo("/queue/ssafymate/chat/{roomId}/{senderId}")
+    public ChatMessageDto ErrorMessage(ChatMessageDto chatMessage) {
+
+        chatMessage.setType(MessageType.ERROR);
+
         return chatMessage;
     }
 

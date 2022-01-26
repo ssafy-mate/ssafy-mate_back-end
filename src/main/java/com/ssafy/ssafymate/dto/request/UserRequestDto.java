@@ -57,6 +57,6 @@ public class UserRequestDto {
     private String etcUrl;
 
     @ApiModelProperty(value = "개인정보 동의여부", example = "true")
-    private Boolean agreement;
+    private String agreement;
 
 }

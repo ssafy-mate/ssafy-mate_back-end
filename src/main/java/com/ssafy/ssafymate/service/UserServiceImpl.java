@@ -1,8 +1,13 @@
 package com.ssafy.ssafymate.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.ssafy.ssafymate.dto.request.PwModifyRequestDto;
 import com.ssafy.ssafymate.dto.request.UserRequestDto;
 import com.ssafy.ssafymate.entity.User;
+import com.ssafy.ssafymate.entity.UserStack;
 import com.ssafy.ssafymate.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("userService")
 @RequiredArgsConstructor
@@ -34,22 +42,30 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true) // 1:1 매칭이 필요없는 속성은 무시함
     @Override
-    public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException {
+    public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
 
         String profileImgUrl;
 
         if(multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정 - 상대경로로 바꿔야함
-            profileImgUrl = "/var/webapps/upload/default_img.jpg";
-//            profileImgUrl = "\\src\\main\\resources\\static\\image\\default_img.jpg";
+//            profileImgUrl = "/var/webapps/upload/default_img.jpg";
+            profileImgUrl = "C:\\image\\default_img.jpg";
         } else {
-            profileImgUrl = "/var/webapps/upload/" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-//            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+//            profileImgUrl = "/var/webapps/upload/" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
 
             File file = new File(profileImgUrl);
             multipartFile.transferTo(file);
         }
+
+        // userRequestDto 에서 String 형태의 techStacks 찾기
+        String jsonString = userRequestDto.getTechStacks();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Type listType = new TypeToken<ArrayList<UserStack>>(){}.getType();
+        List<UserStack> techStacks = gson.fromJson(jsonString, listType);
+
         User user = User.builder()
                 .campus(userRequestDto.getCampus())
                 .ssafyTrack(userRequestDto.getSsafyTrack())
@@ -61,7 +77,7 @@ public class UserServiceImpl implements UserService {
                 .selfIntroduction(userRequestDto.getSelfIntroduction())
                 .job1(userRequestDto.getJob1())
                 .job2(userRequestDto.getJob2())
-                .techStacks(userRequestDto.getTechStacks())
+                .techStacks(techStacks)
                 .githubUrl(userRequestDto.getGithubUrl())
                 .etcUrl(userRequestDto.getEtcUrl())
                 .agreement(userRequestDto.getAgreement())

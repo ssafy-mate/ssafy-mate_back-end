@@ -34,7 +34,7 @@ public class UserRequestDto {
     private String userEmail;
 
     @ApiModelProperty(value = "비밀번호", example = "a12345")
-    @Pattern(regexp="^(?[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]{6,255=.*}$", message = "비밀번호는 영어와 숫자를 포함해서 6자리 이상 입력해주세요.")
+    @Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{6,}$", message = "비밀번호는 영어와 숫자를 포함해서 6자리 이상 입력해주세요.")
     private String password;
 
     @ApiModelProperty(value = "자기소개", example = "안녕하세요...")
@@ -46,9 +46,10 @@ public class UserRequestDto {
     @ApiModelProperty(value = "희망 포지션2", example = "백엔드 (Back-end)")
     private String job2;
 
-//    @ApiModelProperty(value = "기술스택", example = [{\"techStackLevel\": \"상\", \"techStackName\": \"Java\"}, {\"techStackLevel\": \"중\", \"techStackName\": \"Python\"}])
-    @Size(min=2)
-    List<UserStack> techStacks = new ArrayList<>();
+    //    @ApiModelProperty(value = "기술스택", example = [{\"techStackLevel\": \"상\", \"techStackName\": \"Java\"}, {\"techStackLevel\": \"중\", \"techStackName\": \"Python\"}])
+//    @Size(min=2)
+//    List<UserStack> techStacks = new ArrayList<>();
+    private String techStacks;
 
     @ApiModelProperty(value = "Github URL", example = "https://github.com/ssafy-mate")
     private String githubUrl;

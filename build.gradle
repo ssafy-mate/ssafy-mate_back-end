@@ -60,6 +60,10 @@ dependencies {
 
 	// 외장 톰캣 사용
 //	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	// json
+//	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+	implementation 'com.google.code.gson:gson:2.8.6'
 }
 
 test {

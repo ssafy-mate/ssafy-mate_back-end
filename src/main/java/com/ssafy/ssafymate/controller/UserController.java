@@ -130,6 +130,7 @@ public class UserController {
         try {
             userService.userSave(userRequestDto, profileImg);
         } catch (Exception exception) {
+            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
         }
         return ResponseEntity.status(200).body(MessageBody.of("계정 생성이 완료되었습니다."));

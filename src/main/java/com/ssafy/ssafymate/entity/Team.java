@@ -1,6 +1,7 @@
 package com.ssafy.ssafymate.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +28,11 @@ public class Team {
     private Long id;
 
     @NotNull
+    @Column(updatable = false)
     private String campus;
 
     @NotNull
+    @Column(updatable = false)
     private String project;
 
     @NotNull
@@ -59,13 +63,22 @@ public class Team {
     private String teamImg;
 
     @NotNull
-    private int totalRecruitment;
+    private Integer totalRecruitment;
 
     @NotNull
-    private int frontendRecruitment;
+    private Integer frontendRecruitment;
 
     @NotNull
-    private int backendRecruitment;
+    private Integer backendRecruitment;
+
+    @Column(nullable = true)
+    Integer totalHeadcount;
+
+    @Column(nullable = true)
+    Integer frontendHeadcount;
+
+    @Column(nullable = true)
+    Integer backendHeadcount;
 
     @CreationTimestamp
     @Column(updatable = false)

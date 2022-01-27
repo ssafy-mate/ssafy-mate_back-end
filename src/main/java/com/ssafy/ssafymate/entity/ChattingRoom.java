@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ChattingRoom {
 
 //    @Id
@@ -22,6 +22,16 @@ public class ChattingRoom {
     @Id
     @Column(name = "room_id")
     private String roomId;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id1", referencedColumnName = "id")
+    private User userId1;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id2", referencedColumnName = "id")
+    private User userId2;
 
     @NotNull
     @OneToMany(mappedBy = "chattingRoom")

@@ -32,18 +32,15 @@ public class SwaggerConfig {
 
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
-                .title("GreenByMe REST API")
-                .description("Green by me, Green by earth(us)")
-                .version("0.4.0")
-                .termsOfServiceUrl("Terms of service")
-                .contact(new Contact("Tae Jeong, Da hun", "https://github.com/GreenByMe/GreenByMe_Server", "xowjd41@naver.com"))
-                .license("Apache License Version 2.0")
-                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
+                .title("SSAFY MATE REST API")
+                .description("싸피인들을 위한 팀 빌딩 플랫폼")
+                .version("1.0.0")
+//                .contact(new Contact("Jeonghwan, Yeojin, Jeongeun, Wonbin, Youngbae, Jeonghun", "https://github.com/ssafy-mate", "ssafymate@gmail.com"))
                 .build();
     }
 
     private ApiKey apiKey() {
-        return new ApiKey("JWT", "jwt", "header");
+        return new ApiKey("Authentication", "Authentication", "header");
     }
 
     private SecurityContext securityContext() {
@@ -60,6 +57,6 @@ public class SwaggerConfig {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+        return Arrays.asList(new SecurityReference("Authentication", authorizationScopes));
     }
 }

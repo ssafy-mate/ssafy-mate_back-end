@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class UserStack {
 
     private String techStackLevel;
 
+    @JsonIgnore
     @ManyToOne
     private User user;
 }

@@ -1,9 +1,11 @@
 package com.ssafy.ssafymate.JWT;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssafymate.entity.User;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -15,16 +17,28 @@ public class CustomUserDetails implements UserDetails {
 
     @Autowired
     private User user;
+
     boolean accountNonExpired = true;
     boolean accountNonLocked = true;
     boolean credentialNonExpired = true;
     boolean enabled = true;
 
-    List<GrantedAuthority> roles = new ArrayList<>();
+    private Collection<? extends GrantedAuthority> authorities;
+    // List<GrantedAuthority> roles = new ArrayList<>();
 
-    public CustomUserDetails(User user){
+    public CustomUserDetails (User user){
         super();
         this.user=user;
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+
+//        return new CustomUserDetails(
+//                user.getId(),
+//                user.getEmail(),
+//                user.getEmail(),
+//                user.getPassword(),
+//                authorities);
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.ssafy.ssafymate.service.UserTeamService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +41,7 @@ public class TeamController {
     private TokenProvider tokenProvider;
 
     @GetMapping("/{teamId}")
+    @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "팀 상세조회", notes = "팀 아이디로 해당 팀 상세 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

@@ -1,8 +1,10 @@
 package com.ssafy.ssafymate.JWT;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssafymate.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -13,23 +15,35 @@ public class CustomUserDetails implements UserDetails {
 
     @Autowired
     User user;
-    boolean accountNonExpired;
-    boolean accountNonLocked;
-    boolean credentialNonExpired;
-    boolean enabled = false;
-    List<GrantedAuthority> roles = new ArrayList<>();
+    boolean accountNonExpired = true;
+    boolean accountNonLocked = true;
+    boolean credentialNonExpired = true;
+    boolean enabled = true;
 
-    public CustomUserDetails(User user){
+    private Collection<? extends GrantedAuthority> authorities;
+//    List<GrantedAuthority> roles = new ArrayList<>();
+
+    public CustomUserDetails (User user){
         super();
         this.user=user;
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+
+//        return new CustomUserDetails(
+//                user.getId(),
+//                user.getEmail(),
+//                user.getEmail(),
+//                user.getPassword(),
+//                authorities);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
+        return this.authorities;
     }
-    public void setAuthorities(List<GrantedAuthority> roles) {
-        this.roles = roles;
+    public void setAuthorities(List<GrantedAuthority> authorities) {
+        this.authorities = authorities;
     }
 
     public User getUser(){

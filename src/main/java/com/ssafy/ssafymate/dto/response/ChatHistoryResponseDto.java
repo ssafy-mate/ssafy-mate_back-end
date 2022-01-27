@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.swing.text.AbstractDocument;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -13,12 +15,30 @@ import java.util.List;
 @ApiModel("ChatHistoryResponseDto")
 public class ChatHistoryResponseDto {
 
-    @ApiModelProperty(name = "대화내용 리스트", example = "contentLists: []")
-    List<ContentList> contentList;
+    private Long id;
 
-    public static ChatHistoryResponseDto of(List<ContentList> contentList) {
-        ChatHistoryResponseDto res = new ChatHistoryResponseDto();
-        res.setContentList(contentList);
+    private String content;
+
+    private String sentTime;
+
+    private String userName;
+
+    private Long senderId;
+
+    public static List<ChatHistoryResponseDto> of(List<ContentList> contentList) {
+        List<ChatHistoryResponseDto> res = new ArrayList<>();
+
+        for (ContentList cl : contentList) {
+            ChatHistoryResponseDto chr = new ChatHistoryResponseDto();
+
+            chr.setId(cl.getId());
+            chr.setContent(cl.getContent());
+            chr.setSentTime(cl.getSent_time());
+            chr.setSenderId(cl.getSender_id());
+            chr.setUserName(cl.getUsername());
+
+            res.add(chr);
+        }
         return res;
     }
 }

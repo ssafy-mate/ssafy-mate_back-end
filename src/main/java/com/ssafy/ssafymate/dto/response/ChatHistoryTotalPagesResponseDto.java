@@ -14,14 +14,14 @@ import java.util.List;
 public class ChatHistoryTotalPagesResponseDto {
 
     @ApiModelProperty(name = "대화내용 리스트", example = "contentLists: []")
-    List<ContentList> contentList;
+    List<ChatHistoryResponseDto> contentList;
 
     @ApiModelProperty(name = "전체 페이지 수", example = "3")
     int totalPages;
 
     public static ChatHistoryTotalPagesResponseDto of(List<ContentList> contentList, int totalPages) {
         ChatHistoryTotalPagesResponseDto res = new ChatHistoryTotalPagesResponseDto();
-        res.setContentList(contentList);
+        res.setContentList(ChatHistoryResponseDto.of(contentList));
         res.setTotalPages(totalPages);
         return res;
     }

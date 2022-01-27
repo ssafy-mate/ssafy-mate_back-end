@@ -2,7 +2,6 @@ package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.JWT.TokenProvider;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
-import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.dto.request.LoginRequestDto;
 import com.ssafy.ssafymate.dto.response.LoginResponseDto;
 import com.ssafy.ssafymate.entity.User;
@@ -14,15 +13,15 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @Api(value = "로그인 API", tags = {"signin"})
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/user/signin")
 public class LoginContoller {
 
     @Autowired
@@ -35,7 +34,7 @@ public class LoginContoller {
     private UserService userService;
 
     // 로그인 시 토큰 생성
-    @PostMapping("/signin")
+    @PostMapping("")
     @ApiOperation(value = "로그인", notes = "이메일과 비밀번호를 받아서 확인한 뒤 토큰 생성")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -60,6 +59,6 @@ public class LoginContoller {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "아이디 또는 비밀번호가 잘못 입력되었습니다."));
         }
         String token = tokenProvider.createToken(loginRequestDto.getEmail());
-        return ResponseEntity.status(200).body(LoginResponseDto.of("로그인 하셨습니다.", token));
+        return ResponseEntity.status(200).body(LoginResponseDto.of("로그인 하셨습니다.", user, token));
     }
 }

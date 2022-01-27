@@ -45,17 +45,17 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> studentVerify(
-            @RequestParam String campus, @RequestParam String studentNumber, @RequestParam String studentName) {
+            @RequestParam("campus") String campus, @RequestParam("studentNumber") String studentNumber, @RequestParam("userName") String userName) {
         Student student;
         try {
             student = studentService.getStudentByStudentNumber(studentNumber);
         }catch (Exception exception){
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 인증 실패"));
         }
-        if(student==null || !((campus.equals(student.getCampus())) && (studentNumber.equals(student.getStudentNumber())) && (studentName.equals(student.getStudentName())))) {
+        if(student==null || !((campus.equals(student.getCampus())) && (studentNumber.equals(student.getStudentNumber())) && (userName.equals(student.getStudentName())))) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "해당 교육생 정보가 없습니다.."));
         }
-        String email = userService.getEmailByStudentNumberAndStudentName(studentNumber,studentName);
+        String email = userService.getEmailByStudentNumberAndStudentName(studentNumber,userName);
         if(email!=null){
             return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생은 등록된 교육생 입니다."));
         }
@@ -72,15 +72,15 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> emailConfirm(
-            @RequestBody @ApiParam(value="이메일 정보", required = true) String email) throws Exception {
+            @RequestBody @ApiParam(value="이메일 정보", required = true) String userEmail) throws Exception {
         String confirm;
         User user ;
         try {
-            user = userService.getUserByEmail(email);
+            user = userService.getUserByEmail(userEmail);
             if (user != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 등록된 이메일입니다."));
             }
-            confirm = emailService.sendSimpleMessage(email);
+            confirm = emailService.sendSimpleMessage(userEmail);
         } catch(Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 이메일 전송 실패"));
         }
@@ -97,10 +97,10 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> emailAuth(
-            @RequestParam String email, @RequestParam String code) throws Exception {
+            @RequestParam("userEmail") String userEmail, @RequestParam("code") String code) throws Exception {
         Long emailAuth;
         try {
-            emailAuth = emailService.getUserIdByCode(email, code);
+            emailAuth = emailService.getUserIdByCode(userEmail, code);
         } catch (EmailCodeException exception) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false,  "올바른 인증 코드가 아닙니다."));
         } catch (NullPointerException exception) {
@@ -125,18 +125,12 @@ public class UserController {
             @RequestPart(value= "file", required = false) MultipartFile profileImg) throws Exception {
         // @Valid 유효성 검사를 통과하지 못하면 500 에러 반환
         if (bindingResult.hasErrors()) {
-            System.out.println("valid 체크 통과 못함");
-
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "계정 생성이 실패하였습니다."));
-
         }
         try {
             userService.userSave(userRequestDto, profileImg);
         } catch (Exception exception) {
-            System.out.println("예외 캐치");
-
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
-
         }
         return ResponseEntity.status(200).body(MessageBody.of("계정 생성이 완료되었습니다."));
     }
@@ -151,10 +145,10 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> idSearch(
-            @RequestParam String studentNumber, @RequestParam String studentName) {
+            @RequestParam("studneNumber") String studentNumber, @RequestParam("userName") String userName) {
         String email;
         try {
-            email = userService.getEmailByStudentNumberAndStudentName(studentNumber, studentName);
+            email = userService.getEmailByStudentNumberAndStudentName(studentNumber, userName);
         } catch (NullPointerException exception) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "일치하는 회원 정보가 없습니다."));
         }
@@ -171,16 +165,16 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends ErrorResponseBody> pwSearch(
-            @RequestParam String email,
-            @RequestParam String studentNumber,
-            @RequestParam String studentName) throws Exception {
+            @RequestParam("userEmail") String userEmail,
+            @RequestParam("studentNumber") String studentNumber,
+            @RequestParam("userName") String userName) throws Exception {
         String pwVerification;
-        User user = userService.getUserByEmail(email);
-        if (user == null || !user.getStudentName().equals(studentName) || !user.getStudentNumber().equals(studentNumber)) {
+        User user = userService.getUserByEmail(userEmail);
+        if (user == null || !user.getStudentName().equals(userName) || !user.getStudentNumber().equals(studentNumber)) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "일치하는 회원정보가 없습니다."));
         }
         try {
-            pwVerification = emailService.sendPwSimpleMessage(email);
+            pwVerification = emailService.sendPwSimpleMessage(userEmail);
         } catch(Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "이메일 전송에 실패하였습니다."));
         }
@@ -197,10 +191,10 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends ErrorResponseBody> pwSearchEmailAuth(
-            @RequestParam String email, @RequestParam String code) throws Exception {
+            @RequestParam("userEmail") String userEmail, @RequestParam("code") String code) throws Exception {
         Long emailAuth;
         try {
-            emailAuth = emailService.getUserIdByCode(email, code);
+            emailAuth = emailService.getUserIdByCode(userEmail, code);
         } catch (EmailCodeException exception) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false,  "올바른 인증 코드가 아닙니다."));
         } catch (NullPointerException exception) {

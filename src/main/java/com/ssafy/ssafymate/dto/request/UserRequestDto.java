@@ -28,13 +28,13 @@ public class UserRequestDto {
     private String studentNumber;
 
     @ApiModelProperty(value = "이름", example = "홍길동")
-    private String studentName;
+    private String userName;
 
     @ApiModelProperty(value = "이메일", example = "gildong@gmail.com")
-    private String email;
+    private String userEmail;
 
     @ApiModelProperty(value = "비밀번호", example = "a12345")
-    @Pattern(regexp="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]{6,20}$", message = "비밀번호는 영어와 숫자를 포함해서 6 ~ 12자리 이내로 입력해주세요.")
+    @Pattern(regexp="^(?[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]{6,255=.*}$", message = "비밀번호는 영어와 숫자를 포함해서 6자리 이상 입력해주세요.")
     private String password;
 
     @ApiModelProperty(value = "자기소개", example = "안녕하세요...")

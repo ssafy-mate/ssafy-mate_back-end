@@ -20,11 +20,11 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Stri
             "FROM \n" +
             "    (SELECT CR.ROOM_ID, U.ID USER_ID, U.STUDENT_NAME username, U.PROFILE_IMG \n" +
             "    FROM\n" +
-            "        (SELECT ROOM_ID, (CASE WHEN USER_ID1 = :userId THEN USER_ID2 \n" +
-            "                ELSE USER_ID1 END)\n" +
+            "        (SELECT ROOM_ID, (CASE WHEN USER_ID_SMALL = :userId THEN USER_ID_BIG \n" +
+            "                ELSE USER_ID_SMALL END)\n" +
             "                 USER_ID \n" +
             "        FROM CHATTING_ROOM \n" +
-            "        WHERE USER_ID1 = :userId OR USER_ID2=:userId) CR\n" +
+            "        WHERE USER_ID_SMALL = :userId OR USER_ID_BIG=:userId) CR\n" +
             "    JOIN \n" +
             "        USER U\n" +
             "    ON U.ID = CR.USER_ID) UR\n" +
@@ -44,7 +44,7 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Stri
     Optional<ChattingRoom> findByRoomId(String roomId);
 
     @Modifying
-    @Query(value = "insert into chatting_room (room_id, user_id1, user_id2) values (:roomId, :userId1, :userId2)", nativeQuery = true)
+    @Query(value = "insert into chatting_room (room_id, user_id_small, user_id_big) values (:roomId, :userId1, :userId2)", nativeQuery = true)
     @Transactional
     int saveRoom(@Param("roomId") String roomId, @Param("userId1") Long userId1, @Param("userId2") Long userId2);
 }

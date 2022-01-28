@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -17,7 +18,13 @@ public class UserStack {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String techStackName;
+    @JsonBackReference
+    @Column(name = "tech_stack_code")
+    private Long techStackCode;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tech_stack_code", insertable = false, updatable = false)
+    TechStack techStack;
 
     private String techStackLevel;
 

@@ -24,7 +24,7 @@ public class ChattingHistory {
     private String sentTime;
 
     @ManyToOne
-    @JoinColumn(name = "chatting_room_id",referencedColumnName = "room_id")
+    @JoinColumn(name = "room_id",referencedColumnName = "room_id")
     private ChattingRoom chattingRoom;
 
     @ManyToOne

@@ -31,7 +31,7 @@ public class CustomUserDetails implements UserDetails {
         this.user=user;
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+        authorities.add(new SimpleGrantedAuthority(user.getRoles().toString()));
 
 //        return new CustomUserDetails(
 //                user.getId(),

@@ -7,6 +7,8 @@ import com.ssafy.ssafymate.repository.TeamStackRepository;
 import com.ssafy.ssafymate.repository.UserRepository;
 import com.ssafy.ssafymate.repository.UserTeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,17 +109,28 @@ public class TeamServiceImpl implements TeamService{
         return teamRepository.findByTeamIdAndUserIdJQL(teamId,userId);
     }
 
+
+//    @Override
+//    public Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, int front, int back, List<String> teamStacks) {
+//        Optional<List<Team>> teams = teamRepository.findALLByteamStackJQL2(project,projectTrack,teamName,front,back, teamStacks);
+//        return teams;
+////        return teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+//    }
+
+//    @Override
+//    public Optional<List<Team>> teamSearch2(String project, String projectTrack, String teamName, int front, int back) {
+//        Optional<List<Team>> teams = teamRepository.findALLJQL2(project,projectTrack, teamName,front,back);
+//        return teams;
+//
+//    }
     @Override
-    public Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, List<String> teamStacks) {
-        Optional<List<Team>> teams = teamRepository.findALLByteamStackJQL(project,projectTrack,teamName, teamStacks);
-        return teams;
-//        return teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+    public Page<Team> teamSearch(Pageable pageable,String project, String projectTrack, String teamName, int front, int back) {
+        return teamRepository.findALLJQL(pageable, project,projectTrack, teamName,front,back);
     }
 
     @Override
-    public Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName) {
-        Optional<List<Team>> teams = teamRepository.findALLJQL(project,projectTrack, teamName);
-        return teams;
+    public Page<Team> teamSearch(Pageable pageable, String project, String projectTrack, String teamName, int front, int back, List<String> teamStacks) {
+        return teamRepository.findALLByteamStackJQL(pageable, project,projectTrack, teamName,front,back,teamStacks);
     }
 
 

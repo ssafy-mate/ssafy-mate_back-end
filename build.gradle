@@ -2,6 +2,15 @@ plugins {
 	id 'org.springframework.boot' version '2.5.8'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'war'
+}
+
+bootWar {
+	enabled = true
+}
+
+bootJar {
+	launchScript ()
 }
 
 group = 'ssafy-mate'
@@ -25,11 +34,36 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.h2database:h2'
+
+	 runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'mysql:mysql-connector-java'
+
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'com.sun.mail:javax.mail:1.6.2'
+	implementation 'org.springframework:spring-context-support:5.3.14'
+	implementation("io.springfox:springfox-boot-starter:3.0.0")
+	implementation 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+	implementation 'javax.xml.bind:jaxb-api'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.10.7'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.10.7'
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// 외장 톰캣 사용
+//	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	// json
+//	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+	implementation 'com.google.code.gson:gson:2.8.6'
 }
 
 test {

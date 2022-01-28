@@ -35,11 +35,11 @@ public interface TeamService {
 //    Optional<List<Team>> teamSearch2(String project, String projectTrack, String teamName, int front, int back);
 
     // 팀 리스트 검색(전체)
-    Page<Team> teamSearch(Pageable pageable,String project, String projectTrack, String teamName, int front, int back);
+    Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back);
 
     // 팀 리스트 검색(기술 스택)
 //    Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, int front, int back, List<String> teamStacks);
 
-    Page<Team> teamSearch(Pageable pageable, String project, String projectTrack, String teamName, int front, int back, List<String> teamStacks);
+    Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back, List<Long> teamStacks);
 
 }

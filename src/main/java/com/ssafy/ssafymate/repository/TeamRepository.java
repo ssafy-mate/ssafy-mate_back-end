@@ -109,7 +109,8 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
     // 팀 조회 (일반)
     @Query(value = "select t.ID ,  t.BACKEND_RECRUITMENT,  t.CAMPUS,  t.CREATE_DATE_TIME,   t.FRONTEND_RECRUITMENT,  t.INTRODUCTION,  t.NOTICE,  t.PROJECT," +
             "  t.PROJECT_TRACK,  t.TEAM_IMG,  t.TEAM_NAME,  t.TOTAL_RECRUITMENT,  t.OWNER_ID, uut.FRONTEND_HEADCOUNT,  uut.BACKEND_HEADCOUNT,  uut.TOTAL_HEADCOUNT " +
-            " from (select * from team where project=:project " +
+            " from (select * from team where campus=:campus " +
+            "            and project=:project " +
             "            and project_track=:projectTrack " +
             "            and team_name like %:teamName%) t " +
             "join \n" +
@@ -126,6 +127,7 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             "and t.FRONTEND_RECRUITMENT - uut.FRONTEND_HEADCOUNT >= :front"
             ,nativeQuery = true)
     Page<Team> findALLJQL(Pageable pageable,
+                          @Param("campus") String campus,
                           @Param("project") String project,
                           @Param("projectTrack") String projectTrack,
                           @Param("teamName") String teamName,
@@ -136,11 +138,12 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
     // 팀 리스트 조회(스택 검색)
     @Query(value = "select t.ID ,  t.BACKEND_RECRUITMENT,  t.CAMPUS,  t.CREATE_DATE_TIME,   t.FRONTEND_RECRUITMENT,  t.INTRODUCTION,  t.NOTICE,  t.PROJECT," +
             "  t.PROJECT_TRACK,  t.TEAM_IMG,  t.TEAM_NAME,  t.TOTAL_RECRUITMENT,  t.OWNER_ID, uut.FRONTEND_HEADCOUNT,  uut.BACKEND_HEADCOUNT,  uut.TOTAL_HEADCOUNT" +
-            " from (select * from team where project=:project " +
+            " from (select * from team where campus=:campus " +
+            "            and project=:project " +
             "            and project_track=:projectTrack " +
             "            and team_name like %:teamName% " +
             "            and id in " +
-            "            (select team_id from team_stack where tech_stack_name in (:teamStacks))) t " +
+            "            (select team_id from team_stack where tech_stack_code in (:teamStacks))) t " +
             "join \n" +
             "(select ut.team_id, \n" +
             "count(case when u.job1 like '%Front%' then 1 end) as frontend_headcount,\n" +
@@ -155,10 +158,11 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             "and t.FRONTEND_RECRUITMENT - uut.FRONTEND_HEADCOUNT >= :front"
             ,nativeQuery = true)
     Page<Team> findALLByteamStackJQL(Pageable pageable,
+                                     @Param("campus") String campus,
                                      @Param("project") String project,
                                      @Param("projectTrack") String projectTrack,
                                      @Param("teamName") String teamName,
                                      @Param("front") Integer front,
                                      @Param("back") Integer back,
-                                     @Param("teamStacks") List<String> teamStacks);
+                                     @Param("teamStacks") List<Long> teamStacks);
 }

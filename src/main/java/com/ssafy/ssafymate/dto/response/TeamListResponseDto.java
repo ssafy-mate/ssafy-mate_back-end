@@ -22,11 +22,14 @@ public class TeamListResponseDto {
 
     Integer nowPage;
 
-    public static TeamListResponseDto of(List<Team> teams, Integer totalPage, Integer nowPage){
+    Long totalElement;
+
+    public static TeamListResponseDto of(List<Team> teams, Integer totalPage, Integer nowPage, Long totalElement){
         TeamListResponseDto res = new TeamListResponseDto();
         res.setTeams(TeamBoardDto.of(teams));
         res.setTotalPage(totalPage);
         res.setNowPage(nowPage);
+        res.setTotalElement(totalElement);
         return res;
     }
 }

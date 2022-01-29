@@ -21,6 +21,6 @@ public class TechStack {
 
     private String techStackName;
 
-    private String techStackImg;
+    private String techStackImgUrl;
 
 }

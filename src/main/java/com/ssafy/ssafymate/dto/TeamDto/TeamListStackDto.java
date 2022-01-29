@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TeamListStackDto {
+    private Long id;
     private String techStackName;
 
     public static List<TeamListStackDto> of (List<TeamStack> teamStacks){
@@ -17,6 +18,7 @@ public class TeamListStackDto {
 
         for(TeamStack teamStack : teamStacks){
             TeamListStackDto teamListStackDto = new TeamListStackDto();
+            teamListStackDto.setId(teamStack.getTechStack().getId());
             teamListStackDto.setTechStackName(teamStack.getTechStack().getTechStackName());
 
             res.add(teamListStackDto);

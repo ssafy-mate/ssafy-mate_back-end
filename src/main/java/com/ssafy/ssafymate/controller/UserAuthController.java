@@ -3,7 +3,6 @@ package com.ssafy.ssafymate.controller;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.dto.request.UserModifyRequestDto;
-import com.ssafy.ssafymate.dto.request.UserRequestDto;
 import com.ssafy.ssafymate.dto.response.BelongToTeam;
 import com.ssafy.ssafymate.dto.response.UserResponseDto;
 import com.ssafy.ssafymate.entity.Team;
@@ -17,10 +16,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @Api(value = "교육생 auth API", tags = {"UserAuth"})
 @RestController
@@ -101,7 +97,7 @@ public class UserAuthController {
 
         Long reqUserId = user.getId();
         if(reqUserId != userId) {
-            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "사용자는 정보를 수정할 수 있는 권한이 없습니다."))
+            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
         }
 
         try {

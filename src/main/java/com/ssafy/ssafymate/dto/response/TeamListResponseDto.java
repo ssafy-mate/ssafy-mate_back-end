@@ -19,7 +19,7 @@ public class TeamListResponseDto extends ErrorResponseBody {
 
     public static TeamListResponseDto of(Integer statusCode, Boolean success, String message, List<Team> teams){
         TeamListResponseDto res = new TeamListResponseDto();
-        res.setStatusCode(statusCode);
+        res.setStatus(statusCode);
         res.setSuccess(success);
         res.setMessage(message);
         res.setTeams(TeamBoardDto.of(teams));

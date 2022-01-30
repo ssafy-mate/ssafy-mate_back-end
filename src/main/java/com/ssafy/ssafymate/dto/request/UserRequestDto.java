@@ -1,16 +1,14 @@
 package com.ssafy.ssafymate.dto.request;
 
-import com.ssafy.ssafymate.entity.UserStack;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -59,5 +57,8 @@ public class UserRequestDto {
 
     @ApiModelProperty(value = "개인정보 동의여부", example = "true")
     private String agreement;
+
+    @ApiModelProperty(value = "프로필 사진")
+    private MultipartFile profileImg;
 
 }

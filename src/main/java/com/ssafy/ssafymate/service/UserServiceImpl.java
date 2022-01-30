@@ -1,6 +1,5 @@
 package com.ssafy.ssafymate.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true) // 1:1 매칭이 필요없는 속성은 무시함
+//    @JsonIgnoreProperties(ignoreUnknown = true) // 1:1 매칭이 필요없는 속성은 무시함
     @Override
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
 
@@ -50,11 +49,11 @@ public class UserServiceImpl implements UserService {
 
         if(multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정 - 상대경로로 바꿔야함
-//            profileImgUrl = "/var/webapps/upload/default_img.jpg";
-            profileImgUrl = "C:\\image\\default_img.jpg";
+            profileImgUrl = "/var/webapps/upload/default_img.jpg";
+//            profileImgUrl = "C:\\image\\default_img.jpg";
         } else {
-//            profileImgUrl = "/var/webapps/upload/" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+            profileImgUrl = "/var/webapps/upload/" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+//            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
 
             File file = new File(profileImgUrl);
             multipartFile.transferTo(file);

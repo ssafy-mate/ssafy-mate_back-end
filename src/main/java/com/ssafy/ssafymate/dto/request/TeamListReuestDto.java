@@ -3,11 +3,13 @@ package com.ssafy.ssafymate.dto.request;
 import com.ssafy.ssafymate.entity.TeamStack;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 public class TeamListReuestDto {
     @ApiModelProperty(value = "프로젝트", example = "특화 프로젝트")
     private String project;

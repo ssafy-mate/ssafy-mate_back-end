@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService {
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
 
         String profileImgUrl;
-        if(multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정 - 상대경로로 바꿔야함
         if(multipartFile == null || multipartFile.isEmpty()) {
 //            profileImgUrl = "/var/webapps/upload/default_img.jpg";

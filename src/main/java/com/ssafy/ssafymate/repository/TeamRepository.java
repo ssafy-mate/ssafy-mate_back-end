@@ -1,6 +1,8 @@
 package com.ssafy.ssafymate.repository;
 
 import com.ssafy.ssafymate.entity.Team;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,34 +52,98 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
 
 
     // 팀 조회 (일반)
+//    @Query(value = "select t.ID ,  t.BACKEND_RECRUITMENT,  t.CAMPUS,  t.CREATE_DATE_TIME,   t.FRONTEND_RECRUITMENT,  t.INTRODUCTION,  t.NOTICE,  t.PROJECT," +
+//            "  t.PROJECT_TRACK,  t.TEAM_IMG,  t.TEAM_NAME,  t.TOTAL_RECRUITMENT,  t.OWNER_ID, uut.FRONTEND_HEADCOUNT,  uut.BACKEND_HEADCOUNT,  uut.TOTAL_HEADCOUNT " +
+//            " from (select * from team where project=:project " +
+//            "            and project_track=:projectTrack " +
+//            "            and team_name like %:teamName%) t " +
+//            "join \n" +
+//                "(select ut.team_id, \n" +
+//                "count(case when u.job1 like '%Front%' then 1 end) as frontend_headcount, " +
+//                "count(case when u.job1 like '%Back%' then 1 end) as backend_headcount, " +
+//                "count(*) as total_headcount \n" +
+//                "from user u \n" +
+//                "join (select * from user_team ) ut\n" +
+//                "on u.id = ut.user_id\n" +
+//                "group by ut.team_id) uut \n" +
+//            "on t.id = uut.team_id " +
+//            "where t.BACKEND_RECRUITMENT - uut.BACKEND_HEADCOUNT >= :back " +
+//            "and t.FRONTEND_RECRUITMENT - uut.FRONTEND_HEADCOUNT >= :front"
+//            ,nativeQuery = true)
+//    Optional<List<Team>> findALLJQL2(@Param("project") String project,
+//                                    @Param("projectTrack") String projectTrack,
+//                                    @Param("teamName") String teamName,
+//                                    @Param("front") Integer front,
+//                                    @Param("back") Integer back);
+
+    // 팀 리스트 조회(스택 검색)
+//    @Query(value = "select t.ID ,  t.BACKEND_RECRUITMENT,  t.CAMPUS,  t.CREATE_DATE_TIME,   t.FRONTEND_RECRUITMENT,  t.INTRODUCTION,  t.NOTICE,  t.PROJECT," +
+//            "  t.PROJECT_TRACK,  t.TEAM_IMG,  t.TEAM_NAME,  t.TOTAL_RECRUITMENT,  t.OWNER_ID, uut.FRONTEND_HEADCOUNT,  uut.BACKEND_HEADCOUNT,  uut.TOTAL_HEADCOUNT" +
+//            " from (select * from team where project=:project " +
+//            "            and project_track=:projectTrack " +
+//            "            and team_name like %:teamName% " +
+//            "            and id in " +
+//            "            (select team_id from team_stack where tech_stack_name in (:teamStacks))) t " +
+//            "join \n" +
+//            "(select ut.team_id, \n" +
+//            "count(case when u.job1 like '%Front%' then 1 end) as frontend_headcount,\n" +
+//            "count(case when u.job1 like '%Back%' then 1 end) as backend_headcount,\n" +
+//            "count(*) as total_headcount \n" +
+//            "from user u \n" +
+//            "join (select * from user_team ) ut\n" +
+//            "on u.id = ut.user_id\n" +
+//            "group by ut.team_id) uut \n" +
+//            "on t.id = uut.team_id " +
+//            "where t.BACKEND_RECRUITMENT - uut.BACKEND_HEADCOUNT >= :back " +
+//            "and t.FRONTEND_RECRUITMENT - uut.FRONTEND_HEADCOUNT >= :front"
+//            ,nativeQuery = true)
+//    Optional<List<Team>> findALLByteamStackJQL2(@Param("project") String project,
+//                                               @Param("projectTrack") String projectTrack,
+//                                               @Param("teamName") String teamName,
+//                                               @Param("front") Integer front,
+//                                               @Param("back") Integer back,
+//                                               @Param("teamStacks") List<String> teamStacks);
+
+
+
+    // 팀 조회 (일반)
     @Query(value = "select t.ID ,  t.BACKEND_RECRUITMENT,  t.CAMPUS,  t.CREATE_DATE_TIME,   t.FRONTEND_RECRUITMENT,  t.INTRODUCTION,  t.NOTICE,  t.PROJECT," +
             "  t.PROJECT_TRACK,  t.TEAM_IMG,  t.TEAM_NAME,  t.TOTAL_RECRUITMENT,  t.OWNER_ID, uut.FRONTEND_HEADCOUNT,  uut.BACKEND_HEADCOUNT,  uut.TOTAL_HEADCOUNT " +
-            " from (select * from team where project=:project " +
+            " from (select * from team where campus=:campus " +
+            "            and project=:project " +
             "            and project_track=:projectTrack " +
             "            and team_name like %:teamName%) t " +
             "join \n" +
-                "(select ut.team_id, \n" +
-                "count(case when u.job1 like '%Front%' then 1 end) as frontend_headcount, " +
-                "count(case when u.job1 like '%Back%' then 1 end) as backend_headcount, " +
-                "count(*) as total_headcount \n" +
-                "from user u \n" +
-                "join (select * from user_team ) ut\n" +
-                "on u.id = ut.user_id\n" +
-                "group by ut.team_id) uut \n" +
-            "on t.id = uut.team_id"
+            "(select ut.team_id, \n" +
+            "count(case when u.job1 like '%Front%' then 1 end) as frontend_headcount, " +
+            "count(case when u.job1 like '%Back%' then 1 end) as backend_headcount, " +
+            "count(*) as total_headcount \n" +
+            "from user u \n" +
+            "join (select * from user_team ) ut\n" +
+            "on u.id = ut.user_id\n" +
+            "group by ut.team_id) uut \n" +
+            "on t.id = uut.team_id " +
+            "where t.BACKEND_RECRUITMENT - uut.BACKEND_HEADCOUNT >= :back " +
+            "and t.FRONTEND_RECRUITMENT - uut.FRONTEND_HEADCOUNT >= :front"
             ,nativeQuery = true)
-    Optional<List<Team>> findALLJQL(@Param("project") String project,
-                                    @Param("projectTrack") String projectTrack,
-                                    @Param("teamName") String teamName);
+    Page<Team> findALLJQL(Pageable pageable,
+                          @Param("campus") String campus,
+                          @Param("project") String project,
+                          @Param("projectTrack") String projectTrack,
+                          @Param("teamName") String teamName,
+                          @Param("front") Integer front,
+                          @Param("back") Integer back);
+
 
     // 팀 리스트 조회(스택 검색)
     @Query(value = "select t.ID ,  t.BACKEND_RECRUITMENT,  t.CAMPUS,  t.CREATE_DATE_TIME,   t.FRONTEND_RECRUITMENT,  t.INTRODUCTION,  t.NOTICE,  t.PROJECT," +
             "  t.PROJECT_TRACK,  t.TEAM_IMG,  t.TEAM_NAME,  t.TOTAL_RECRUITMENT,  t.OWNER_ID, uut.FRONTEND_HEADCOUNT,  uut.BACKEND_HEADCOUNT,  uut.TOTAL_HEADCOUNT" +
-            " from (select * from team where project=:project " +
+            " from (select * from team where campus=:campus " +
+            "            and project=:project " +
             "            and project_track=:projectTrack " +
             "            and team_name like %:teamName% " +
             "            and id in " +
-            "            (select team_id from team_stack where tech_stack_name in (:teamStacks))) t " +
+            "            (select team_id from team_stack where tech_stack_code in (:teamStacks))) t " +
             "join \n" +
             "(select ut.team_id, \n" +
             "count(case when u.job1 like '%Front%' then 1 end) as frontend_headcount,\n" +
@@ -87,11 +153,16 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             "join (select * from user_team ) ut\n" +
             "on u.id = ut.user_id\n" +
             "group by ut.team_id) uut \n" +
-            "on t.id = uut.team_id"
+            "on t.id = uut.team_id " +
+            "where t.BACKEND_RECRUITMENT - uut.BACKEND_HEADCOUNT >= :back " +
+            "and t.FRONTEND_RECRUITMENT - uut.FRONTEND_HEADCOUNT >= :front"
             ,nativeQuery = true)
-    Optional<List<Team>> findALLByteamStackJQL(@Param("project") String project,
-                                               @Param("projectTrack") String projectTrack,
-                                               @Param("teamName") String teamName,
-                                               @Param("teamStacks") List<String> teamStacks);
-
+    Page<Team> findALLByteamStackJQL(Pageable pageable,
+                                     @Param("campus") String campus,
+                                     @Param("project") String project,
+                                     @Param("projectTrack") String projectTrack,
+                                     @Param("teamName") String teamName,
+                                     @Param("front") Integer front,
+                                     @Param("back") Integer back,
+                                     @Param("teamStacks") List<Long> teamStacks);
 }

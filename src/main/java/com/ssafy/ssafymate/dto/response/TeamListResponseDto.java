@@ -5,6 +5,7 @@ import com.ssafy.ssafymate.dto.TeamDto.TeamBoardDto;
 import com.ssafy.ssafymate.entity.Team;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,16 +14,22 @@ import java.util.List;
 @Getter
 @Setter
 @ApiModel("TeamList")
-public class TeamListResponseDto extends ErrorResponseBody {
+public class TeamListResponseDto {
     @ApiModelProperty(name="팀 리스트", example = "teams :[]")
     List<TeamBoardDto> teams;
 
-    public static TeamListResponseDto of(Integer statusCode, Boolean success, String message, List<Team> teams){
+    Integer totalPage;
+
+    Integer nowPage;
+
+    Long totalElement;
+
+    public static TeamListResponseDto of(List<Team> teams, Integer totalPage, Integer nowPage, Long totalElement){
         TeamListResponseDto res = new TeamListResponseDto();
-        res.setStatus(statusCode);
-        res.setSuccess(success);
-        res.setMessage(message);
         res.setTeams(TeamBoardDto.of(teams));
+        res.setTotalPage(totalPage);
+        res.setNowPage(nowPage);
+        res.setTotalElement(totalElement);
         return res;
     }
 }

@@ -58,11 +58,15 @@ public class UserServiceImpl implements UserService {
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
 
         String profileImgUrl;
+<<<<<<< HEAD
         if(multipartFile.isEmpty()) {
 <<<<<<< HEAD
             // 기본 이미지 경로 설정 - 상대경로로 바꿔야함
 =======
 >>>>>>> bf5378b (Feat : 유저 수정 관련 코드 작성)
+=======
+        if(multipartFile == null || multipartFile.isEmpty()) {
+>>>>>>> 8c41364 (Modify : 회원정보 수정 관련 코드 수정)
 //            profileImgUrl = "/var/webapps/upload/default_img.jpg";
             profileImgUrl = "C:\\image\\default_img.jpg";
         } else {
@@ -122,19 +126,19 @@ public class UserServiceImpl implements UserService {
     public User userModify(UserModifyRequestDto userModifyRequestDto, MultipartFile multipartFile, User user) throws IOException {
         // 기존 유저 스택 삭제
         Long userId = user.getId();
-        List<UserStack> stackInDb = userStackRepository.findByUserId(userId);
+        List<UserStack> stackInDb = userStackRepository.findAllByUserId(userId);
         if(stackInDb.size() > 0) {
             userStackRepository.deleteByUserId(userId);
         }
 
         // 프로필 이미지 저장
         String modifyProfileImgUrl;
-        if(multipartFile.isEmpty()) {
-//            modifyProfileImgUrl = "/var/webapps/upload/default_img.jpg";
-            modifyProfileImgUrl = "C:\\image\\default_img.jpg";
+        if(multipartFile == null || multipartFile.isEmpty()) {
+            modifyProfileImgUrl = "/var/webapps/upload/default_img.jpg";
+//            modifyProfileImgUrl = "C:\\image\\default_img.jpg";
         } else {
-//            modifyProfileImgUrl = "/var/webapps/upload/" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-            modifyProfileImgUrl = "C:\\image\\" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+            modifyProfileImgUrl = "/var/webapps/upload/" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+//            modifyProfileImgUrl = "C:\\image\\" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
 
             File file = new File(modifyProfileImgUrl);
             multipartFile.transferTo(file);
@@ -142,7 +146,7 @@ public class UserServiceImpl implements UserService {
 
         String jsonString = userModifyRequestDto.getTechStacks();
         List<UserStack> techStacks = StringToTechStacks(jsonString);
-
+        
         user.setProfileImg(modifyProfileImgUrl);
         user.setSelfIntroduction(userModifyRequestDto.getSelfIntroduction());
         user.setJob1(userModifyRequestDto.getJob1());

@@ -127,10 +127,13 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "계정 생성이 실패하였습니다."));
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8c41364 (Modify : 회원정보 수정 관련 코드 수정)
         try {
             userService.userSave(userRequestDto, profileImg);
         } catch (Exception exception) {
-            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
         }
         return ResponseEntity.status(200).body(MessageBody.of("계정 생성이 완료되었습니다."));

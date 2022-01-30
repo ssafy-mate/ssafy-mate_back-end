@@ -44,9 +44,7 @@ public class UserRequestDto {
     @ApiModelProperty(value = "희망 포지션2", example = "백엔드 (Back-end)")
     private String job2;
 
-    //    @ApiModelProperty(value = "기술스택", example = [{\"techStackLevel\": \"상\", \"techStackName\": \"Java\"}, {\"techStackLevel\": \"중\", \"techStackName\": \"Python\"}])
-//    @Size(min=2)
-//    List<UserStack> techStacks = new ArrayList<>();
+    @ApiModelProperty(value = "기술스택")
     private String techStacks;
 
     @ApiModelProperty(value = "Github URL", example = "https://github.com/ssafy-mate")

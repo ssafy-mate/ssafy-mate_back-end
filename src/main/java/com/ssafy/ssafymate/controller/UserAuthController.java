@@ -1,6 +1,8 @@
 package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.common.ErrorResponseBody;
+import com.ssafy.ssafymate.common.MessageBody;
+import com.ssafy.ssafymate.dto.request.UserModifyRequestDto;
 import com.ssafy.ssafymate.dto.response.BelongToTeam;
 import com.ssafy.ssafymate.dto.response.UserResponseDto;
 import com.ssafy.ssafymate.entity.Team;
@@ -53,8 +55,14 @@ public class UserAuthController {
     }
 
 
-    //교육생 상세 정보 조회
+    // 교육생 상세 정보 조회
     @GetMapping("/{userId}")
+    @ApiOperation(value = "교육생 상세 조회", notes = "유저 아이디로 해당 교육생 상세 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "인증 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
     public ResponseEntity<?> userDetail(
             @PathVariable final Long userId
     ) {
@@ -73,4 +81,32 @@ public class UserAuthController {
 
         return ResponseEntity.status(200).body(UserResponseDto.of(user));
     }
+
+    // 교육생 상제 정보 수정
+    @PutMapping("/{userId}")
+    @ApiOperation(value = "교육생 상세 정보 수정", notes = "유저 아이디로 해당 교육생 상세 정보 수정")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "인증 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> userModify(
+            @PathVariable final Long userId,
+            UserModifyRequestDto userModifyRequestDto,
+            @AuthenticationPrincipal String token) {
+
+        User user = userService.getUserByEmail(token);
+        Long reqUserId = user.getId();
+        if(reqUserId != userId) {
+            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
+        }
+
+        try {
+            userService.userModify(userModifyRequestDto, userModifyRequestDto.getProfileImg(), user);
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 교육생 상세 정보 수정 실패"));
+        }
+        return ResponseEntity.status(200).body(MessageBody.of("교육생 상세 정보 수정이 완료되었습니다."));
+    }
+
 }

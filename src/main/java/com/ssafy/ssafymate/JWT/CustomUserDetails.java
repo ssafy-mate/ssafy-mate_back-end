@@ -1,6 +1,5 @@
 package com.ssafy.ssafymate.JWT;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssafymate.entity.User;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;

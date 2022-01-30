@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(value = "로그인 API", tags = {"signin"})
 @RestController
-@RequestMapping("/api/user/signin")
+@RequestMapping("/api/user/sign-in")
 public class LoginContoller {
 
     @Autowired
@@ -47,7 +47,7 @@ public class LoginContoller {
 
         User user;
         try {
-            user = userService.getUserByEmail(loginRequestDto.getEmail());
+            user = userService.getUserByEmail(loginRequestDto.getUserEmail());
 
         }catch (Exception exception){
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 로그인 실패"));
@@ -58,7 +58,7 @@ public class LoginContoller {
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "아이디 또는 비밀번호가 잘못 입력되었습니다."));
         }
-        String token = tokenProvider.createToken(loginRequestDto.getEmail());
+        String token = tokenProvider.createToken(loginRequestDto.getUserEmail());
         return ResponseEntity.status(200).body(LoginResponseDto.of("로그인 하셨습니다.", user, token));
     }
 }

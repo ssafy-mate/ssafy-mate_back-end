@@ -1,16 +1,14 @@
 package com.ssafy.ssafymate.dto.request;
 
-import com.ssafy.ssafymate.entity.UserStack;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,9 +44,7 @@ public class UserRequestDto {
     @ApiModelProperty(value = "희망 포지션2", example = "백엔드 (Back-end)")
     private String job2;
 
-    //    @ApiModelProperty(value = "기술스택", example = [{\"techStackLevel\": \"상\", \"techStackName\": \"Java\"}, {\"techStackLevel\": \"중\", \"techStackName\": \"Python\"}])
-//    @Size(min=2)
-//    List<UserStack> techStacks = new ArrayList<>();
+    @ApiModelProperty(value = "기술스택")
     private String techStacks;
 
     @ApiModelProperty(value = "Github URL", example = "https://github.com/ssafy-mate")
@@ -59,5 +55,8 @@ public class UserRequestDto {
 
     @ApiModelProperty(value = "개인정보 동의여부", example = "true")
     private String agreement;
+
+    @ApiModelProperty(value = "프로필 사진")
+    private MultipartFile profileImg;
 
 }

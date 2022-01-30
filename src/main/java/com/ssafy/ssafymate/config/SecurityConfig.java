@@ -14,19 +14,26 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CorsFilter corsFilter;
+//    private final CorsFilter corsFilter;
 
     private final TokenProvider tokenProvider;
 
-    public SecurityConfig(CorsFilter corsFilter, TokenProvider tokenProvider) {
-        this.corsFilter = corsFilter;
+//    public SecurityConfig(CorsFilter corsFilter, TokenProvider tokenProvider) {
+//        this.corsFilter = corsFilter;
+//        this.tokenProvider = tokenProvider;
+//    }
+    public SecurityConfig(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
@@ -34,10 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable() // httpBasic : ID, PW를 담아서 요청할때마다 검증 (보안에 취약) vs. Bearer (토큰 방식)
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Session을 사용하지 않음. STATELESS 상태로 한다.
                 .and()
-                .addFilter(corsFilter)
+//                .addFilter(corsFilter)
                 .formLogin().disable() //
 
                 .authorizeRequests()
@@ -66,5 +75,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    // CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+//        configuration.addAllowedOrigin("*");
+        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
     }
 }

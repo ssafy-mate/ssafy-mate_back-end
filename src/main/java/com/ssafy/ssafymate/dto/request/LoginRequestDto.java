@@ -2,12 +2,10 @@ package com.ssafy.ssafymate.dto.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class LoginRequestDto {
 
     @ApiModelProperty(value = "이메일", example = "gildong@gmail.com")
-    private String email;
+    private String userEmail;
 
     @ApiModelProperty(value = "비밀번호", example = "a123123a")
     private String password;

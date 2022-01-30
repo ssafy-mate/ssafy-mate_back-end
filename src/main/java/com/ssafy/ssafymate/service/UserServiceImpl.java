@@ -1,6 +1,5 @@
 package com.ssafy.ssafymate.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -49,24 +48,14 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-<<<<<<< HEAD
-    @JsonIgnoreProperties(ignoreUnknown = true) // 1:1 매칭이 필요없는 속성은 무시함
-=======
     @Transactional
->>>>>>> bf5378b (Feat : 유저 수정 관련 코드 작성)
     @Override
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
 
         String profileImgUrl;
-<<<<<<< HEAD
         if(multipartFile.isEmpty()) {
-<<<<<<< HEAD
             // 기본 이미지 경로 설정 - 상대경로로 바꿔야함
-=======
->>>>>>> bf5378b (Feat : 유저 수정 관련 코드 작성)
-=======
         if(multipartFile == null || multipartFile.isEmpty()) {
->>>>>>> 8c41364 (Modify : 회원정보 수정 관련 코드 수정)
 //            profileImgUrl = "/var/webapps/upload/default_img.jpg";
             profileImgUrl = "C:\\image\\default_img.jpg";
         } else {

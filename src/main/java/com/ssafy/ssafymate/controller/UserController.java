@@ -3,6 +3,7 @@ package com.ssafy.ssafymate.controller;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.common.SuccessMessageBody;
+import com.ssafy.ssafymate.dto.request.EmailRequestDto;
 import com.ssafy.ssafymate.dto.request.PwModifyRequestDto;
 import com.ssafy.ssafymate.dto.request.UserRequestDto;
 import com.ssafy.ssafymate.dto.response.EmailResponseDto;
@@ -12,14 +13,17 @@ import com.ssafy.ssafymate.exception.EmailCodeException;
 import com.ssafy.ssafymate.service.EmailService;
 import com.ssafy.ssafymate.service.StudentService;
 import com.ssafy.ssafymate.service.UserService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 @Api(value = "유저 API", tags = {"User"})
 @RestController
@@ -45,15 +49,16 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> studentVerify(
-            @RequestParam("campus") String campus, @RequestParam("studentNumber") String studentNumber, @RequestParam("userName") String userName) {
+            @RequestParam("campus") String campus, @RequestParam("studentNumber") String studentNumber, @RequestParam("userName") String userName) throws UnsupportedEncodingException {
         Student student;
+
         try {
             student = studentService.getStudentByStudentNumber(studentNumber);
         }catch (Exception exception){
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 인증 실패"));
         }
         if(student==null || !((campus.equals(student.getCampus())) && (studentNumber.equals(student.getStudentNumber())) && (userName.equals(student.getStudentName())))) {
-            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "해당 교육생 정보가 없습니다.."));
+            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "해당 교육생 정보가 없습니다."));
         }
         String email = userService.getEmailByStudentNumberAndStudentName(studentNumber,userName);
         if(email!=null){
@@ -63,7 +68,7 @@ public class UserController {
     }
 
     // 회원가입 2단계 - 이메일 인증
-    @PostMapping("/sign-up/verification/email")
+    @GetMapping("/sign-up/verification/email")
     @ApiOperation(value = "이메일 인증 요청 & 재요청", notes = "사용자가 입력한 이메일에 인증코드 전송")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -72,7 +77,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> emailConfirm(
-            @RequestBody @ApiParam(value="이메일 정보", required = true) String userEmail) throws Exception {
+            @RequestParam("userEmail") String userEmail) throws Exception {
         String confirm;
         User user ;
         try {
@@ -97,8 +102,11 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> emailAuth(
-            @RequestParam("userEmail") String userEmail, @RequestParam("code") String code) throws Exception {
+            @RequestBody EmailRequestDto emailRequestDto) throws Exception {
         Long emailAuth;
+        String userEmail = emailRequestDto.getUserEmail();
+        String code = emailRequestDto.getCode();
+
         try {
             emailAuth = emailService.getUserIdByCode(userEmail, code);
         } catch (EmailCodeException exception) {
@@ -112,7 +120,7 @@ public class UserController {
     }
 
     // 회원가입 3단계
-    @PostMapping(name="/")
+    @PostMapping(name = "/")
     @ApiOperation(value = "계정 생성을 위한 프로필 작성", notes = "회원가입 1~3단계를 거쳐서 작성한 회원정보를 저장하고 회원가입 완료")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -121,18 +129,14 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> signUp(
-            @RequestPart(value= "userRequestDto") @Valid UserRequestDto userRequestDto, BindingResult bindingResult,
-            @RequestPart(value= "file", required = false) MultipartFile profileImg) throws Exception {
+            @Valid UserRequestDto userRequestDto, BindingResult bindingResult) throws Exception {
         // @Valid 유효성 검사를 통과하지 못하면 500 에러 반환
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "계정 생성이 실패하였습니다."));
         }
-<<<<<<< HEAD
-=======
 
->>>>>>> 8c41364 (Modify : 회원정보 수정 관련 코드 수정)
         try {
-            userService.userSave(userRequestDto, profileImg);
+            userService.userSave(userRequestDto, userRequestDto.getProfileImg());
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
         }

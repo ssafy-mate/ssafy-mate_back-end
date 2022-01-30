@@ -93,8 +93,9 @@ public class UserAuthController {
     public ResponseEntity<?> userModify(
             @PathVariable final Long userId,
             UserModifyRequestDto userModifyRequestDto,
-            @AuthenticationPrincipal User user) {
+            @AuthenticationPrincipal String token) {
 
+        User user = userService.getUserByEmail(token);
         Long reqUserId = user.getId();
         if(reqUserId != userId) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "사용자는 정보를 수정할 수 있는 권한이 없습니다."));

@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
 
         String profileImgUrl;
-        if(multipartFile.isEmpty()) {
+        if(multipartFile == null || multipartFile.isEmpty()) {
 //            profileImgUrl = "/var/webapps/upload/default_img.jpg";
             profileImgUrl = "C:\\image\\default_img.jpg";
         } else {
@@ -113,19 +113,19 @@ public class UserServiceImpl implements UserService {
     public User userModify(UserModifyRequestDto userModifyRequestDto, MultipartFile multipartFile, User user) throws IOException {
         // 기존 유저 스택 삭제
         Long userId = user.getId();
-        List<UserStack> stackInDb = userStackRepository.findByUserId(userId);
+        List<UserStack> stackInDb = userStackRepository.findAllByUserId(userId);
         if(stackInDb.size() > 0) {
             userStackRepository.deleteByUserId(userId);
         }
 
         // 프로필 이미지 저장
         String modifyProfileImgUrl;
-        if(multipartFile.isEmpty()) {
-//            modifyProfileImgUrl = "/var/webapps/upload/default_img.jpg";
-            modifyProfileImgUrl = "C:\\image\\default_img.jpg";
+        if(multipartFile == null || multipartFile.isEmpty()) {
+            modifyProfileImgUrl = "/var/webapps/upload/default_img.jpg";
+//            modifyProfileImgUrl = "C:\\image\\default_img.jpg";
         } else {
-//            modifyProfileImgUrl = "/var/webapps/upload/" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-            modifyProfileImgUrl = "C:\\image\\" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+            modifyProfileImgUrl = "/var/webapps/upload/" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+//            modifyProfileImgUrl = "C:\\image\\" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
 
             File file = new File(modifyProfileImgUrl);
             multipartFile.transferTo(file);
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
         String jsonString = userModifyRequestDto.getTechStacks();
         List<UserStack> techStacks = StringToTechStacks(jsonString);
-
+        
         user.setProfileImg(modifyProfileImgUrl);
         user.setSelfIntroduction(userModifyRequestDto.getSelfIntroduction());
         user.setJob1(userModifyRequestDto.getJob1());

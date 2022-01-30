@@ -227,5 +227,4 @@ public class UserController {
         }
         return ResponseEntity.status(200).body(ErrorResponseBody.of(200, true,  "success"));
     }
-
 }

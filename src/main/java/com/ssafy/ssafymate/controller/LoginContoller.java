@@ -44,15 +44,13 @@ public class LoginContoller {
     })
     public ResponseEntity<?> userCheckAndSendToken(
             @RequestBody LoginRequestDto loginRequestDto) {
-
         User user;
         try {
             user = userService.getUserByEmail(loginRequestDto.getUserEmail());
-
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 로그인 실패"));
         }
-        if(user == null){
+        if (user == null) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "아이디 또는 비밀번호가 잘못 입력되었습니다."));
         }
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {

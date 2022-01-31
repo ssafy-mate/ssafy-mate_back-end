@@ -51,17 +51,16 @@ public class UserController {
     public ResponseEntity<?> studentVerify(
             @RequestParam("campus") String campus, @RequestParam("studentNumber") String studentNumber, @RequestParam("userName") String userName) throws UnsupportedEncodingException {
         Student student;
-
         try {
             student = studentService.getStudentByStudentNumber(studentNumber);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 인증 실패"));
         }
-        if(student==null || !((campus.equals(student.getCampus())) && (studentNumber.equals(student.getStudentNumber())) && (userName.equals(student.getStudentName())))) {
+        if (student==null || !((campus.equals(student.getCampus())) && (studentNumber.equals(student.getStudentNumber())) && (userName.equals(student.getStudentName())))) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "해당 교육생 정보가 없습니다."));
         }
         String email = userService.getEmailByStudentNumberAndStudentName(studentNumber,userName);
-        if(email!=null){
+        if (email!=null) {
             return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생은 등록된 교육생 입니다."));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "교육생 인증이 완료되었습니다."));
@@ -86,7 +85,7 @@ public class UserController {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 등록된 이메일입니다."));
             }
             confirm = emailService.sendSimpleMessage(userEmail);
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 이메일 전송 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "입력한 이메일로 인증 메일을 발송했습니다.\\n 이메일에 표시된 인증코드를 입력해주세요."));
@@ -106,7 +105,6 @@ public class UserController {
         Long emailAuth;
         String userEmail = emailRequestDto.getUserEmail();
         String code = emailRequestDto.getCode();
-
         try {
             emailAuth = emailService.getUserIdByCode(userEmail, code);
         } catch (EmailCodeException exception) {
@@ -134,7 +132,6 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "계정 생성이 실패하였습니다."));
         }
-
         try {
             userService.userSave(userRequestDto, userRequestDto.getProfileImg());
         } catch (Exception exception) {
@@ -183,7 +180,7 @@ public class UserController {
         }
         try {
             pwVerification = emailService.sendPwSimpleMessage(userEmail);
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "이메일 전송에 실패하였습니다."));
         }
         return ResponseEntity.status(200).body(ErrorResponseBody.of(200, true, "success"));

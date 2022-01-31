@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @ApiModel("ErrorResponseBody")
 public class ErrorResponseBody{
+
     @ApiModelProperty(name="응답 메시지", example = "정상")
     String message = null;
     @ApiModelProperty(name="응답 코드", example = "200")
@@ -22,7 +23,7 @@ public class ErrorResponseBody{
         this.status = statusCode;
     }
 
-    public ErrorResponseBody(Integer statusCode, String message){
+    public ErrorResponseBody(Integer statusCode, String message) {
         this.status = statusCode;
         this.message = message;
     }

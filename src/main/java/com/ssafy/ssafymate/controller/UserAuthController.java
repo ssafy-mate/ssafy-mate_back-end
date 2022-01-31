@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth/user")
 public class UserAuthController {
+
     @Autowired
     UserService userService;
 
@@ -37,23 +38,19 @@ public class UserAuthController {
     public ResponseEntity<?> canCreateTeam(
             @RequestParam final String selectedProject,
             @AuthenticationPrincipal final String token){
-
         Boolean belongToTeam = false;
-
         try {
             User user = userService.getUserByEmail(token);
             Long userId = user.getId();
             Team team = teamService.belongToTeam(selectedProject,userId).orElse(null);
-            if(team == null){
+            if (team == null) {
                 belongToTeam = true;
             }
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server, 팀 참여 여부 조회 실패"));
         }
-
         return ResponseEntity.status(200).body(BelongToTeam.of(belongToTeam));
     }
-
 
     // 교육생 상세 정보 조회
     @GetMapping("/{userId}")
@@ -64,21 +61,16 @@ public class UserAuthController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> userDetail(
-            @PathVariable final Long userId
-    ) {
-
+            @PathVariable final Long userId){
         User user;
         try {
             user = userService.getUserById(userId);
-
             if (user == null) {
                 return ResponseEntity.status(405).body(ErrorResponseBody.of(405, false, "해당 교육생 정보가 존재하지 않습니다."));
             }
-
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 상세 정보 조회 실패"));
         }
-
         return ResponseEntity.status(200).body(UserResponseDto.of(user));
     }
 
@@ -94,13 +86,11 @@ public class UserAuthController {
             @PathVariable final Long userId,
             UserModifyRequestDto userModifyRequestDto,
             @AuthenticationPrincipal String token) {
-
         User user = userService.getUserByEmail(token);
         Long reqUserId = user.getId();
-        if(reqUserId != userId) {
+        if (reqUserId != userId) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
         }
-
         try {
             userService.userModify(userModifyRequestDto, userModifyRequestDto.getProfileImg(), user);
         } catch (Exception exception) {
@@ -108,5 +98,4 @@ public class UserAuthController {
         }
         return ResponseEntity.status(200).body(MessageBody.of("교육생 상세 정보 수정이 완료되었습니다."));
     }
-
 }

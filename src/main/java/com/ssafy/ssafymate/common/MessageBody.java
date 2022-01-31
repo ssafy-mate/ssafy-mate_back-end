@@ -15,11 +15,9 @@ public class MessageBody {
     @ApiModelProperty(name="응답 메시지", example = "정상")
     String message = null;
 
-
-    public static MessageBody of(String message){
+    public static MessageBody of(String message) {
         MessageBody res = new MessageBody();
         res.setMessage(message);
-
         return res;
     }
 }

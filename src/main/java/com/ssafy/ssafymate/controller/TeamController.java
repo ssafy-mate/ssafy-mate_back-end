@@ -61,22 +61,18 @@ public class TeamController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> findTeam(
-            @PathVariable final Long teamId
-    ){
+            @PathVariable final Long teamId) {
         Team teamdata;
-
         try {
         teamdata = teamService.teamfind(teamId).orElse(null);
-        if(teamdata==null){
+        if (teamdata==null) {
             return ResponseEntity.status(405).body(ErrorResponseBody.of(405, false,  "해당 팀 정보가 존재하지 않습니다."));
         }
-
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 팀 상세 정보 조회 실패"));
         }
         return ResponseEntity.status(200).body(TeamResponseDto.of(teamdata));
     }
-
 
     @PostMapping("/")
     @ApiOperation(value = "팀 생성", notes = "작성된 팀 정보와 유저 아이디를 가지고 팀생성")
@@ -86,7 +82,7 @@ public class TeamController {
     })
     public ResponseEntity<?> createTeam(
             @Valid TeamRequestDto teamRequestDto,
-                @AuthenticationPrincipal String token)  {
+            @AuthenticationPrincipal String token) {
         try {
             User user = userService.getUserByEmail(token);
             Team team = teamService.teamSave(teamRequestDto, teamRequestDto.getTeamImg(),user);
@@ -97,8 +93,6 @@ public class TeamController {
         return ResponseEntity.status(200).body(MessageBody.of("팀을 성공적으로 생성하였습니다."));
     }
 
-
-
     @PutMapping("/{teamId}")
     @ApiOperation(value = "팀 수정", notes = "수정된 팀 정보를 가지고 팀 수정")
     @ApiResponses({
@@ -107,15 +101,14 @@ public class TeamController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> modifyTeam(
-            @RequestPart(value= "teamRequestDto")TeamRequestDto teamRequestDto,
+            @RequestPart(value= "teamRequestDto") TeamRequestDto teamRequestDto,
             @PathVariable final Long teamId,
             @AuthenticationPrincipal String token) {
-
         try {
             User user = userService.getUserByEmail(token);
             Long userId = user.getId();
             Team team = teamService.ownTeam(teamId,userId).orElse(null);
-            if(team==null || !team.getOwner().getEmail().equals(token)){
+            if (team==null || !team.getOwner().getEmail().equals(token)) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "팀 수정 권한이 없습니다."));
             }
             teamService.teamModify(teamRequestDto, teamRequestDto.getTeamImg(), user, teamId);
@@ -124,8 +117,6 @@ public class TeamController {
         }
         return ResponseEntity.status(200).body(MessageBody.of("팀 상세 정보 수정이 완료되었습니다."));
     }
-
-
 
     @DeleteMapping("/{teamId}")
     @ApiOperation(value = "팀 삭제", notes = "팀장이 팀 삭제")
@@ -136,14 +127,12 @@ public class TeamController {
     })
     public ResponseEntity<?> deleteTeam(
             @PathVariable final Long teamId,
-            @AuthenticationPrincipal String token
-    ){
+            @AuthenticationPrincipal String token) {
         try {
             User user = userService.getUserByEmail(token);
             Long userId = user.getId();
-
             Team team = teamService.ownTeam(teamId, userId).orElse(null);
-            if(team==null || !team.getOwner().getEmail().equals(token)){
+            if (team==null || !team.getOwner().getEmail().equals(token)) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "팀 삭제에 권한이 없습니다."));
             }
             teamService.teamDelete(teamId);
@@ -162,8 +151,7 @@ public class TeamController {
     })
     public ResponseEntity<?> SearchTeam(
             TeamListReuestDto teamListReuestDto,
-            @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage
-            ){
+            @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage) {
         List<Team> teams = new ArrayList<>();
         System.out.println(teamListReuestDto);
         int front = 0;
@@ -171,18 +159,17 @@ public class TeamController {
         if (teamListReuestDto.getJob() != null) {
             if (teamListReuestDto.getJob().contains("프론트엔드")) {
                 front = 1;
-
             } else if (teamListReuestDto.getJob().equals("백엔드")) {
                 back = 1;
             }
         }
-        if(teamListReuestDto.getTeamName() == null){
+        if (teamListReuestDto.getTeamName() == null) {
             teamListReuestDto.setTeamName("");
         }
         int totalPage = 0;
         int size = 8;
         Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "t.id");
-        if(teamListReuestDto.getSort()!=null) {
+        if (teamListReuestDto.getSort()!=null) {
             if (teamListReuestDto.getSort().equals("최신순")) {
                 pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "t.create_date_time");
             } else if (teamListReuestDto.getSort().equals("인원순")) {
@@ -192,8 +179,7 @@ public class TeamController {
         Page<Team> teamp;
 
         List<TeamStack> techStacks = new ArrayList<>();
-
-        if(teamListReuestDto.getTechStacks() != null) {
+        if (teamListReuestDto.getTechStacks() != null) {
             // teamListReuestDto 에서 String 형태의 techStacks 찾기
             String jsonString = teamListReuestDto.getTechStacks();
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -201,14 +187,13 @@ public class TeamController {
             techStacks = gson.fromJson(jsonString, listType);
         }
         try {
-            if((techStacks.size() == 0) || (teamListReuestDto.getTechStacks()==null)) {
+            if ((techStacks.size() == 0) || (teamListReuestDto.getTechStacks()==null)) {
                 System.out.println("not stack");
 //                teams = teamService.teamSearch2(teamListReuestDto.getProject(),
 //                        teamListReuestDto.getProjectTrack(),
 //                        teamListReuestDto.getTeamName(),
 //                        front, back).orElse(null);
 //                System.out.println(teams);
-
                 teamp = teamService.teamSearch(pageable,
                         teamListReuestDto.getCampus(),
                         teamListReuestDto.getProject(),
@@ -218,12 +203,10 @@ public class TeamController {
                 teams = teamp.getContent();
                 System.out.println(teamp.getTotalElements());
                 System.out.println(teamp.getTotalPages());
-
                 totalPage = teamp.getTotalPages();
             }
-            else{
+            else {
                 System.out.println("stack");
-
 
                 List<Long> teamstacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
 //                List<Long> teamstacks = teamListReuestDto.getTechStacks();
@@ -243,12 +226,9 @@ public class TeamController {
 
                 totalPage = teamp.getTotalPages();
             }
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server, 팀 리스트 조회 실패"));
         }
-
-
         return ResponseEntity.status(200).body(TeamListResponseDto.of(teams,totalPage,nowPage,teamp.getTotalElements()));
-
     }
 }

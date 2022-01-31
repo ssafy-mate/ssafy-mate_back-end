@@ -29,7 +29,6 @@ public class UserDetailDto {
     List<UserProjectDto> projects = new ArrayList<>();
     List<UserStack> techStacks = new ArrayList<>();
 
-
     private String githubUrl;
 
     private String etcUrl;

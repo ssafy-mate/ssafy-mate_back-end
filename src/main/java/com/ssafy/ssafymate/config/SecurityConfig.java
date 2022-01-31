@@ -25,14 +25,8 @@ import java.util.Collections;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    private final CorsFilter corsFilter;
-
     private final TokenProvider tokenProvider;
 
-//    public SecurityConfig(CorsFilter corsFilter, TokenProvider tokenProvider) {
-//        this.corsFilter = corsFilter;
-//        this.tokenProvider = tokenProvider;
-//    }
     public SecurityConfig(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
@@ -45,10 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Session을 사용하지 않음. STATELESS 상태로 한다.
-                .and()
-//                .addFilter(corsFilter)
-                .formLogin().disable() //
 
+                .and()
+                .formLogin().disable()
                 .authorizeRequests()
 //                .antMatchers("/admin/**").hasRole("ADMIN")  // 인증 요구
 //                .antMatchers("/user/**").hasRole("USER")    // 인증 요구
@@ -62,7 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/h2-console/**", "/favicon.ico");
-
     }
 
     @Bean

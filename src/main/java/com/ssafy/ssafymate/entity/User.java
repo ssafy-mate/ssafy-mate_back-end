@@ -73,7 +73,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<ChattingHistory> chattingHistory = new ArrayList<>();
 
-
     @Column(updatable = false)
     private String roles; // USER, ADMIN
 

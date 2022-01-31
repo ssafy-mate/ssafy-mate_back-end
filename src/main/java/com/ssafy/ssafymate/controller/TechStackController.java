@@ -24,7 +24,6 @@ import java.util.List;
 @RequestMapping("/api/techstack-list")
 public class TechStackController {
 
-
     @Autowired
     TechStackService techStackService;
 
@@ -33,15 +32,14 @@ public class TechStackController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
-    })public ResponseEntity<?> userDetail(){
+    })
+    public ResponseEntity<?> userDetail() {
         List<TechStack> techStacks = new ArrayList<>();
-
         try {
             techStacks = techStackService.techstackList();
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 기술 스택 리스트 조회 실패"));
         }
-
         return ResponseEntity.status(200).body(TechStacksResponseDto.of(techStacks));
     }
 }

@@ -25,10 +25,10 @@ public class UserRequestDto {
     @ApiModelProperty(value = "학번", example = "0000000")
     private String studentNumber;
 
-    @ApiModelProperty(value = "이름", example = "홍길동")
+    @ApiModelProperty(value = "이름", example = "김싸피")
     private String userName;
 
-    @ApiModelProperty(value = "이메일", example = "gildong@gmail.com")
+    @ApiModelProperty(value = "이메일", example = "ssafymate@gmail.com")
     private String userEmail;
 
     @ApiModelProperty(value = "비밀번호", example = "a12345")

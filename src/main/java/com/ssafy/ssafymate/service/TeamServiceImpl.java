@@ -1,5 +1,8 @@
 package com.ssafy.ssafymate.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.entity.*;
 import com.ssafy.ssafymate.repository.TeamRepository;
@@ -7,6 +10,8 @@ import com.ssafy.ssafymate.repository.TeamStackRepository;
 import com.ssafy.ssafymate.repository.UserRepository;
 import com.ssafy.ssafymate.repository.UserTeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +49,7 @@ public class TeamServiceImpl implements TeamService{
             teamImgUrl = "C:\\image\\team_image\\default_img.jpg";
         } else {
 //            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
-            teamImgUrl = "../" +  "image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
 
 
             File file = new File(teamImgUrl);
@@ -107,22 +114,39 @@ public class TeamServiceImpl implements TeamService{
         return teamRepository.findByTeamIdAndUserIdJQL(teamId,userId);
     }
 
+
+//    @Override
+//    public Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, int front, int back, List<String> teamStacks) {
+//        Optional<List<Team>> teams = teamRepository.findALLByteamStackJQL2(project,projectTrack,teamName,front,back, teamStacks);
+//        return teams;
+////        return teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+//    }
+
+//    @Override
+//    public Optional<List<Team>> teamSearch2(String project, String projectTrack, String teamName, int front, int back) {
+//        Optional<List<Team>> teams = teamRepository.findALLJQL2(project,projectTrack, teamName,front,back);
+//        return teams;
+//
+//    }
     @Override
-    public Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, List<String> teamStacks) {
-        Optional<List<Team>> teams = teamRepository.findALLByteamStackJQL(project,projectTrack,teamName, teamStacks);
-        return teams;
-//        return teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
+    public Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back) {
+        return teamRepository.findALLJQL(pageable, campus, project,projectTrack, teamName,front,back);
     }
 
     @Override
-    public Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName) {
-        Optional<List<Team>> teams = teamRepository.findALLJQL(project,projectTrack, teamName);
-        return teams;
+    public Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back, List<Long> teamStacks) {
+        return teamRepository.findALLByteamStackJQL(pageable, campus, project,projectTrack, teamName,front,back,teamStacks);
     }
 
 
     // teamrequestDto 와 이미지Url을 team 으로 빌드
     public Team teamBuilder(TeamRequestDto teamRequestDto, String teamImgUrl, User user){
+
+        String jsonString = teamRequestDto.getTechStacks();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Type listType = new TypeToken<ArrayList<TeamStack>>(){}.getType();
+        List<TeamStack> techStacks = gson.fromJson(jsonString, listType);
+
         Team team = Team.builder()
                 .campus(teamRequestDto.getCampus())
                 .project(teamRequestDto.getProject())
@@ -130,7 +154,7 @@ public class TeamServiceImpl implements TeamService{
                 .teamName(teamRequestDto.getTeamName())
                 .notice(teamRequestDto.getNotice())
                 .introduction(teamRequestDto.getIntroduction())
-                .techStacks(teamRequestDto.getTechStacks())
+                .techStacks(techStacks)
                 .teamImg(teamImgUrl)
                 .totalRecruitment(teamRequestDto.getTotalRecruitment())
                 .frontendRecruitment(teamRequestDto.getFrontendRecruitment())

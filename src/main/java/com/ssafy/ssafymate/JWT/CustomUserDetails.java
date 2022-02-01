@@ -1,6 +1,5 @@
 package com.ssafy.ssafymate.JWT;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssafymate.entity.User;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class CustomUserDetails implements UserDetails {
         this.user=user;
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+        authorities.add(new SimpleGrantedAuthority(user.getRoles().toString()));
 
 //        return new CustomUserDetails(
 //                user.getId(),

@@ -3,6 +3,8 @@ package com.ssafy.ssafymate.dto.request;
 import com.ssafy.ssafymate.entity.TeamStack;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class TeamRequestDto {
     private String introduction;
 
     @ApiModelProperty(value = "기술 스택")
-    List<TeamStack> techStacks = new ArrayList<>();
+    String techStacks;
 
     @ApiModelProperty(value = "전체 모집 인원", example = "6")
     private int totalRecruitment;
@@ -44,4 +46,7 @@ public class TeamRequestDto {
 
     @ApiModelProperty(value = "백엔드 모집 인원", example = "3")
     private int backendRecruitment;
+
+    @ApiModelProperty(value = "팀 이미지", example = ".jpg")
+    private MultipartFile teamImg;
 }

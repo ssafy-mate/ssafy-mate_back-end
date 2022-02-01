@@ -33,7 +33,7 @@ public class TeamRequestMessage {
 
     @NotNull
     @ManyToOne
-    User reciver;
+    User receiver;
 
     @NotNull
     @ManyToOne

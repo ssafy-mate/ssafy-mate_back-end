@@ -7,6 +7,7 @@ import lombok.*;
 import javax.validation.constraints.Pattern;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,13 +15,13 @@ import javax.validation.constraints.Pattern;
 @ApiModel(value = "비밀번호 재설정 입력 정보", description = "이메일, 학번, 이름, 비밀번호를 담는 클래스")
 public class PwModifyRequestDto {
 
-    @ApiModelProperty(value = "이메일", example = "gildong@gmail.com")
+    @ApiModelProperty(value = "이메일", example = "ssafymate@gmail.com")
     private String email;
 
     @ApiModelProperty(value = "학번", example = "0000000")
     private String studentNumber;
 
-    @ApiModelProperty(value = "이름", example = "홍길동")
+    @ApiModelProperty(value = "이름", example = "김싸피")
     private String studentName;
 
     @ApiModelProperty(value = "비밀번호", example = "a12345")

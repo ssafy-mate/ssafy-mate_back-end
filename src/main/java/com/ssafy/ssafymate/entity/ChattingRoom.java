@@ -25,12 +25,12 @@ public class ChattingRoom {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id1", referencedColumnName = "id")
+    @JoinColumn(name = "user_id_small", referencedColumnName = "id")
     private User userId1;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id2", referencedColumnName = "id")
+    @JoinColumn(name = "user_id_big", referencedColumnName = "id")
     private User userId2;
 
     @NotNull

@@ -4,6 +4,8 @@ import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.TeamStack;
 import com.ssafy.ssafymate.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -30,9 +32,14 @@ public interface TeamService {
     Optional<Team> ownTeam(Long teamId, Long userId);
 
     // 팀 리스트 검색(전체)
-    Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName);
+//    Optional<List<Team>> teamSearch2(String project, String projectTrack, String teamName, int front, int back);
+
+    // 팀 리스트 검색(전체)
+    Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back);
 
     // 팀 리스트 검색(기술 스택)
-    Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, List<String> teamStacks);
+//    Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, int front, int back, List<String> teamStacks);
+
+    Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back, List<Long> teamStacks);
 
 }

@@ -9,15 +9,14 @@ import lombok.Setter;
 @Setter
 @ApiModel("SuccessMessageBody")
 public class SuccessMessageBody extends MessageBody{
+
     @ApiModelProperty(name="응답 상태", example = "true")
     Boolean success = false;
 
-
-    public static SuccessMessageBody of(Boolean success, String message){
+    public static SuccessMessageBody of(Boolean success, String message) {
         SuccessMessageBody res = new SuccessMessageBody();
         res.setSuccess(success);
         res.setMessage(message);
-
         return res;
     }
 }

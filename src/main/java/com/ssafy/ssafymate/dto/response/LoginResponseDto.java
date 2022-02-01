@@ -17,14 +17,19 @@ public class LoginResponseDto{
     @ApiModelProperty(name="message", example = "로그인 하였습니다.")
     private String message;
 
+    @ApiModelProperty(name="user-id", example = "1")
     private Long userId;
 
+    @ApiModelProperty(name="user-email", example = "ssafymate@gmail.com")
     private String userEmail;
 
+    @ApiModelProperty(name="user-name", example = "김싸피")
     private String userName;
 
+    @ApiModelProperty(name="campus", example = "서울")
     private String campus;
 
+    @ApiModelProperty(name="ssafy-track", example = "Java Track")
     private String ssafyTrack;
 
     public static LoginResponseDto of(String message, User user, String token) {

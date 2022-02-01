@@ -88,7 +88,7 @@ public class UserController {
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 이메일 전송 실패"));
         }
-        return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "입력한 이메일로 인증 메일을 발송했습니다.\\n 이메일에 표시된 인증코드를 입력해주세요."));
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "입력한 이메일로 인증 메일을 발송했습니다.\n 이메일에 표시된 인증코드를 입력해주세요."));
     }
 
     // 회원가입 2단계 - 이메일 인증 확인

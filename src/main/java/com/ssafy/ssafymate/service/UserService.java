@@ -1,12 +1,18 @@
 package com.ssafy.ssafymate.service;
 
+import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
+import com.ssafy.ssafymate.dto.UserDto.UserBoardDto;
 import com.ssafy.ssafymate.dto.request.PwModifyRequestDto;
+import com.ssafy.ssafymate.dto.request.UserListRequestDto;
 import com.ssafy.ssafymate.dto.request.UserModifyRequestDto;
 import com.ssafy.ssafymate.dto.request.UserRequestDto;
 import com.ssafy.ssafymate.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface UserService {
     // 유저 조회 - ID로 찾기
@@ -26,4 +32,9 @@ public interface UserService {
 
     // 유저 수정
     User userModify(UserModifyRequestDto userModifyRequestDto, MultipartFile multipartFile, User user) throws IOException;
+
+
+    Page<UserBoardInterface> userList(Pageable pageable, UserListRequestDto user);
+
+    List<UserBoardDto> userBoarConvert(List<UserBoardInterface> users, String project);
 }

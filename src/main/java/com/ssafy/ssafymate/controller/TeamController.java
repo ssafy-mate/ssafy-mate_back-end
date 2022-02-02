@@ -1,39 +1,23 @@
 package com.ssafy.ssafymate.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.ssafy.ssafymate.JWT.TokenProvider;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.common.MessageBody;
-import com.ssafy.ssafymate.dto.request.TeamListReuestDto;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
-import com.ssafy.ssafymate.dto.response.TeamListResponseDto;
 import com.ssafy.ssafymate.dto.response.TeamResponseDto;
 import com.ssafy.ssafymate.entity.Team;
-import com.ssafy.ssafymate.entity.TeamStack;
 import com.ssafy.ssafymate.entity.User;
-import com.ssafy.ssafymate.entity.UserStack;
 import com.ssafy.ssafymate.service.TeamService;
 import com.ssafy.ssafymate.service.UserService;
 import com.ssafy.ssafymate.service.UserTeamService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Api(value = "팀 API", tags = {"Team"})
 @RestController

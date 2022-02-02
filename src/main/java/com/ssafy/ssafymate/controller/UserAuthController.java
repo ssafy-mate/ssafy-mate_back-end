@@ -2,10 +2,12 @@ package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.common.MessageBody;
+import com.ssafy.ssafymate.common.SuccessMessageBody;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardDto;
 import com.ssafy.ssafymate.dto.request.UserListRequestDto;
 import com.ssafy.ssafymate.dto.request.UserModifyRequestDto;
+import com.ssafy.ssafymate.dto.request.UserSelectProjectTrackRequsetDto;
 import com.ssafy.ssafymate.dto.response.BelongToTeam;
 import com.ssafy.ssafymate.dto.response.UserListResponseDto;
 import com.ssafy.ssafymate.dto.response.UserResponseDto;
@@ -119,7 +121,7 @@ public class UserAuthController {
             @ApiResponse(code = 400, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> SearchTeam(
+    public ResponseEntity<?> SearchUserList(
             @Valid UserListRequestDto userListReuestDto, BindingResult bindingResult,
             @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage
     ){
@@ -136,7 +138,7 @@ public class UserAuthController {
         }
         int totalPage = 0;
         long totalElement = 0;
-        int size = 8;
+        int size = 9;
         Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
 
         if (bindingResult.hasErrors()) {
@@ -159,5 +161,38 @@ public class UserAuthController {
 
         return ResponseEntity.status(200).body(UserListResponseDto.of2(userBoards2,userListReuestDto.getProject(),nowPage,totalPage,totalElement));
     }
+
+    @PostMapping("/project/track")
+    @ApiOperation(value = "교욱생 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 교육생 리스트 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "인증 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> SearchUserList(
+            @RequestBody @Valid UserSelectProjectTrackRequsetDto userSelectProjectTrackRequsetDto,
+            @AuthenticationPrincipal final String token
+    ){
+        String project = userSelectProjectTrackRequsetDto.getProject();
+        try {
+            User user = userService.getUserByEmail(token);
+            if(project.equals("공통 프로젝트")){
+                if(user.getCommonProjectTrack()!= null){
+                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "이미 "+project+" 트랙 선택을 완료 하였습니다."));
+                }
+            }
+            else if(project.equals("특화 프로젝트")){
+                if(user.getSpecializationProjectTrack()!= null){
+                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "이미 "+project+" 트랙 선택을 완료 하였습니다."));
+                }
+            }
+            userService.selectProjectTrack(user,userSelectProjectTrackRequsetDto);
+
+        }catch (Exception exception){
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 교육생 리스트 조회 실패"));
+        }
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true,project+" 트랙 선택이 완료되었습니다."));
+    }
+
 
 }

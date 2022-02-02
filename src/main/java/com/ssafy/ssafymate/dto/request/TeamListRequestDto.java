@@ -1,18 +1,14 @@
 package com.ssafy.ssafymate.dto.request;
 
-import com.ssafy.ssafymate.entity.TeamStack;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @ToString
 @Getter
 @Setter
-public class TeamListReuestDto {
+public class TeamListRequestDto {
     @ApiModelProperty(value = "캠퍼스", example = "서울")
     private String campus;
 

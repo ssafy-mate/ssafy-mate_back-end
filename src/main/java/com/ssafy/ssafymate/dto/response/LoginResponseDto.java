@@ -1,6 +1,5 @@
 package com.ssafy.ssafymate.dto.response;
 
-import com.ssafy.ssafymate.dto.UserDto.UserProjectDto;
 import com.ssafy.ssafymate.dto.UserDto.UserProjectLoginDto;
 import com.ssafy.ssafymate.entity.User;
 import io.swagger.annotations.ApiModel;
@@ -41,7 +40,7 @@ public class LoginResponseDto{
     private String ssafyTrack;
 
     @ApiModelProperty(name="projects")
-    List<UserProjectDto> projects = new ArrayList<>();
+    List<UserProjectLoginDto> projects = new ArrayList<>();
 
     public static LoginResponseDto of(String message, User user, String token) {
         LoginResponseDto body = new LoginResponseDto();

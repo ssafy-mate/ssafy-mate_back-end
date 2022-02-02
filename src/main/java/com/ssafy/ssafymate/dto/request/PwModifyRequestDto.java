@@ -16,15 +16,9 @@ import javax.validation.constraints.Pattern;
 public class PwModifyRequestDto {
 
     @ApiModelProperty(value = "이메일", example = "ssafymate@gmail.com")
-    private String email;
-
-    @ApiModelProperty(value = "학번", example = "0000000")
-    private String studentNumber;
-
-    @ApiModelProperty(value = "이름", example = "김싸피")
-    private String studentName;
+    private String userEmail;
 
     @ApiModelProperty(value = "비밀번호", example = "a12345")
-    @Pattern(regexp="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d~!@#$%^&*()+|=]{6,20}$", message = "비밀번호는 영어와 숫자를 포함해서 6 ~ 12자리 이내로 입력해주세요.")
+    @Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{6,}$", message = "비밀번호는 영어와 숫자를 포함해서 6자리 이상 입력해주세요.")
     private String password;
 }

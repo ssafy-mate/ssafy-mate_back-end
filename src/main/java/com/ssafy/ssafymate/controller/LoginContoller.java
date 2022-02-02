@@ -57,6 +57,6 @@ public class LoginContoller {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "아이디 또는 비밀번호가 잘못 입력되었습니다."));
         }
         String token = tokenProvider.createToken(loginRequestDto.getUserEmail());
-        return ResponseEntity.status(200).body(LoginResponseDto.of("로그인 하셨습니다.", user, token));
+        return ResponseEntity.status(200).body(LoginResponseDto.of("로그인 하였습니다.", user, token));
     }
 }

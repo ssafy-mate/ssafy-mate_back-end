@@ -20,18 +20,22 @@ public class TeamListReuestDto {
     private String project;
 
     @ApiModelProperty(value = "프로젝트 트랙", example = "IoT")
-    private String projectTrack;
+    private String project_track;
 
     @ApiModelProperty(value = "기술 스택")
-    private String techStacks;
+    private String techstack_code;
 
     @ApiModelProperty(value = "팀 이름", example = "우수상")
-    private String teamName;
+    private String team_name;
 
     @ApiModelProperty(value = "희망 직무", example = "프론트엔드(Front-end)")
-    private String job;
+    private String job1;
 
     @ApiModelProperty(value = "정렬", example = "최신순")
     private String sort;
+
+    @ApiModelProperty(value = "가입 가능 팀", example = "false")
+    private Boolean exclusion;
+
 
 }

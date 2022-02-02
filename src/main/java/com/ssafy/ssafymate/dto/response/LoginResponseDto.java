@@ -1,6 +1,7 @@
 package com.ssafy.ssafymate.dto.response;
 
 import com.ssafy.ssafymate.dto.UserDto.UserProjectDto;
+import com.ssafy.ssafymate.dto.UserDto.UserProjectLoginDto;
 import com.ssafy.ssafymate.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -51,7 +52,7 @@ public class LoginResponseDto{
         body.setStudentNumber(user.getStudentNumber());
         body.setCampus(user.getCampus());
         body.setSsafyTrack(user.getSsafyTrack());
-        body.setProjects(UserProjectDto.of(user.getTeams(),user));
+        body.setProjects(UserProjectLoginDto.of(user.getTeams(),user));
         body.setToken(token);
         return body;
     }

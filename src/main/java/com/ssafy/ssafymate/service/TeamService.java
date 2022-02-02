@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.service;
 
+import com.ssafy.ssafymate.dto.request.TeamListReuestDto;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.TeamStack;
@@ -31,15 +32,8 @@ public interface TeamService {
     //팀장 여부 조회
     Optional<Team> ownTeam(Long teamId, Long userId);
 
-    // 팀 리스트 검색(전체)
-//    Optional<List<Team>> teamSearch2(String project, String projectTrack, String teamName, int front, int back);
+    Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back,int total , List<Long> teamStacks);
 
-    // 팀 리스트 검색(전체)
-    Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back);
-
-    // 팀 리스트 검색(기술 스택)
-//    Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, int front, int back, List<String> teamStacks);
-
-    Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back, List<Long> teamStacks);
+    Page<Team> teamSearch(Pageable pageable, TeamListReuestDto teamListReuestDto, int front, int back,int total);
 
 }

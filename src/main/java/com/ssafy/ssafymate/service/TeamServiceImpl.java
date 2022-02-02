@@ -3,6 +3,7 @@ package com.ssafy.ssafymate.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.ssafy.ssafymate.dto.request.TeamListReuestDto;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.entity.*;
 import com.ssafy.ssafymate.repository.TeamRepository;
@@ -24,6 +25,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service("teamService")
 public class TeamServiceImpl implements TeamService{
@@ -114,28 +116,36 @@ public class TeamServiceImpl implements TeamService{
         return teamRepository.findByTeamIdAndUserIdJQL(teamId,userId);
     }
 
-
-//    @Override
-//    public Optional<List<Team>> teamSearch(String project, String projectTrack, String teamName, int front, int back, List<String> teamStacks) {
-//        Optional<List<Team>> teams = teamRepository.findALLByteamStackJQL2(project,projectTrack,teamName,front,back, teamStacks);
-//        return teams;
-////        return teamRepository.findAllByProjectAndProjectTrackAndTechStacksInJQL(project,projectTrack,teamStacks);
-//    }
-
-//    @Override
-//    public Optional<List<Team>> teamSearch2(String project, String projectTrack, String teamName, int front, int back) {
-//        Optional<List<Team>> teams = teamRepository.findALLJQL2(project,projectTrack, teamName,front,back);
-//        return teams;
-//
-//    }
     @Override
-    public Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back) {
-        return teamRepository.findALLJQL(pageable, campus, project,projectTrack, teamName,front,back);
+    public Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back, int total, List<Long> teamStacks) {
+        return teamRepository.findALLByteamStackJQL(pageable, campus, project,projectTrack, teamName,front,back,total ,teamStacks);
     }
 
+
     @Override
-    public Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back, List<Long> teamStacks) {
-        return teamRepository.findALLByteamStackJQL(pageable, campus, project,projectTrack, teamName,front,back,teamStacks);
+    public Page<Team> teamSearch(Pageable pageable, TeamListReuestDto teamListReuestDto,int front, int back, int total) {
+
+        String jsonString = teamListReuestDto.getTechstack_code();
+        List<TeamStack> techStacks = new ArrayList<>();
+
+        if(jsonString != null)
+            techStacks = StringToTechStacks2(jsonString);
+        if((techStacks.size() == 0)){
+            TeamStack notin = new TeamStack();
+            notin.setTechStackCode(0L);
+            techStacks.add(notin);
+        }
+
+        List<Long> teamstacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
+        return teamRepository.findALLByteamStackJQL(pageable,
+                teamListReuestDto.getCampus(),
+                teamListReuestDto.getProject(),
+                teamListReuestDto.getProject_track(),
+                teamListReuestDto.getTeam_name(),
+                front,
+                back,
+                total,
+                teamstacks);
     }
 
 
@@ -162,5 +172,22 @@ public class TeamServiceImpl implements TeamService{
                 .owner(user)
                 .build();
         return team;
+    }
+
+    // String 형태의 techStacks를 UserStack 타입의 리스트로 변환하는 메서드
+    public List<TeamStack> StringToTechStacks(String jsonString) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Type listType = new TypeToken<ArrayList<TeamStack>>(){}.getType();
+        List<TeamStack> techStacks = gson.fromJson(jsonString, listType);
+        return techStacks;
+    }
+
+    // String 형태의 Long 를 UserStack 타입의 리스트로 변환하는 메서드
+    public List<TeamStack> StringToTechStacks2(String jsonString) {
+        List<TeamStack> techStacks = new ArrayList<>();
+        TeamStack techstack = new TeamStack();
+        techstack.setTechStackCode(Long.parseLong(jsonString));
+        techStacks.add(techstack);
+        return techStacks;
     }
 }

@@ -74,6 +74,7 @@ public class TeamController {
         return ResponseEntity.status(200).body(TeamResponseDto.of(teamdata));
     }
 
+
     @PostMapping("/")
     @ApiOperation(value = "팀 생성", notes = "작성된 팀 정보와 유저 아이디를 가지고 팀생성")
     @ApiResponses({
@@ -142,93 +143,5 @@ public class TeamController {
         return ResponseEntity.status(200).body(MessageBody.of("팀 삭제가 완료되었습니다."));
     }
 
-    @GetMapping("/teamList")
-    @ApiOperation(value = "팀 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 팀 리스트 조회")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 400, message = "인증 실패"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity<?> SearchTeam(
-            TeamListReuestDto teamListReuestDto,
-            @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage) {
-        List<Team> teams = new ArrayList<>();
-        System.out.println(teamListReuestDto);
-        int front = 0;
-        int back = 0;
-        if (teamListReuestDto.getJob() != null) {
-            if (teamListReuestDto.getJob().contains("프론트엔드")) {
-                front = 1;
-            } else if (teamListReuestDto.getJob().equals("백엔드")) {
-                back = 1;
-            }
-        }
-        if (teamListReuestDto.getTeamName() == null) {
-            teamListReuestDto.setTeamName("");
-        }
-        int totalPage = 0;
-        int size = 8;
-        Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "t.id");
-        if (teamListReuestDto.getSort()!=null) {
-            if (teamListReuestDto.getSort().equals("최신순")) {
-                pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "t.create_date_time");
-            } else if (teamListReuestDto.getSort().equals("인원순")) {
-                pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.ASC, "t.total_headcount");
-            }
-        }
-        Page<Team> teamp;
 
-        List<TeamStack> techStacks = new ArrayList<>();
-        if (teamListReuestDto.getTechStacks() != null) {
-            // teamListReuestDto 에서 String 형태의 techStacks 찾기
-            String jsonString = teamListReuestDto.getTechStacks();
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Type listType = new TypeToken<ArrayList<TeamStack>>(){}.getType();
-            techStacks = gson.fromJson(jsonString, listType);
-        }
-        try {
-            if ((techStacks.size() == 0) || (teamListReuestDto.getTechStacks()==null)) {
-                System.out.println("not stack");
-//                teams = teamService.teamSearch2(teamListReuestDto.getProject(),
-//                        teamListReuestDto.getProjectTrack(),
-//                        teamListReuestDto.getTeamName(),
-//                        front, back).orElse(null);
-//                System.out.println(teams);
-                teamp = teamService.teamSearch(pageable,
-                        teamListReuestDto.getCampus(),
-                        teamListReuestDto.getProject(),
-                        teamListReuestDto.getProjectTrack(),
-                        teamListReuestDto.getTeamName(),
-                        front, back);
-                teams = teamp.getContent();
-                System.out.println(teamp.getTotalElements());
-                System.out.println(teamp.getTotalPages());
-                totalPage = teamp.getTotalPages();
-            }
-            else {
-                System.out.println("stack");
-
-                List<Long> teamstacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
-//                List<Long> teamstacks = teamListReuestDto.getTechStacks();
-//                teams = teamService.teamSearch(teamListReuestDto.getProject(),
-//                        teamListReuestDto.getProjectTrack(),
-//                        teamListReuestDto.getTeamName() ,
-//                        front, back,
-//                        teamstacks ).orElse(null);
-                teamp = teamService.teamSearch(pageable,
-                        teamListReuestDto.getCampus(),
-                        teamListReuestDto.getProject(),
-                        teamListReuestDto.getProjectTrack(),
-                        teamListReuestDto.getTeamName(),
-                        front, back,
-                        teamstacks);
-                teams = teamp.getContent();
-
-                totalPage = teamp.getTotalPages();
-            }
-        } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server, 팀 리스트 조회 실패"));
-        }
-        return ResponseEntity.status(200).body(TeamListResponseDto.of(teams,totalPage,nowPage,teamp.getTotalElements()));
-    }
 }

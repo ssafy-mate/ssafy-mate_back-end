@@ -12,19 +12,16 @@ public class EmailResponseDto {
 
     @ApiModelProperty(name="응답 메시지", example = "정상")
     String message = null;
-    @ApiModelProperty(name="응답 코드", example = "200")
-    Integer statusCode = null;
     @ApiModelProperty(name="응답 상태", example = "true")
     Boolean success = false;
     @ApiModelProperty(name="아이디", example = "ssafymate@gmail.com")
-    private String email;
+    private String userEmail;
 
-    public static EmailResponseDto of(Integer statusCode, Boolean success, String message, String email) {
+    public static EmailResponseDto of(Boolean success, String message, String email) {
         EmailResponseDto body = new EmailResponseDto();
         body.message = message;
-        body.statusCode = statusCode;
         body.success = success;
-        body.email = email;
+        body.userEmail = email;
         return body;
     }
 }

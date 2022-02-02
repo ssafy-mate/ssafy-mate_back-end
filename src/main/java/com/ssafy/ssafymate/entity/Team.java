@@ -22,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Team {
+public class Team{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -83,4 +83,6 @@ public class Team {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createDateTime;
+
+
 }

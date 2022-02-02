@@ -2,6 +2,7 @@ package com.ssafy.ssafymate.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.mapping.Join;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -70,6 +71,12 @@ public class User {
     @NotNull
     private String agreement;
 
+    @Column(nullable = true)
+    private String commonProjectTrack;
+
+    @Column(nullable = true)
+    private String specializationProjectTrack;
+
     @OneToMany(mappedBy = "user")
     List<ChattingHistory> chattingHistory = new ArrayList<>();
 
@@ -81,5 +88,58 @@ public class User {
             return Arrays.asList(this.roles.split(","));
         }
         return new ArrayList<>();
+    }
+
+    @Transient
+    private Boolean belongToTeam;
+
+//    public User(Long id,String profileImg, String campus, String ssafyTrack,String studentName,String job1, String job2,String githubUrl, Boolean belongToTeam){
+//        this.id = id;
+//        this.profileImg = profileImg;
+//        this.campus = campus;
+//        this.ssafyTrack = ssafyTrack;
+//        this.studentName = studentName;
+//        this.job1 = job1;
+//        this.job2 = job2;
+//        this.githubUrl = githubUrl;
+//        this.belongToTeam = belongToTeam;
+//
+//    }
+//
+    public User(Long id, String campus,
+     String ssafyTrack,
+     String studentNumber,
+     String studentName,
+     String email,
+     String password,
+     String profileImg,
+     String selfIntroduction,
+     String job1,
+     String agreement){
+        this.id = id;
+        this.campus = campus;
+        this.ssafyTrack = ssafyTrack;
+        this.studentNumber = studentNumber;
+        this.studentName = studentName;
+        this.email = email;
+        this.password = password;
+        this.profileImg = profileImg;
+        this.selfIntroduction = selfIntroduction;
+        this.job1 = job1;
+        this.agreement = agreement;
+
+
+
+
+    }
+
+    public void addTechStacks(UserStack userStack){
+        techStacks.add(userStack);
+        userStack.setUser(this);
+    }
+
+    public void removeTechStacks(UserStack userStack){
+        techStacks.remove(userStack);
+        userStack.setUser(null);
     }
 }

@@ -46,7 +46,7 @@ public class UserDetailDto {
         res.setJob2(user.getJob2());
         res.setGithubUrl(user.getGithubUrl());
         res.setEtcUrl(user.getEtcUrl());
-        res.setProjects(UserProjectDto.of(user.getTeams()));
+        res.setProjects(UserProjectDto.of(user.getTeams(),user));
         res.setTechStacks(user.getTechStacks());
 
         return res;

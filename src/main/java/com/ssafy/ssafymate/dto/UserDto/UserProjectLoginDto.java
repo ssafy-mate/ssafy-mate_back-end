@@ -19,7 +19,7 @@ public class UserProjectLoginDto {
     private String projectTrack;
     private Long projectTeamId;
 
-    public static List<UserProjectDto> of(List<UserTeam> teams , User user){
+    public static List<UserProjectLoginDto> of(List<UserTeam> teams , User user){
         List<UserProjectLoginDto> res = new ArrayList<>();
         UserProjectLoginDto commonProjectTrack = new UserProjectLoginDto(1L,"공통 프로젝트",null,null);
         UserProjectLoginDto specializationProjectTrack = new UserProjectLoginDto(2L,"특화 프로젝트",null,null);

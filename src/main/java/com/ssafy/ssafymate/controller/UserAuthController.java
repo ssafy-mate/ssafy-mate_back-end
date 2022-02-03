@@ -50,7 +50,7 @@ public class UserAuthController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> canCreateTeam(
+    public ResponseEntity<?> belongToTeam(
             @RequestParam final String selectedProject,
             @AuthenticationPrincipal final String token){
         Boolean belongToTeam = false;
@@ -163,7 +163,7 @@ public class UserAuthController {
     }
 
     @PostMapping("/project/track")
-    @ApiOperation(value = "교욱생 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 교육생 리스트 조회")
+    @ApiOperation(value = "교욱생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 400, message = "인증 실패"),

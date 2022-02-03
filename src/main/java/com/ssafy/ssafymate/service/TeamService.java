@@ -35,4 +35,6 @@ public interface TeamService {
 
     Page<Team> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total);
 
+
+
 }

@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.repository;
 
+import com.ssafy.ssafymate.dto.RecruitDto.RecruitDto;
 import com.ssafy.ssafymate.entity.Team;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -87,4 +88,18 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
                                      @Param("back") Integer back,
                                      @Param("total") Integer total,
                                      @Param("teamStacks") List<Long> teamStacks);
+
+    @Query(value = "select " +
+            "   (case when t.TOTAL_RECRUITMENT > ut.TOTAL_HEADCOUNT then true" +
+            "   else false end ) as is_recruit " +
+            "from " +
+            "   (select * from team where id=:teamId) t " +
+            "join " +
+            "   (select team_id, count(*) as TOTAL_HEADCOUNT " +
+            "   from user_team " +
+            "   where team_id=:teamId " +
+            "   group by team_id) ut " +
+            "on t.id = ut.team_id"
+            ,nativeQuery = true)
+    Boolean isRecruit(@Param("teamId") Long teamId);
 }

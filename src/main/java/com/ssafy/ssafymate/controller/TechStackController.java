@@ -27,13 +27,13 @@ public class TechStackController {
     TechStackService techStackService;
 
     @GetMapping()
-    @ApiOperation(value = "교육생 인증", notes = "SSAFY 캠퍼스, 학번, 이름으로 교육생 인증")
+    @ApiOperation(value = "태크 스택 리스트", notes = "태크 스택 리스트(태크스택 코드, 이름, 이미지Url 반환)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> userDetail() {
-        List<TechStack> techStacks = new ArrayList<>();
+        List<TechStack> techStacks;
         try {
             techStacks = techStackService.techstackList();
         } catch (Exception e) {

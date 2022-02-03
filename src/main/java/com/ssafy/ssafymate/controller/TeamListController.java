@@ -1,6 +1,7 @@
 package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.common.ErrorResponseBody;
+import com.ssafy.ssafymate.dto.TeamDto.TeamInt;
 import com.ssafy.ssafymate.dto.request.TeamListRequestDto;
 import com.ssafy.ssafymate.dto.response.TeamListResponseDto;
 import com.ssafy.ssafymate.entity.Team;
@@ -73,7 +74,7 @@ public class TeamListController {
         }
         Page<Team> teamp;
 
-
+        Page<TeamInt> teamInts;
         try {
 
             System.out.println("stack");
@@ -82,8 +83,14 @@ public class TeamListController {
                     teamListRequestDto,
                     front, back, total);
 
-            teams = teamp.getContent();
+            teamInts = teamService.teamSearch2(pageable,
+                    teamListRequestDto,
+                    front, back, total);
+            System.out.println(teamInts.getContent().get(0));
+            System.out.println(teamInts.getContent().get(0).getBackend_headcount());
+//            teams = teamp.getContent();
 
+            teams = teamService.teamListTransfer(teamInts.getContent());
             totalPage = teamp.getTotalPages();
 
         } catch (Exception exception) {

@@ -5,12 +5,11 @@ import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.common.SuccessMessageBody;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardDto;
+import com.ssafy.ssafymate.dto.UserDto.UserProjectLoginDto;
 import com.ssafy.ssafymate.dto.request.UserListRequestDto;
 import com.ssafy.ssafymate.dto.request.UserModifyRequestDto;
 import com.ssafy.ssafymate.dto.request.UserSelectProjectTrackRequsetDto;
-import com.ssafy.ssafymate.dto.response.BelongToTeam;
-import com.ssafy.ssafymate.dto.response.UserListResponseDto;
-import com.ssafy.ssafymate.dto.response.UserResponseDto;
+import com.ssafy.ssafymate.dto.response.*;
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.service.TeamService;
@@ -192,6 +191,27 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 교육생 리스트 조회 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true,project+" 트랙 선택이 완료되었습니다."));
+    }
+
+    // 교육생 프로젝트 정보 받기
+    @GetMapping("/projects")
+    @ApiOperation(value = "교육생 프로젝트 정보 받기", notes = "교육생 프로젝트 정보 받기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class ,responseContainer = "List"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> userProjects(@AuthenticationPrincipal final String token){
+
+        User user;
+        try {
+            user = userService.getUserByEmail(token);
+
+        }catch (Exception exception){
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 프로젝트 정보 갱신 실패"));
+        }
+        return ResponseEntity.status(200).body(UserProjectResponseDto.of(UserProjectLoginDto.of(user.getTeams(),user)));
     }
 
 

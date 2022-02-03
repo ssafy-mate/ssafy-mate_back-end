@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class Team{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,7 +50,7 @@ public class Team{
 
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     List<TeamStack> techStacks = new ArrayList<>();
 
@@ -63,26 +65,31 @@ public class Team{
     private String teamImg;
 
     @NotNull
+    @Column(name = "total_recruitment")
     private Integer totalRecruitment;
 
     @NotNull
+    @Column(name = "frontend_recruitment")
     private Integer frontendRecruitment;
 
     @NotNull
+    @Column(name = "backend_recruitment")
     private Integer backendRecruitment;
 
-    @Column(nullable = true)
+    @NotFound
+//    @Column(name = "total_recruitment", nullable = true, insertable = false, updatable = false)
     Integer totalHeadcount;
 
-    @Column(nullable = true)
+    @Column(name = "frontend_recruitment",nullable = true, insertable = false, updatable = false)
     Integer frontendHeadcount;
 
-    @Column(nullable = true)
+    @Column(name = "backend_recruitment",nullable = true, insertable = false, updatable = false)
     Integer backendHeadcount;
 
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createDateTime;
+
 
 
 }

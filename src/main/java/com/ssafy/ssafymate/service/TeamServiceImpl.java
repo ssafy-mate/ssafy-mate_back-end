@@ -3,6 +3,7 @@ package com.ssafy.ssafymate.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.ssafy.ssafymate.dto.TeamDto.TeamInt;
 import com.ssafy.ssafymate.dto.request.TeamListRequestDto;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.entity.*;
@@ -143,6 +144,63 @@ public class TeamServiceImpl implements TeamService{
                 back,
                 total,
                 teamstacks);
+    }
+
+    @Override
+    public Page<TeamInt> teamSearch2(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total) {
+
+        String jsonString = teamListRequestDto.getTechstack_code();
+        List<TeamStack> techStacks = new ArrayList<>();
+
+        if(jsonString != null)
+            techStacks = StringToTechStacks2(jsonString);
+        if((techStacks.size() == 0)){
+            TeamStack notin = new TeamStack();
+            notin.setTechStackCode(0L);
+            techStacks.add(notin);
+        }
+
+        List<Long> teamstacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
+        return teamRepository.findALLByteamStackJQL2(pageable,
+                teamListRequestDto.getCampus(),
+                teamListRequestDto.getProject(),
+                teamListRequestDto.getProject_track(),
+                teamListRequestDto.getTeam_name(),
+                front,
+                back,
+                total,
+                teamstacks);
+    }
+
+    @Override
+    public List<Team> teamListTransfer(List<TeamInt> teamIs){
+        List<Team> teams = new ArrayList<>();
+
+        for (TeamInt teamI : teamIs){
+            teams.add(teamTransfer(teamI));
+        }
+        return teams;
+    }
+
+    public Team teamTransfer(TeamInt teamI){
+        Team team = Team.builder()
+                .id(teamI.getId())
+                .teamImg(teamI.getTeam_img())
+                .campus(teamI.getCampus())
+                .project(teamI.getProject())
+                .projectTrack(teamI.getProject_track())
+                .teamName(teamI.getTeam_name())
+                .totalRecruitment(teamI.getTotal_recruitment())
+                .totalHeadcount(teamI.getTotal_headcount())
+                .frontendRecruitment(teamI.getFrontend_recruitment())
+                .frontendHeadcount(teamI.getFrontend_headcount())
+                .backendRecruitment(teamI.getBackend_recruitment())
+                .backendHeadcount(teamI.getBackend_headcount())
+                .build();
+
+        team.setTechStacks(teamStackRepository.findByTeamId(teamI.getId()));
+
+        return team;
     }
 
 

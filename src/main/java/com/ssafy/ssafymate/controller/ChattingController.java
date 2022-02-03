@@ -28,23 +28,23 @@ public class ChattingController {
     private ChattingService chattingService;
 
 
-    @GetMapping("/room/{userId}")
+    @GetMapping("/room")
     @ApiOperation(value = "채팅방 리스트 불러오기", notes = "사용자가 대화한 채팅방 리스트를 불러온다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 400, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> getRoomList(@PathVariable Long userId) {
+    public ResponseEntity<?> getRoomList(@RequestParam("userId") Long userId) {
         List<RoomList> roomList = chattingService.getRoomList(userId);
 
-        if(roomList == null){
+        if (roomList == null) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "방이 비어있습니다."));
         }
         return ResponseEntity.status(200).body(ChatRoomResponseDto.of(roomList));
     }
 
-    @GetMapping("/log")
+    @GetMapping("/log/{roomId}")
     @ApiOperation(value = "대화 내용 불러오기", notes = "대화 내용을 페이징하여 보내준다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -52,17 +52,22 @@ public class ChattingController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> getHistoryList(
-                                            @RequestParam("userId1") Long userId1,
-                                            @RequestParam("userId2") Long userId2,
-                                            @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage,
-                                            @RequestParam("entryTime") String entryTime) {
-        String roomId;
-        if (userId1 > userId2) {
-            roomId = userId2 + "-" + userId1;
-        } else {
-            roomId = userId1 + "-" + userId2;
-        }
+//                                            @RequestParam("userId1") Long userId1,
+//                                            @RequestParam("userId2") Long userId2,
+            @PathVariable("roomId") String roomId,
+            @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage,
+            @RequestParam("entryTime") String entryTime) {
 
+        // 스트링 파싱하기
+        String[] ids = roomId.split("-");
+        Long userId1 = Long.parseLong(ids[0]);
+        Long userId2 = Long.parseLong(ids[1]);
+//        String roomId; // 123-124
+//        if (userId1 > userId2) {
+//            roomId = userId2 + "-" + userId1;
+//        } else {
+//            roomId = userId1 + "-" + userId2;
+//        }
         if (chattingService.findRoom(roomId) == null) {
             int temp = chattingService.saveRoom(roomId, userId1, userId2);
             if (temp == 0) {
@@ -70,7 +75,7 @@ public class ChattingController {
             }
         }
         int size = 5;
-        Pageable pageable = PageRequest.of(nowPage-1, size, Sort.Direction.DESC, "CH.id");
+        Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "CH.id");
 
         if (nowPage == 1) {
             int totalLogCount = chattingService.getTotalLogCount(roomId);

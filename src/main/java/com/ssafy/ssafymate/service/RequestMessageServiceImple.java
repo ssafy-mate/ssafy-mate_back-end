@@ -33,7 +33,14 @@ public class RequestMessageServiceImple implements RequestMessageService{
 
     @Override
     public RequestMessage teamRequest(User sender, Long receiverId, Team team, String message) {
-        return null;
+        RequestMessage requestMessage = RequestMessage.builder()
+                .senderId(sender.getId())
+                .teamId(team.getId())
+                .receiverId(receiverId)
+                .message(message)
+                .type("teamRequest")
+                .build();
+        return requestMessageRepository.save(requestMessage);
     }
 
     @Override

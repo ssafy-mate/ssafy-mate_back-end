@@ -49,6 +49,8 @@ public class TeamBoardDto {
             teamBoardDto.setFrontendHeadcount(team.getFrontendHeadcount());
             teamBoardDto.setBackendHeadcount(team.getBackendHeadcount());
 
+            teamBoardDto.setCreateDateTime(team.getCreateDateTime());
+
 
             res.add(teamBoardDto);
         }

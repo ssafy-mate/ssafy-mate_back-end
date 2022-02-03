@@ -72,26 +72,21 @@ public class TeamListController {
                 pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, "t.total_headcount");
             }
         }
-        Page<Team> teamp;
+
 
         Page<TeamInt> teamInts;
         try {
 
             System.out.println("stack");
 
-            teamp = teamService.teamSearch(pageable,
-                    teamListRequestDto,
-                    front, back, total);
-
-            teamInts = teamService.teamSearch2(pageable,
+            teamInts = teamService.teamSearch(pageable,
                     teamListRequestDto,
                     front, back, total);
             System.out.println(teamInts.getContent().get(0));
             System.out.println(teamInts.getContent().get(0).getBackend_headcount());
-//            teams = teamp.getContent();
 
             teams = teamService.teamListTransfer(teamInts.getContent());
-            totalPage = teamp.getTotalPages();
+            totalPage = teamInts.getTotalPages();
 
         } catch (Exception exception) {
             System.out.println(exception);
@@ -99,7 +94,7 @@ public class TeamListController {
         }
 
 
-        return ResponseEntity.status(200).body(TeamListResponseDto.of(teams, totalPage, page, teamp.getTotalElements()));
+        return ResponseEntity.status(200).body(TeamListResponseDto.of(teams, totalPage, page, teamInts.getTotalElements()));
 
     }
 }

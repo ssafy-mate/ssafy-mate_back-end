@@ -32,11 +32,7 @@ public interface TeamService {
     //팀장 여부 조회
     Optional<Team> ownTeam(Long teamId, Long userId);
 
-    Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back,int total , List<Long> teamStacks);
-
-    Page<Team> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total);
-
-    Page<TeamInt> teamSearch2(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total);
+    Page<TeamInt> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total);
 
     List<Team> teamListTransfer(List<TeamInt> teamIs);
 

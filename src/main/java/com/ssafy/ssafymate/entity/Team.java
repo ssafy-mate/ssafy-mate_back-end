@@ -76,14 +76,13 @@ public class Team{
     @Column(name = "backend_recruitment")
     private Integer backendRecruitment;
 
-    @NotFound
-//    @Column(name = "total_recruitment", nullable = true, insertable = false, updatable = false)
+    @Transient
     Integer totalHeadcount;
 
-    @Column(name = "frontend_recruitment",nullable = true, insertable = false, updatable = false)
+    @Transient
     Integer frontendHeadcount;
 
-    @Column(name = "backend_recruitment",nullable = true, insertable = false, updatable = false)
+    @Transient
     Integer backendHeadcount;
 
     @CreationTimestamp

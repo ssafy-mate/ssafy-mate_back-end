@@ -8,6 +8,7 @@ import org.hibernate.annotations.NotFound;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +22,14 @@ public interface TeamInt {
     String getTeam_name();
     String getNotice();
 
+    LocalDateTime getCreate_date_time();
     Integer getTotal_recruitment();
     Integer getFrontend_recruitment();
     Integer getBackend_recruitment();
     Integer getTotal_headcount();
     Integer getFrontend_headcount();
     Integer getBackend_headcount();
+
+
 
 }

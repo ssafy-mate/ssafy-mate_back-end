@@ -37,7 +37,7 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public Optional<Team> teamfind(Long teamId) {
-        return teamRepository.findByIdJQL(teamId);
+        return teamRepository.findById(teamId);
     }
 
     @Transactional
@@ -115,13 +115,7 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back, int total, List<Long> teamStacks) {
-        return teamRepository.findALLByteamStackJQL(pageable, campus, project,projectTrack, teamName,front,back,total ,teamStacks);
-    }
-
-
-    @Override
-    public Page<Team> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total) {
+    public Page<TeamInt> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total) {
 
         String jsonString = teamListRequestDto.getTechstack_code();
         List<TeamStack> techStacks = new ArrayList<>();
@@ -136,32 +130,6 @@ public class TeamServiceImpl implements TeamService{
 
         List<Long> teamstacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
         return teamRepository.findALLByteamStackJQL(pageable,
-                teamListRequestDto.getCampus(),
-                teamListRequestDto.getProject(),
-                teamListRequestDto.getProject_track(),
-                teamListRequestDto.getTeam_name(),
-                front,
-                back,
-                total,
-                teamstacks);
-    }
-
-    @Override
-    public Page<TeamInt> teamSearch2(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total) {
-
-        String jsonString = teamListRequestDto.getTechstack_code();
-        List<TeamStack> techStacks = new ArrayList<>();
-
-        if(jsonString != null)
-            techStacks = StringToTechStacks2(jsonString);
-        if((techStacks.size() == 0)){
-            TeamStack notin = new TeamStack();
-            notin.setTechStackCode(0L);
-            techStacks.add(notin);
-        }
-
-        List<Long> teamstacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
-        return teamRepository.findALLByteamStackJQL2(pageable,
                 teamListRequestDto.getCampus(),
                 teamListRequestDto.getProject(),
                 teamListRequestDto.getProject_track(),
@@ -189,6 +157,7 @@ public class TeamServiceImpl implements TeamService{
                 .campus(teamI.getCampus())
                 .project(teamI.getProject())
                 .projectTrack(teamI.getProject_track())
+                .notice(teamI.getNotice())
                 .teamName(teamI.getTeam_name())
                 .totalRecruitment(teamI.getTotal_recruitment())
                 .totalHeadcount(teamI.getTotal_headcount())
@@ -196,15 +165,13 @@ public class TeamServiceImpl implements TeamService{
                 .frontendHeadcount(teamI.getFrontend_headcount())
                 .backendRecruitment(teamI.getBackend_recruitment())
                 .backendHeadcount(teamI.getBackend_headcount())
+                .createDateTime(teamI.getCreate_date_time())
                 .build();
 
         team.setTechStacks(teamStackRepository.findByTeamId(teamI.getId()));
 
         return team;
     }
-
-
-
 
     // teamrequestDto 와 이미지Url을 team 으로 빌드
     public Team teamBuilder(TeamRequestDto teamRequestDto, String teamImgUrl, User user){

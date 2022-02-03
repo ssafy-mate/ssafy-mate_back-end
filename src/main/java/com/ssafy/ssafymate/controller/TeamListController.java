@@ -1,6 +1,7 @@
 package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.common.ErrorResponseBody;
+import com.ssafy.ssafymate.dto.TeamDto.TeamInt;
 import com.ssafy.ssafymate.dto.request.TeamListRequestDto;
 import com.ssafy.ssafymate.dto.response.TeamListResponseDto;
 import com.ssafy.ssafymate.entity.Team;
@@ -71,20 +72,21 @@ public class TeamListController {
                 pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, "t.total_headcount");
             }
         }
-        Page<Team> teamp;
 
 
+        Page<TeamInt> teamInts;
         try {
 
             System.out.println("stack");
 
-            teamp = teamService.teamSearch(pageable,
+            teamInts = teamService.teamSearch(pageable,
                     teamListRequestDto,
                     front, back, total);
+            System.out.println(teamInts.getContent().get(0));
+            System.out.println(teamInts.getContent().get(0).getBackend_headcount());
 
-            teams = teamp.getContent();
-
-            totalPage = teamp.getTotalPages();
+            teams = teamService.teamListTransfer(teamInts.getContent());
+            totalPage = teamInts.getTotalPages();
 
         } catch (Exception exception) {
             System.out.println(exception);
@@ -92,7 +94,7 @@ public class TeamListController {
         }
 
 
-        return ResponseEntity.status(200).body(TeamListResponseDto.of(teams, totalPage, page, teamp.getTotalElements()));
+        return ResponseEntity.status(200).body(TeamListResponseDto.of(teams, totalPage, page, teamInts.getTotalElements()));
 
     }
 }

@@ -3,7 +3,6 @@ package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.dto.response.TechStacksResponseDto;
-import com.ssafy.ssafymate.dto.response.UserResponseDto;
 import com.ssafy.ssafymate.entity.TechStack;
 import com.ssafy.ssafymate.service.TechStackService;
 import io.swagger.annotations.Api;

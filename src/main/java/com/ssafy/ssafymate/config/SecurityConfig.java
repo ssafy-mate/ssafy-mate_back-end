@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/admin/**").hasRole("ADMIN")  // 인증 요구
 //                .antMatchers("/user/**").hasRole("USER")    // 인증 요구
                     .antMatchers("/api/auth/team/**").access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+                    .antMatchers("/api/chat/**").access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
                     .anyRequest().permitAll()    // 그 외 나머지 요청 다 허용
                     .and()
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class); // JwtFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다

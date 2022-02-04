@@ -10,28 +10,28 @@ import lombok.ToString;
 @Setter
 public class TeamListRequestDto {
     @ApiModelProperty(value = "캠퍼스", example = "서울")
-    private String campus;
+    private String campus="";
 
     @ApiModelProperty(value = "프로젝트", example = "특화 프로젝트")
-    private String project;
+    private String project="";
 
     @ApiModelProperty(value = "프로젝트 트랙", example = "IoT")
-    private String project_track;
+    private String project_track="";
 
     @ApiModelProperty(value = "기술 스택")
-    private String techstack_code;
+    private String techstack_code="0";
 
     @ApiModelProperty(value = "팀 이름", example = "우수상")
-    private String team_name;
+    private String team_name="";
 
     @ApiModelProperty(value = "희망 직무", example = "프론트엔드(Front-end)")
-    private String job1;
+    private String job1="";
 
     @ApiModelProperty(value = "정렬", example = "최신순")
-    private String sort;
+    private String sort="";
 
     @ApiModelProperty(value = "가입 가능 팀", example = "false")
-    private Boolean exclusion;
+    private Boolean exclusion=false;
 
 
 }

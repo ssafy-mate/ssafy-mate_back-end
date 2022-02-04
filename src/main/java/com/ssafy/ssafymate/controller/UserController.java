@@ -6,6 +6,7 @@ import com.ssafy.ssafymate.common.SuccessBody;
 import com.ssafy.ssafymate.common.SuccessMessageBody;
 import com.ssafy.ssafymate.dto.request.EmailRequestDto;
 import com.ssafy.ssafymate.dto.request.PwModifyRequestDto;
+import com.ssafy.ssafymate.dto.request.PwSearchRequestDto;
 import com.ssafy.ssafymate.dto.request.UserRequestDto;
 import com.ssafy.ssafymate.dto.response.EmailResponseDto;
 import com.ssafy.ssafymate.entity.Student;
@@ -195,10 +196,10 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> pwSearchEmailAuth(
-            @RequestParam("userEmail") String userEmail, @RequestParam("code") String code) throws Exception {
+            @RequestBody PwSearchRequestDto pwSearchRequestDto) throws Exception {
         Long emailAuth;
         try {
-            emailAuth = emailService.getUserIdByCode(userEmail, code);
+            emailAuth = emailService.getUserIdByCode(pwSearchRequestDto.getUserEmail(), pwSearchRequestDto.getCode());
         } catch (EmailCodeException exception) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false,  "올바른 인증 코드가 아닙니다."));
         } catch (NullPointerException exception) {

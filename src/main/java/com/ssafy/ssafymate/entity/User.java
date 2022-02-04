@@ -2,10 +2,11 @@ package com.ssafy.ssafymate.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.hibernate.mapping.Join;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -89,6 +90,10 @@ public class User {
         }
         return new ArrayList<>();
     }
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createDateTime;
 
     @Transient
     private Boolean belongToTeam;

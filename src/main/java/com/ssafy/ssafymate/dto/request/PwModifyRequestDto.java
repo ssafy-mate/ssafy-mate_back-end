@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@ApiModel(value = "비밀번호 재설정 입력 정보", description = "이메일, 학번, 이름, 비밀번호를 담는 클래스")
+@ApiModel(value = "비밀번호 재설정 입력 정보", description = "이메일, 비밀번호를 담는 클래스")
 public class PwModifyRequestDto {
 
     @ApiModelProperty(value = "이메일", example = "ssafymate@gmail.com")

@@ -1,39 +1,23 @@
 package com.ssafy.ssafymate.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.ssafy.ssafymate.JWT.TokenProvider;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.common.MessageBody;
-import com.ssafy.ssafymate.dto.request.TeamListReuestDto;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
-import com.ssafy.ssafymate.dto.response.TeamListResponseDto;
 import com.ssafy.ssafymate.dto.response.TeamResponseDto;
 import com.ssafy.ssafymate.entity.Team;
-import com.ssafy.ssafymate.entity.TeamStack;
 import com.ssafy.ssafymate.entity.User;
-import com.ssafy.ssafymate.entity.UserStack;
 import com.ssafy.ssafymate.service.TeamService;
 import com.ssafy.ssafymate.service.UserService;
 import com.ssafy.ssafymate.service.UserTeamService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Api(value = "팀 API", tags = {"Team"})
 @RestController
@@ -52,7 +36,7 @@ public class TeamController {
     @Autowired
     private TokenProvider tokenProvider;
 
-    @GetMapping("/{teamId}")
+    @GetMapping("/info/{teamId}")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "팀 상세조회", notes = "팀 아이디로 해당 팀 상세 조회")
     @ApiResponses({
@@ -75,7 +59,7 @@ public class TeamController {
     }
 
 
-    @PostMapping("/")
+    @PostMapping("/info")
     @ApiOperation(value = "팀 생성", notes = "작성된 팀 정보와 유저 아이디를 가지고 팀생성")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -94,7 +78,7 @@ public class TeamController {
         return ResponseEntity.status(200).body(MessageBody.of("팀을 성공적으로 생성하였습니다."));
     }
 
-    @PutMapping("/{teamId}")
+    @PutMapping("/info/{teamId}")
     @ApiOperation(value = "팀 수정", notes = "수정된 팀 정보를 가지고 팀 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -119,7 +103,7 @@ public class TeamController {
         return ResponseEntity.status(200).body(MessageBody.of("팀 상세 정보 수정이 완료되었습니다."));
     }
 
-    @DeleteMapping("/{teamId}")
+    @DeleteMapping("/info/{teamId}")
     @ApiOperation(value = "팀 삭제", notes = "팀장이 팀 삭제")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

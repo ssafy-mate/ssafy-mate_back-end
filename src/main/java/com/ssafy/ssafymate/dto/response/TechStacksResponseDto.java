@@ -10,11 +10,11 @@ import java.util.List;
 @Setter
 public class TechStacksResponseDto {
 
-    List<TechStack> tecjStackList;
+    List<TechStack> techStackList;
 
     public static TechStacksResponseDto of (List<TechStack> techStacks){
         TechStacksResponseDto res = new TechStacksResponseDto();
-        res.setTecjStackList(techStacks);
+        res.setTechStackList(techStacks);
         return res;
     }
 }

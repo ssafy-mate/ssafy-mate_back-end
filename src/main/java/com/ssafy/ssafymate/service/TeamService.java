@@ -1,9 +1,9 @@
 package com.ssafy.ssafymate.service;
 
-import com.ssafy.ssafymate.dto.request.TeamListReuestDto;
+import com.ssafy.ssafymate.dto.TeamDto.TeamInt;
+import com.ssafy.ssafymate.dto.request.TeamListRequestDto;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.entity.Team;
-import com.ssafy.ssafymate.entity.TeamStack;
 import com.ssafy.ssafymate.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,8 +32,10 @@ public interface TeamService {
     //팀장 여부 조회
     Optional<Team> ownTeam(Long teamId, Long userId);
 
-    Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back,int total , List<Long> teamStacks);
+    Page<TeamInt> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total);
 
-    Page<Team> teamSearch(Pageable pageable, TeamListReuestDto teamListReuestDto, int front, int back,int total);
+    List<Team> teamListTransfer(List<TeamInt> teamIs);
+
+
 
 }

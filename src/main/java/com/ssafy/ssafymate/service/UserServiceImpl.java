@@ -6,10 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardDto;
 import com.ssafy.ssafymate.dto.UserDto.UserListStackDto;
-import com.ssafy.ssafymate.dto.request.PwModifyRequestDto;
-import com.ssafy.ssafymate.dto.request.UserListRequestDto;
-import com.ssafy.ssafymate.dto.request.UserModifyRequestDto;
-import com.ssafy.ssafymate.dto.request.UserRequestDto;
+import com.ssafy.ssafymate.dto.request.*;
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.entity.UserStack;
 import com.ssafy.ssafymate.repository.UserRepository;
@@ -203,6 +200,19 @@ public class UserServiceImpl implements UserService {
 
         }
         return userBoards;
+    }
+
+    @Transactional
+    @Modifying
+    @Override
+    public String selectProjectTrack(User user, UserSelectProjectTrackRequsetDto userSelectProjectTrackRequsetDto) {
+        if(userSelectProjectTrackRequsetDto.getProject().equals("공통 프로젝트")){
+            userRepository.updateCommonProjectTrack(user.getId(), userSelectProjectTrackRequsetDto.getProjectTrack());
+        }
+        else if(userSelectProjectTrackRequsetDto.getProject().equals("특화 프로젝트")){
+            userRepository.updateSpecialProjectTrack(user.getId(), userSelectProjectTrackRequsetDto.getProjectTrack());
+        }
+        return userSelectProjectTrackRequsetDto.getProject();
     }
 
     // String 형태의 techStacks를 UserStack 타입의 리스트로 변환하는 메서드

@@ -3,20 +3,18 @@ package com.ssafy.ssafymate.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.ssafy.ssafymate.dto.request.TeamListReuestDto;
+import com.ssafy.ssafymate.dto.TeamDto.TeamInt;
+import com.ssafy.ssafymate.dto.request.TeamListRequestDto;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.entity.*;
 import com.ssafy.ssafymate.repository.TeamRepository;
 import com.ssafy.ssafymate.repository.TeamStackRepository;
-import com.ssafy.ssafymate.repository.UserRepository;
-import com.ssafy.ssafymate.repository.UserTeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -39,7 +37,7 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public Optional<Team> teamfind(Long teamId) {
-        return teamRepository.findByIdJQL(teamId);
+        return teamRepository.findById(teamId);
     }
 
     @Transactional
@@ -117,15 +115,9 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back, int total, List<Long> teamStacks) {
-        return teamRepository.findALLByteamStackJQL(pageable, campus, project,projectTrack, teamName,front,back,total ,teamStacks);
-    }
+    public Page<TeamInt> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total) {
 
-
-    @Override
-    public Page<Team> teamSearch(Pageable pageable, TeamListReuestDto teamListReuestDto,int front, int back, int total) {
-
-        String jsonString = teamListReuestDto.getTechstack_code();
+        String jsonString = teamListRequestDto.getTechstack_code();
         List<TeamStack> techStacks = new ArrayList<>();
 
         if(jsonString != null)
@@ -138,16 +130,48 @@ public class TeamServiceImpl implements TeamService{
 
         List<Long> teamstacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
         return teamRepository.findALLByteamStackJQL(pageable,
-                teamListReuestDto.getCampus(),
-                teamListReuestDto.getProject(),
-                teamListReuestDto.getProject_track(),
-                teamListReuestDto.getTeam_name(),
+                teamListRequestDto.getCampus(),
+                teamListRequestDto.getProject(),
+                teamListRequestDto.getProject_track(),
+                teamListRequestDto.getTeam_name(),
                 front,
                 back,
                 total,
                 teamstacks);
     }
 
+    @Override
+    public List<Team> teamListTransfer(List<TeamInt> teamIs){
+        List<Team> teams = new ArrayList<>();
+
+        for (TeamInt teamI : teamIs){
+            teams.add(teamTransfer(teamI));
+        }
+        return teams;
+    }
+
+    public Team teamTransfer(TeamInt teamI){
+        Team team = Team.builder()
+                .id(teamI.getId())
+                .teamImg(teamI.getTeam_img())
+                .campus(teamI.getCampus())
+                .project(teamI.getProject())
+                .projectTrack(teamI.getProject_track())
+                .notice(teamI.getNotice())
+                .teamName(teamI.getTeam_name())
+                .totalRecruitment(teamI.getTotal_recruitment())
+                .totalHeadcount(teamI.getTotal_headcount())
+                .frontendRecruitment(teamI.getFrontend_recruitment())
+                .frontendHeadcount(teamI.getFrontend_headcount())
+                .backendRecruitment(teamI.getBackend_recruitment())
+                .backendHeadcount(teamI.getBackend_headcount())
+                .createDateTime(teamI.getCreate_date_time())
+                .build();
+
+        team.setTechStacks(teamStackRepository.findByTeamId(teamI.getId()));
+
+        return team;
+    }
 
     // teamrequestDto 와 이미지Url을 team 으로 빌드
     public Team teamBuilder(TeamRequestDto teamRequestDto, String teamImgUrl, User user){

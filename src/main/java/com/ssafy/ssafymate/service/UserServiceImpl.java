@@ -56,17 +56,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
 
+        String domainPrefix = "http://i6a402.p.ssafy.io:8080/resources/upload/";
+        String defaultImg = "default_img.jpg";
         String profileImgUrl;
-            // 기본 이미지 경로 설정 - 상대경로로 바꿔야함
-        if(multipartFile == null || multipartFile.isEmpty()) {
-//            profileImgUrl = "/var/webapps/upload/default_img.jpg";
-            profileImgUrl = "C:\\image\\default_img.jpg";
-        } else {
-//            profileImgUrl = "/var/webapps/upload/" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
 
-            File file = new File(profileImgUrl);
+        if(multipartFile == null || multipartFile.isEmpty()) {
+            profileImgUrl = domainPrefix + defaultImg;
+//            profileImgUrl = "C:\\image\\default_img.jpg";
+        } else {
+            String profileImgSaveUrl = "/var/webapps/upload/" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+//            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+
+            File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
+            profileImgUrl = domainPrefix + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
         }
 
         String jsonString = userRequestDto.getTechStacks();

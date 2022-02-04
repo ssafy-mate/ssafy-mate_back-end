@@ -39,9 +39,6 @@ public class LoginResponseDto{
     @ApiModelProperty(name="ssafy-track", example = "Java Track")
     private String ssafyTrack;
 
-    @ApiModelProperty(name="profile-img", example = "http://i6a402.p.ssafy.io:8080/resources/upload/default_img.jpg")
-    private String profileImg;
-
     @ApiModelProperty(name="projects")
     List<UserProjectLoginDto> projects = new ArrayList<>();
 
@@ -54,7 +51,6 @@ public class LoginResponseDto{
         body.setStudentNumber(user.getStudentNumber());
         body.setCampus(user.getCampus());
         body.setSsafyTrack(user.getSsafyTrack());
-        body.setProfileImg(user.getProfileImg());
         body.setProjects(UserProjectLoginDto.of(user.getTeams(),user));
         body.setToken(token);
         return body;

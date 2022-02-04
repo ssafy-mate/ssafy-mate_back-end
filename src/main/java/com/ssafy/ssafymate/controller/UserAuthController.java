@@ -67,7 +67,7 @@ public class UserAuthController {
     }
 
     // 교육생 상세 정보 조회
-    @GetMapping("/{userId}")
+    @GetMapping("/info/{userId}")
     @ApiOperation(value = "교육생 상세 조회", notes = "유저 아이디로 해당 교육생 상세 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -89,7 +89,7 @@ public class UserAuthController {
     }
 
     // 교육생 상제 정보 수정
-    @PutMapping("/{userId}")
+    @PutMapping("/info/{userId}")
     @ApiOperation(value = "교육생 상세 정보 수정", notes = "유저 아이디로 해당 교육생 상세 정보 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

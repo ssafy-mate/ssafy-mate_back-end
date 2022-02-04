@@ -59,9 +59,7 @@ public class TeamListController {
         if(teamListRequestDto.getExclusion() != null && teamListRequestDto.getExclusion()){
             total = 1;
         }
-        if (teamListRequestDto.getTeam_name() == null) {
-            teamListRequestDto.setTeam_name("");
-        }
+
         int totalPage;
         int size = 8;
         Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "t.id");
@@ -76,8 +74,6 @@ public class TeamListController {
 
         Page<TeamInt> teamInts;
         try {
-
-            System.out.println("stack");
 
             teamInts = teamService.teamSearch(pageable,
                     teamListRequestDto,

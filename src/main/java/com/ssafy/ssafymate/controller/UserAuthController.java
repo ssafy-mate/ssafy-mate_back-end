@@ -29,7 +29,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -156,7 +155,7 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 리스트 조회 실패"));
         }
 
-        return ResponseEntity.status(200).body(UserListResponseDto.of2(userBoards2, userListReuestDto.getProject(), nowPage, totalPage, totalElement));
+        return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListReuestDto.getProject(), nowPage, totalPage, totalElement));
     }
 
     @PostMapping("/project/track")

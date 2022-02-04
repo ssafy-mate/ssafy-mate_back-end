@@ -65,14 +65,13 @@ public class RequestController {
             if (teamService.belongToTeam(team.getProject(),userId).orElse(null) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 이미 팀에 속해있어 요청이 불가능합니다."));
             }
-            if(userTeamService.isRecruit(messageUserRequestDto.getTeamId())==false){
+            if(!userTeamService.isRecruit(messageUserRequestDto.getTeamId())){
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
             }
             requestMessageService.userRequest(user,team,messageUserRequestDto.getMessage());
 
 
         }catch (Exception exception){
-            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 팀 지원 요청 실패"));
         }
         return ResponseEntity.status(200).body(ErrorResponseBody.of(200, true, "성공"));
@@ -108,14 +107,13 @@ public class RequestController {
             if (teamService.belongToTeam(team.getProject(),messageTeamRequestDto.getUserId()).orElse(null) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생은 이미 다른 팀에 합류되어 있습니다"));
             }
-            if(userTeamService.isRecruit(messageTeamRequestDto.getTeamId())==false){
+            if(!userTeamService.isRecruit(messageTeamRequestDto.getTeamId())){
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
             }
             requestMessageService.teamRequest(sender,messageTeamRequestDto.getUserId(),team, messageTeamRequestDto.getMessage());
 
 
         }catch (Exception exception){
-            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 팀 지원 요청 실패"));
         }
         return ResponseEntity.status(200).body(ErrorResponseBody.of(200, true, "성공"));

@@ -14,7 +14,7 @@ public class TechStackServiceImpl implements TechStackService{
     TechStackRepository techStackRepository;
 
     @Override
-    public List<TechStack> techstackList() {
+    public List<TechStack> techStackList() {
         return techStackRepository.findAll();
     }
 }

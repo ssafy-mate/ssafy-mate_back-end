@@ -100,7 +100,6 @@ public class TeamServiceImpl implements TeamService{
     @Override
     public void teamDelete(Long team_id) {
         teamRepository.deleteById(team_id);
-        return ;
     }
 
     @Override
@@ -128,7 +127,7 @@ public class TeamServiceImpl implements TeamService{
             techStacks.add(notin);
         }
 
-        List<Long> teamstacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
+        List<Long> teamstacks = techStacks.stream().map(TeamStack::getTechStackCode).collect(Collectors.toList());
         return teamRepository.findALLByteamStackJQL(pageable,
                 teamListRequestDto.getCampus(),
                 teamListRequestDto.getProject(),
@@ -181,7 +180,7 @@ public class TeamServiceImpl implements TeamService{
         Type listType = new TypeToken<ArrayList<TeamStack>>(){}.getType();
         List<TeamStack> techStacks = gson.fromJson(jsonString, listType);
 
-        Team team = Team.builder()
+        return Team.builder()
                 .campus(teamRequestDto.getCampus())
                 .project(teamRequestDto.getProject())
                 .projectTrack(teamRequestDto.getProjectTrack())
@@ -195,7 +194,6 @@ public class TeamServiceImpl implements TeamService{
                 .backendRecruitment(teamRequestDto.getBackendRecruitment())
                 .owner(user)
                 .build();
-        return team;
     }
 
     // String 형태의 techStacks를 UserStack 타입의 리스트로 변환하는 메서드

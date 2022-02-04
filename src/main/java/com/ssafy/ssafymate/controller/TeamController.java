@@ -1,6 +1,5 @@
 package com.ssafy.ssafymate.controller;
 
-import com.ssafy.ssafymate.JWT.TokenProvider;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
@@ -32,9 +31,6 @@ public class TeamController {
 
     @Autowired
     UserTeamService userTeamService;
-
-    @Autowired
-    private TokenProvider tokenProvider;
 
     @GetMapping("/info/{teamId}")
     @PreAuthorize("hasRole('USER')")

@@ -25,12 +25,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
             " U.ID, U.PROFILE_IMG, U.CAMPUS, U.SSAFY_TRACK, U.STUDENT_NAME, U.JOB1, U.JOB2, U.GITHUB_URL, U.COMMON_PROJECT_TRACK, U.Specialization_project_track   " +
             "FROM " +
             "   (SELECT * FROM USER " +
-            "   WHERE campus=:campus " +
+            "   WHERE campus LIKE %:campus% " +
             "   AND ssafy_track LIKE %:ssafyTrack% " +
             "   AND (CASE WHEN (:project='공통 프로젝트') " +
-            "       THEN (common_project_track = :projectTrack OR (common_project_track IS NULL)) " +
+            "       THEN (common_project_track LIKE %:projectTrack% OR (common_project_track IS NULL)) " +
             "       WHEN (:project='특화 프로젝트') " +
-            "       THEN (specialization_project_track=:projectTrack OR specialization_project_track IS NULL)" +
+            "       THEN (specialization_project_track LIKE %:projectTrack% OR specialization_project_track IS NULL)" +
             "       ELSE " +
             "       1 " +
             "       END " +
@@ -73,7 +73,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   COMMON_PROJECT_TRACK = :ProjectTrack " +
             "WHERE id=:userId"
             , nativeQuery = true)
-    int updateCommonProjectTrack(@Param("userId") Long userId, String ProjectTrack);
+    void updateCommonProjectTrack(@Param("userId") Long userId, String ProjectTrack);
 
     @Transactional
     @Modifying
@@ -82,6 +82,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   SPECIALIZATION_PROJECT_TRACK = :ProjectTrack " +
             "WHERE id=:userId"
             , nativeQuery = true)
-    int updateSpecialProjectTrack(@Param("userId") Long userId, String ProjectTrack);
+    void updateSpecialProjectTrack(@Param("userId") Long userId, String ProjectTrack);
 
 }

@@ -1,14 +1,11 @@
 package com.ssafy.ssafymate.service;
 
-import com.ssafy.ssafymate.dto.ChatDto.ChatMessageDto;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
-import com.ssafy.ssafymate.entity.ChattingHistory;
 import com.ssafy.ssafymate.entity.ChattingRoom;
 import com.ssafy.ssafymate.repository.ChattingHistoryRepository;
 import com.ssafy.ssafymate.repository.ChattingRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -58,18 +55,4 @@ public class ChattingServiceImpl implements ChattingService{
 
     }
 
-    @Override
-    public int saveHistory(ChatMessageDto chatMessageDto) {
-
-        int temp = chattingHistoryRepository.saveHistory(
-                chatMessageDto.getRoomId(),
-                chatMessageDto.getSenderId(),
-                chatMessageDto.getSentTime(),
-                chatMessageDto.getContent()
-        );
-        if(temp == 1){
-            return temp;
-        }
-        return 0;
-    }
 }

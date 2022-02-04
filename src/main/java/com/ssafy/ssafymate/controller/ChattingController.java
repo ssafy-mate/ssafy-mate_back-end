@@ -3,7 +3,6 @@ package com.ssafy.ssafymate.controller;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
-import com.ssafy.ssafymate.dto.request.ChatRequestDto;
 import com.ssafy.ssafymate.dto.response.ChatHistoryResponseDto;
 import com.ssafy.ssafymate.dto.response.ChatHistoryTotalPagesResponseDto;
 import com.ssafy.ssafymate.dto.response.ChatRoomResponseDto;
@@ -52,8 +51,6 @@ public class ChattingController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> getHistoryList(
-//                                            @RequestParam("userId1") Long userId1,
-//                                            @RequestParam("userId2") Long userId2,
             @PathVariable("roomId") String roomId,
             @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage,
             @RequestParam("entryTime") String entryTime) {
@@ -62,6 +59,7 @@ public class ChattingController {
         String[] ids = roomId.split("-");
         Long userId1 = Long.parseLong(ids[0]);
         Long userId2 = Long.parseLong(ids[1]);
+
 //        String roomId; // 123-124
 //        if (userId1 > userId2) {
 //            roomId = userId2 + "-" + userId1;

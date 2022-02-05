@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
     Optional<User> findByEmail(String email);
-    Optional<User> findEmailByStudentNumberAndStudentName(String studentNumber, String studentName);
+    Optional<User> findByStudentNumberAndStudentName(String studentNumber, String studentName);
 
     @Query(value = "SELECT " +
             " (CASE WHEN UT.TEAM_ID IS NULL THEN 'False' ELSE 'True' END) AS BELONG_TO_TEAM," +
@@ -69,19 +69,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Modifying
     @Query(value = "" +
-            "UPDATE USER SET" +
-            "   COMMON_PROJECT_TRACK = :ProjectTrack " +
+            "UPDATE USER SET " +
+            "COMMON_PROJECT_TRACK=:projectTrack " +
             "WHERE id=:userId"
             , nativeQuery = true)
-    void updateCommonProjectTrack(@Param("userId") Long userId, String ProjectTrack);
+    int updateCommonProjectTrack(@Param("userId") Long userId, @Param("projectTrack") String projectTrack);
 
     @Transactional
     @Modifying
     @Query(value = "" +
-            "UPDATE USER SET" +
-            "   SPECIALIZATION_PROJECT_TRACK = :ProjectTrack " +
+            "UPDATE USER SET " +
+            "SPECIALIZATION_PROJECT_TRACK=:projectTrack " +
             "WHERE id=:userId"
             , nativeQuery = true)
-    void updateSpecialProjectTrack(@Param("userId") Long userId, String ProjectTrack);
-
+    int updateSpecialProjectTrack(@Param("userId") Long userId, @Param("projectTrack") String projectTrack);
 }

@@ -61,7 +61,7 @@ public class UserController {
         if (student==null || !((campus.equals(student.getCampus())) && (studentNumber.equals(student.getStudentNumber())) && (userName.equals(student.getStudentName())))) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "해당 교육생 정보가 없습니다."));
         }
-        User user = userService.getEmailByStudentNumberAndStudentName(studentNumber,userName);
+        User user = userService.getUserByStudentNumberAndStudentName(studentNumber,userName);
         if (user!=null) {
             return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 가입된 교육생 입니다."));
         }
@@ -155,7 +155,10 @@ public class UserController {
             @RequestParam("studentNumber") String studentNumber, @RequestParam("userName") String userName) {
         User user;
         try {
-            user = userService.getEmailByStudentNumberAndStudentName(studentNumber, userName);
+            user = userService.getUserByStudentNumberAndStudentName(studentNumber, userName);
+            if (user == null) {
+                return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "일치하는 회원 정보가 없습니다."));
+            }
         } catch (Exception exception) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "일치하는 회원 정보가 없습니다."));
         }

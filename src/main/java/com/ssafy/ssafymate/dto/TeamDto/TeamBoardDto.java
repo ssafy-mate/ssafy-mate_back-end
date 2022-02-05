@@ -2,6 +2,8 @@ package com.ssafy.ssafymate.dto.TeamDto;
 
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.TeamStack;
+import com.ssafy.ssafymate.entity.User;
+import com.ssafy.ssafymate.entity.UserTeam;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,9 +44,13 @@ public class TeamBoardDto {
             teamBoardDto.setTotalRecruitment(team.getTotalRecruitment());
             teamBoardDto.setFrontendRecruitment(team.getFrontendRecruitment());
             teamBoardDto.setBackendRecruitment(team.getBackendRecruitment());
+
             teamBoardDto.setTotalHeadcount(team.getTotalHeadcount());
             teamBoardDto.setFrontendHeadcount(team.getFrontendHeadcount());
             teamBoardDto.setBackendHeadcount(team.getBackendHeadcount());
+
+            teamBoardDto.setCreateDateTime(team.getCreateDateTime());
+
 
             res.add(teamBoardDto);
         }

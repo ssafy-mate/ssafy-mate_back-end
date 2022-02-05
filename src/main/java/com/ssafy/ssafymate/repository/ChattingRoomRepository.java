@@ -29,22 +29,22 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Stri
             "        USER U\n" +
             "    ON U.ID = CR.USER_ID) UR\n" +
             "JOIN\n" +
-            "    (SELECT CH1.CHATTING_ROOM_ID, CH1.SENT_TIME, CH1.CONTENT\n" +
+            "    (SELECT CH1.ROOM_ID, CH1.SENT_TIME, CH1.CONTENT\n" +
             "    FROM \n" +
             "        CHATTING_HISTORY CH1\n" +
             "    JOIN\n" +
-            "        (SELECT CHATTING_ROOM_ID, MAX(SENT_TIME) SENT_TIME\n" +
+            "        (SELECT ROOM_ID, MAX(SENT_TIME) SENT_TIME\n" +
             "        FROM CHATTING_HISTORY \n" +
-            "        GROUP BY CHATTING_ROOM_ID) CH2\n" +
-            "    ON CH1.CHATTING_ROOM_ID = CH2.CHATTING_ROOM_ID AND  CH1.SENT_TIME =  CH2.SENT_TIME) CH\n" +
-            "ON UR. ROOM_ID = CH.CHATTING_ROOM_ID"
+            "        GROUP BY ROOM_ID) CH2\n" +
+            "    ON CH1.ROOM_ID = CH2.ROOM_ID AND  CH1.SENT_TIME =  CH2.SENT_TIME) CH\n" +
+            "ON UR. ROOM_ID = CH.ROOM_ID"
     , nativeQuery = true)
     Optional<List<RoomList>> getChattingRoom(@Param("userId") Long userId);
 
     Optional<ChattingRoom> findByRoomId(String roomId);
 
     @Modifying
-    @Query(value = "insert into chatting_room (room_id, user_id_small, user_id_big) values (:roomId, :userId1, :userId2)", nativeQuery = true)
+    @Query(value = "insert into chatting_room (room_id, user_id_small, user_id_big) values (:roomId, :userIdSmall, :userIdBig)", nativeQuery = true)
     @Transactional
-    int saveRoom(@Param("roomId") String roomId, @Param("userId1") Long userId1, @Param("userId2") Long userId2);
+    int saveRoom(@Param("roomId") String roomId, @Param("userIdSmall") Long userIdSmall, @Param("userIdBig") Long userIdBig);
 }

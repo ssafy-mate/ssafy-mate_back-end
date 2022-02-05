@@ -22,15 +22,15 @@ public interface ChattingHistoryRepository extends JpaRepository<ChattingHistory
             "from chatting_history AS CH\n" +
             "join user as U\n" +
             "on U.id = CH.sender_id\n" +
-            "WHERE CH.chatting_room_id = :roomId AND CH.sent_time < :entryTime", nativeQuery = true)
+            "WHERE CH.room_id = :roomId AND CH.sent_time < :entryTime", nativeQuery = true)
     List<ContentList> getHistoryList(Pageable pageable, @Param("roomId") String roomId, @Param("entryTime") String entryTime);
 //    Optional<List<ContentList>> getHistoryList(@Param("roomId") String roomId);
 
-    @Query(value = "select count(*) from chatting_history where chatting_room_id = :roomId", nativeQuery = true)
+    @Query(value = "select count(*) from chatting_history where room_id = :roomId", nativeQuery = true)
     int countByChattingRoomId(@Param("roomId") String roomId);
 
     @Modifying
-    @Query(value = "insert into chatting_history(chatting_room_id, sender_id, sent_time, content) values (:roomId, :senderId, :sentTime, :content)", nativeQuery = true)
+    @Query(value = "insert into chatting_history(room_id, sender_id, sent_time, content) values (:roomId, :senderId, :sentTime, :content)", nativeQuery = true)
     @Transactional
     int saveHistory(@Param("roomId") String roomId, @Param("senderId") Long senderId, @Param("sentTime") String sentTime, @Param("content") String content);
 }

@@ -49,13 +49,24 @@ public class TeamDetail {
         res.setOwner(TeamDetailOwnerDto.of(team.getOwner()));
         res.setMembers(TeamDetailUserDto.of(team.getMembers()));
 
+        int front = 0;
+        int back = 0;
+        for (UserTeam userTeam : team.getMembers()){
+            if(userTeam.getUser().getJob1().contains("Front")){
+                front++;
+            }
+            else if(userTeam.getUser().getJob1().contains("Back")){
+                back++;
+            }
+        }
+
         res.setTeamImgUrl(team.getTeamImg());
         res.setTotalRecruitment(team.getTotalRecruitment());
         res.setFrontendRecruitment(team.getFrontendRecruitment());
         res.setBackendRecruitment(team.getBackendRecruitment());
-        res.setTotalHeadcount(team.getTotalHeadcount());
-        res.setFrontendHeadcount(team.getFrontendHeadcount());
-        res.setBackendHeadcount(team.getBackendHeadcount());
+        res.setTotalHeadcount(front+back);
+        res.setFrontendHeadcount(front);
+        res.setBackendHeadcount(back);
         return res;
     }
 }

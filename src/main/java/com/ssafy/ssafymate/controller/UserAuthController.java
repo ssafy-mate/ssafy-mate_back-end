@@ -5,12 +5,11 @@ import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.common.SuccessMessageBody;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardDto;
+import com.ssafy.ssafymate.dto.UserDto.UserProjectLoginDto;
 import com.ssafy.ssafymate.dto.request.UserListRequestDto;
 import com.ssafy.ssafymate.dto.request.UserModifyRequestDto;
 import com.ssafy.ssafymate.dto.request.UserSelectProjectTrackRequsetDto;
-import com.ssafy.ssafymate.dto.response.BelongToTeam;
-import com.ssafy.ssafymate.dto.response.UserListResponseDto;
-import com.ssafy.ssafymate.dto.response.UserResponseDto;
+import com.ssafy.ssafymate.dto.response.*;
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.service.TeamService;
@@ -32,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Api(value = "교육생 auth API", tags = {"UserAuth"})
 @RestController
@@ -50,25 +50,25 @@ public class UserAuthController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> canCreateTeam(
+    public ResponseEntity<?> belongToTeam(
             @RequestParam final String selectedProject,
-            @AuthenticationPrincipal final String token){
+            @AuthenticationPrincipal final String token) {
         Boolean belongToTeam = false;
         try {
             User user = userService.getUserByEmail(token);
             Long userId = user.getId();
-            Team team = teamService.belongToTeam(selectedProject,userId).orElse(null);
+            Team team = teamService.belongToTeam(selectedProject, userId).orElse(null);
             if (team == null) {
                 belongToTeam = true;
             }
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server, 팀 참여 여부 조회 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 참여 여부 조회 실패"));
         }
         return ResponseEntity.status(200).body(BelongToTeam.of(belongToTeam));
     }
 
     // 교육생 상세 정보 조회
-    @GetMapping("/{userId}")
+    @GetMapping("/info/{userId}")
     @ApiOperation(value = "교육생 상세 조회", notes = "유저 아이디로 해당 교육생 상세 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -76,7 +76,7 @@ public class UserAuthController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> userDetail(
-            @PathVariable final Long userId){
+            @PathVariable final Long userId) {
         User user;
         try {
             user = userService.getUserById(userId);
@@ -90,7 +90,7 @@ public class UserAuthController {
     }
 
     // 교육생 상제 정보 수정
-    @PutMapping("/{userId}")
+    @PutMapping("/info/{userId}")
     @ApiOperation(value = "교육생 상세 정보 수정", notes = "유저 아이디로 해당 교육생 상세 정보 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -103,13 +103,13 @@ public class UserAuthController {
             @AuthenticationPrincipal String token) {
         User user = userService.getUserByEmail(token);
         Long reqUserId = user.getId();
-        if (reqUserId != userId) {
-            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
+        if (!Objects.equals(reqUserId, userId)) {
+            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
         }
         try {
             userService.userModify(userModifyRequestDto, userModifyRequestDto.getProfileImg(), user);
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 교육생 상세 정보 수정 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 상세 정보 수정 실패"));
         }
         return ResponseEntity.status(200).body(MessageBody.of("교육생 상세 정보 수정이 완료되었습니다."));
     }
@@ -124,46 +124,43 @@ public class UserAuthController {
     public ResponseEntity<?> SearchUserList(
             @Valid UserListRequestDto userListReuestDto, BindingResult bindingResult,
             @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage
-    ){
-        List<User> users = new ArrayList<>();
-        List<UserBoardInterface> userBoards = new ArrayList<>();
-        if(userListReuestDto.getUser_name() == null){
-            userListReuestDto.setUser_name("");
-        }
-        if(userListReuestDto.getJob1() == null){
-            userListReuestDto.setJob1("");
-        }
-        if(userListReuestDto.getSsafy_track() == null){
-            userListReuestDto.setSsafy_track("");
-        }
-        int totalPage = 0;
-        long totalElement = 0;
+    ) {
+        List<UserBoardInterface> userBoards;
+
+        int totalPage;
+        long totalElement;
         int size = 9;
         Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
 
+        if (userListReuestDto.getSort() != null) {
+            if (userListReuestDto.getSort().equals("recent")) {
+                pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
+            } else if (userListReuestDto.getSort().equals("name")) {
+                pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.ASC, "student_name");
+            }
+        }
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "잘못된 입력"));
+            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "잘못된 입력"));
         }
         Page<UserBoardInterface> userPage;
-        List<UserBoardDto> userBoards2 = new ArrayList<>();
+        List<UserBoardDto> userBoards2;
         try {
-            userPage = userService.userList(pageable,userListReuestDto);
+            userPage = userService.userList(pageable, userListReuestDto);
 
             userBoards = userPage.getContent();
             userBoards2 = userService.userBoarConvert(userBoards, userListReuestDto.getProject());
 
             totalPage = userPage.getTotalPages();
             totalElement = userPage.getTotalElements();
-        }catch (Exception exception){
-            System.out.println(exception);
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 교육생 리스트 조회 실패"));
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 리스트 조회 실패"));
         }
 
-        return ResponseEntity.status(200).body(UserListResponseDto.of2(userBoards2,userListReuestDto.getProject(),nowPage,totalPage,totalElement));
+        return ResponseEntity.status(200).body(UserListResponseDto.of2(userBoards2, userListReuestDto.getProject(), nowPage, totalPage, totalElement));
     }
 
     @PostMapping("/project/track")
-    @ApiOperation(value = "교욱생 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 교육생 리스트 조회")
+    @ApiOperation(value = "교욱생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 400, message = "인증 실패"),
@@ -172,26 +169,46 @@ public class UserAuthController {
     public ResponseEntity<?> SearchUserList(
             @RequestBody @Valid UserSelectProjectTrackRequsetDto userSelectProjectTrackRequsetDto,
             @AuthenticationPrincipal final String token
-    ){
+    ) {
         String project = userSelectProjectTrackRequsetDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
-            if(project.equals("공통 프로젝트")){
-                if(user.getCommonProjectTrack()!= null){
-                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "이미 "+project+" 트랙 선택을 완료 하였습니다."));
+            if (project.equals("공통 프로젝트")) {
+                if (user.getCommonProjectTrack() != null) {
+                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "이미 " + project + " 트랙 선택을 완료 하였습니다."));
+                }
+            } else if (project.equals("특화 프로젝트")) {
+                if (user.getSpecializationProjectTrack() != null) {
+                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "이미 " + project + " 트랙 선택을 완료 하였습니다."));
                 }
             }
-            else if(project.equals("특화 프로젝트")){
-                if(user.getSpecializationProjectTrack()!= null){
-                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "이미 "+project+" 트랙 선택을 완료 하였습니다."));
-                }
-            }
-            userService.selectProjectTrack(user,userSelectProjectTrackRequsetDto);
+            userService.selectProjectTrack(user, userSelectProjectTrackRequsetDto);
 
-        }catch (Exception exception){
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 교육생 리스트 조회 실패"));
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 리스트 조회 실패"));
         }
-        return ResponseEntity.status(200).body(SuccessMessageBody.of(true,project+" 트랙 선택이 완료되었습니다."));
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
+    }
+
+    // 교육생 프로젝트 정보 받기
+    @GetMapping("/projects")
+    @ApiOperation(value = "교육생 프로젝트 정보 받기", notes = "교육생 프로젝트 정보 받기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> userProjects(@AuthenticationPrincipal final String token) {
+
+        User user;
+        try {
+            user = userService.getUserByEmail(token);
+
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 프로젝트 정보 갱신 실패"));
+        }
+        return ResponseEntity.status(200).body(UserProjectResponseDto.of(UserProjectLoginDto.of(user.getTeams(), user)));
     }
 
 

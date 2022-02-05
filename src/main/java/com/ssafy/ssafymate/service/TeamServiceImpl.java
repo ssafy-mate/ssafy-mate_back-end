@@ -3,6 +3,7 @@ package com.ssafy.ssafymate.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.ssafy.ssafymate.dto.TeamDto.TeamInt;
 import com.ssafy.ssafymate.dto.request.TeamListRequestDto;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.entity.*;
@@ -36,7 +37,7 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public Optional<Team> teamfind(Long teamId) {
-        return teamRepository.findByIdJQL(teamId);
+        return teamRepository.findById(teamId);
     }
 
     @Transactional
@@ -114,13 +115,7 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public Page<Team> teamSearch(Pageable pageable, String campus, String project, String projectTrack, String teamName, int front, int back, int total, List<Long> teamStacks) {
-        return teamRepository.findALLByteamStackJQL(pageable, campus, project,projectTrack, teamName,front,back,total ,teamStacks);
-    }
-
-
-    @Override
-    public Page<Team> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total) {
+    public Page<TeamInt> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total) {
 
         String jsonString = teamListRequestDto.getTechstack_code();
         List<TeamStack> techStacks = new ArrayList<>();
@@ -145,6 +140,38 @@ public class TeamServiceImpl implements TeamService{
                 teamstacks);
     }
 
+    @Override
+    public List<Team> teamListTransfer(List<TeamInt> teamIs){
+        List<Team> teams = new ArrayList<>();
+
+        for (TeamInt teamI : teamIs){
+            teams.add(teamTransfer(teamI));
+        }
+        return teams;
+    }
+
+    public Team teamTransfer(TeamInt teamI){
+        Team team = Team.builder()
+                .id(teamI.getId())
+                .teamImg(teamI.getTeam_img())
+                .campus(teamI.getCampus())
+                .project(teamI.getProject())
+                .projectTrack(teamI.getProject_track())
+                .notice(teamI.getNotice())
+                .teamName(teamI.getTeam_name())
+                .totalRecruitment(teamI.getTotal_recruitment())
+                .totalHeadcount(teamI.getTotal_headcount())
+                .frontendRecruitment(teamI.getFrontend_recruitment())
+                .frontendHeadcount(teamI.getFrontend_headcount())
+                .backendRecruitment(teamI.getBackend_recruitment())
+                .backendHeadcount(teamI.getBackend_headcount())
+                .createDateTime(teamI.getCreate_date_time())
+                .build();
+
+        team.setTechStacks(teamStackRepository.findByTeamId(teamI.getId()));
+
+        return team;
+    }
 
     // teamrequestDto 와 이미지Url을 team 으로 빌드
     public Team teamBuilder(TeamRequestDto teamRequestDto, String teamImgUrl, User user){

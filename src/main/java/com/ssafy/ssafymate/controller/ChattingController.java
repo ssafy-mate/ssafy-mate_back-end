@@ -27,14 +27,14 @@ public class ChattingController {
     private ChattingService chattingService;
 
 
-    @GetMapping("/room")
+    @GetMapping("/room/{userId}")
     @ApiOperation(value = "채팅방 리스트 불러오기", notes = "사용자가 대화한 채팅방 리스트를 불러온다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 400, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> getRoomList(@RequestParam("userId") Long userId) {
+    public ResponseEntity<?> getRoomList(@PathVariable("userId") Long userId) {
         List<RoomList> roomList = chattingService.getRoomList(userId);
 
         if (roomList == null) {
@@ -59,7 +59,8 @@ public class ChattingController {
         String[] ids = roomId.split("-");
         Long userId1 = Long.parseLong(ids[0]);
         Long userId2 = Long.parseLong(ids[1]);
-
+        System.out.println(userId1);
+        System.out.println(userId2);
 //        String roomId; // 123-124
 //        if (userId1 > userId2) {
 //            roomId = userId2 + "-" + userId1;
@@ -73,7 +74,7 @@ public class ChattingController {
             }
         }
         int size = 5;
-        Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "CH.id");
+        Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
 
         if (nowPage == 1) {
             int totalLogCount = chattingService.getTotalLogCount(roomId);

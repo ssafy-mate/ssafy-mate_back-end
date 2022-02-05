@@ -73,7 +73,7 @@ public class ChattingController {
                 return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "방 생성에 실패하였습니다."));
             }
         }
-        int size = 5;
+        int size = 20;
         Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
 
         if (nowPage == 1) {

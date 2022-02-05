@@ -15,8 +15,6 @@ import java.util.List;
 @ApiModel("ChatHistoryResponseDto")
 public class ChatHistoryResponseDto {
 
-    private Long id;
-
     private String content;
 
     private String sentTime;
@@ -31,7 +29,7 @@ public class ChatHistoryResponseDto {
         for (ContentList cl : contentList) {
             ChatHistoryResponseDto chr = new ChatHistoryResponseDto();
 
-            chr.setId(cl.getId());
+//            chr.setId(cl.getId());
             chr.setContent(cl.getContent());
             chr.setSentTime(cl.getSent_time());
             chr.setSenderId(cl.getSender_id());

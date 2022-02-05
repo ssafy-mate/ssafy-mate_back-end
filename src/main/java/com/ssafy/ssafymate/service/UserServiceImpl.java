@@ -97,12 +97,9 @@ public class UserServiceImpl implements UserService {
 
     // 아이디 찾기
     @Override
-    public String getEmailByStudentNumberAndStudentName(String studentNumber, String studentName) {
+    public User getEmailByStudentNumberAndStudentName(String studentNumber, String studentName) {
         User user = userRepository.findEmailByStudentNumberAndStudentName(studentNumber, studentName).orElse(null);
-        String email = null;
-        if(user != null)
-            email = user.getEmail();
-        return email;
+        return user;
     }
 
     // 비밀번호 재설정

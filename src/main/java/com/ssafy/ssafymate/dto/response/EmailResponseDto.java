@@ -17,9 +17,9 @@ public class EmailResponseDto {
     @ApiModelProperty(name="아이디", example = "ssafymate@gmail.com")
     private String userEmail;
 
-    public static EmailResponseDto of(Boolean success, String message, String email) {
+    public static EmailResponseDto of(Boolean success, String message, String userName, String email) {
         EmailResponseDto body = new EmailResponseDto();
-        body.message = message;
+        body.message = String.format(message, userName);
         body.success = success;
         body.userEmail = email;
         return body;

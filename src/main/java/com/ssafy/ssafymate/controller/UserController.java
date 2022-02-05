@@ -61,8 +61,8 @@ public class UserController {
         if (student==null || !((campus.equals(student.getCampus())) && (studentNumber.equals(student.getStudentNumber())) && (userName.equals(student.getStudentName())))) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "해당 교육생 정보가 없습니다."));
         }
-        String email = userService.getEmailByStudentNumberAndStudentName(studentNumber,userName);
-        if (email!=null) {
+        User user = userService.getEmailByStudentNumberAndStudentName(studentNumber,userName);
+        if (user!=null) {
             return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 가입된 교육생 입니다."));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "교육생 인증이 완료되었습니다."));
@@ -153,13 +153,13 @@ public class UserController {
     })
     public ResponseEntity<?> idSearch(
             @RequestParam("studentNumber") String studentNumber, @RequestParam("userName") String userName) {
-        String email;
+        User user;
         try {
-            email = userService.getEmailByStudentNumberAndStudentName(studentNumber, userName);
+            user = userService.getEmailByStudentNumberAndStudentName(studentNumber, userName);
         } catch (Exception exception) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "일치하는 회원 정보가 없습니다."));
         }
-        return ResponseEntity.status(200).body(EmailResponseDto.of(true, "고객님의 싸피메이트 계정을 찾았습니다.\n 아이디 확인 후 로그인 해주세요.", email));
+        return ResponseEntity.status(200).body(EmailResponseDto.of(true, "%s님의 싸피메이트 계정을 찾았습니다.\n 아이디 확인 후 로그인 해주세요.", user.getStudentName(), user.getEmail()));
     }
 
     // 비밀번호 재설정 - 이메일 인증

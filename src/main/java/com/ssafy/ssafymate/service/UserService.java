@@ -19,7 +19,7 @@ public interface UserService {
     User getUserByEmail(String email);
 
     // 유저 조회 - 학번, 이름으로 찾기
-    User getEmailByStudentNumberAndStudentName(String studentNumber, String studentName);
+    User getUserByStudentNumberAndStudentName(String studentNumber, String studentName);
 
     // 유저 비밀번호 수정
     User passwordModify(PwModifyRequestDto pwModifyRequestDto, User user);

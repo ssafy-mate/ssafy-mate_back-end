@@ -76,17 +76,17 @@ public class ChattingController {
         int size = 20;
         Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
 
-        if (nowPage == 1) {
-            int totalLogCount = chattingService.getTotalLogCount(roomId);
-            int totalPages = totalLogCount / size;
-            if (totalLogCount % size != 0) {
-                totalPages += 1;
-            }
-            List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
-            return ResponseEntity.status(200).body(ChatHistoryTotalPagesResponseDto.of(contentList, totalPages));
+//        if (nowPage == 1) {
+        int totalLogCount = chattingService.getTotalLogCount(roomId);
+        int totalPages = totalLogCount / size;
+        if (totalLogCount % size != 0) {
+            totalPages += 1;
         }
-
         List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
-        return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(contentList));
+        return ResponseEntity.status(200).body(ChatHistoryTotalPagesResponseDto.of(contentList, totalPages));
+//        }
+
+//        List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
+//        return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(contentList));
     }
 }

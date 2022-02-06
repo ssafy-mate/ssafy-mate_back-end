@@ -18,7 +18,7 @@ import java.util.Optional;
 @Repository
 public interface ChattingHistoryRepository extends JpaRepository<ChattingHistory, Long> {
 
-    @Query(value = "select CH.sender_id, U.student_name username, CH.content, CH.sent_time\n" +
+    @Query(value = "select CH.room_id, CH.sender_id, U.student_name username, CH.content, CH.sent_time\n" +
             "from chatting_history AS CH\n" +
             "join user as U\n" +
             "on U.id = CH.sender_id\n" +

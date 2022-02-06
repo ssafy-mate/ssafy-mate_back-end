@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.config;
 
+import antlr.collections.List;
 import com.ssafy.ssafymate.JWT.JwtFilter;
 import com.ssafy.ssafymate.JWT.TokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -76,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("*");
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://youthful-kirch-818851.netlify.app/"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

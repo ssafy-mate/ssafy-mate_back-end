@@ -57,36 +57,34 @@ public class ChattingController {
 
         // 스트링 파싱하기
         String[] ids = roomId.split("-");
-        Long userId1 = Long.parseLong(ids[0]);
-        Long userId2 = Long.parseLong(ids[1]);
-        System.out.println(userId1);
-        System.out.println(userId2);
-//        String roomId; // 123-124
-//        if (userId1 > userId2) {
-//            roomId = userId2 + "-" + userId1;
-//        } else {
-//            roomId = userId1 + "-" + userId2;
-//        }
+//        Long userId1 = Long.parseLong(ids[0]);
+//        Long userId2 = Long.parseLong(ids[1]);
+//        System.out.println(userId1);
+//        System.out.println(userId2);
+
+        // 채팅방의 존재 여부 확인
         if (chattingService.findRoom(roomId) == null) {
-            int temp = chattingService.saveRoom(roomId, userId1, userId2);
+            // 채팅방이 없으면 채팅방 개설
+            int temp = chattingService.saveRoom(roomId, Long.parseLong(ids[0]), Long.parseLong(ids[1]));
             if (temp == 0) {
                 return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "방 생성에 실패하였습니다."));
             }
         }
+        // 20개씩 전송
         int size = 20;
         Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
 
 //        if (nowPage == 1) {
-        int totalLogCount = chattingService.getTotalLogCount(roomId);
-        int totalPages = totalLogCount / size;
-        if (totalLogCount % size != 0) {
-            totalPages += 1;
-        }
-        List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
-        return ResponseEntity.status(200).body(ChatHistoryTotalPagesResponseDto.of(contentList, totalPages));
+//        int totalLogCount = chattingService.getTotalLogCount(roomId);
+//        int totalPages = totalLogCount / size;
+//        if (totalLogCount % size != 0) {
+//            totalPages += 1;
+//        }
+//        List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
+//        return ResponseEntity.status(200).body(ChatHistoryTotalPagesResponseDto.of(contentList, totalPages));
 //        }
 
-//        List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
-//        return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(contentList));
+        List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
+        return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(contentList));
     }
 }

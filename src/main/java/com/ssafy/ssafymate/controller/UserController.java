@@ -162,7 +162,7 @@ public class UserController {
         } catch (Exception exception) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "일치하는 회원 정보가 없습니다."));
         }
-        return ResponseEntity.status(200).body(EmailResponseDto.of(true, "%s님의 싸피메이트 계정을 찾았습니다.\n 아이디 확인 후 로그인 해주세요.", user.getStudentName(), user.getEmail()));
+        return ResponseEntity.status(200).body(EmailResponseDto.of(true, "%s님의 싸피메이트 계정을 찾았습니다.", user.getStudentName(), user.getEmail()));
     }
 
     // 비밀번호 재설정 - 이메일 인증

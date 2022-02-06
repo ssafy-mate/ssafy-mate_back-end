@@ -1,9 +1,12 @@
 package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.common.ErrorResponseBody;
+import com.ssafy.ssafymate.common.SuccessMessageBody;
 import com.ssafy.ssafymate.dto.request.MessageTeamRequestDto;
 import com.ssafy.ssafymate.dto.request.MessageUserRequestDto;
 import com.ssafy.ssafymate.dto.response.LoginResponseDto;
+import com.ssafy.ssafymate.dto.response.RequestMessageListResponseDto;
+import com.ssafy.ssafymate.entity.RequestMessage;
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.service.RequestMessageService;
@@ -17,10 +20,10 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Objects;
 
 @Api(value = "지원 요청 API", tags = {"requset"})
 @RestController
@@ -43,7 +46,7 @@ public class RequestController {
     @ApiOperation(value = "팀 지원 요청", notes = "팀 지원 요청 (사용자 -> 팀)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
-            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class ,responseContainer = "List"),
+            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
             @ApiResponse(code = 409, message = "요청 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
@@ -53,36 +56,36 @@ public class RequestController {
 
         try {
 
-            if(token == null){
+            if (token == null) {
                 return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "토큰이 유효하지 않습니다."));
             }
-            User user = userService.getUserByEmail(token);
-            Long userId = user.getId();
-            Team team = teamService.teamfind(messageUserRequestDto.getTeamId()).orElse(null);
-            if(team==null){
+            User sender = userService.getUserByEmail(token);
+            Long senderId = sender.getId();
+            Team team = teamService.teamfind(messageUserRequestDto.getTeamId());
+            if (team == null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 존재하지 않습니다."));
-            }
-            if (teamService.belongToTeam(team.getProject(),userId).orElse(null) != null) {
+            } else if ((team.getProject().equals("공통 프로젝트") && !team.getProjectTrack().equals(sender.getCommonProjectTrack())) ||
+                    (team.getProject().equals("특화 프로젝트") && !team.getProjectTrack().equals(sender.getSpecializationProjectTrack()))) {
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자 프로젝트 트랙과 해당 팀 트랙이 일치하지 않습니다."));
+            } else if (teamService.belongToTeam(team.getProject(), senderId) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 이미 팀에 속해있어 요청이 불가능합니다."));
-            }
-            if(userTeamService.isRecruit(messageUserRequestDto.getTeamId())==false){
+            } else if (!userTeamService.isRecruit(messageUserRequestDto.getTeamId())) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
             }
-            requestMessageService.userRequest(user,team,messageUserRequestDto.getMessage());
+            requestMessageService.userRequest(sender, team, messageUserRequestDto.getMessage());
 
 
-        }catch (Exception exception){
-            System.out.println(exception);
+        } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 팀 지원 요청 실패"));
         }
-        return ResponseEntity.status(200).body(ErrorResponseBody.of(200, true, "성공"));
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "팀 지원이 완료되었습니다."));
     }
 
     @PostMapping("/team/request")
-    @ApiOperation(value = "팀 지원 요청", notes = "팀 지원 요청 (사용자 -> 팀)")
+    @ApiOperation(value = "팀 합류 요청", notes = "팀 합류 요청 (팀 (팀장) -> 사용자)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
-            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class ,responseContainer = "List"),
+            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
             @ApiResponse(code = 409, message = "요청 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
@@ -92,32 +95,133 @@ public class RequestController {
 
         try {
 
-            if(token == null){
+            if (token == null) {
                 return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "토큰이 유효하지 않습니다."));
             }
             User sender = userService.getUserByEmail(token);
             Long senderId = sender.getId();
 
-            Team team = teamService.teamfind(messageTeamRequestDto.getTeamId()).orElse(null);
-            if(team==null){
-                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 존재하지 않습니다."));
-            }
-            if(teamService.ownTeam(messageTeamRequestDto.getTeamId(),senderId).orElse(null) == null){
-                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 팀 합류 요청 권한이 없습니다. 팀 생성 후 다시 시도해 주세요."));
-            }
-            if (teamService.belongToTeam(team.getProject(),messageTeamRequestDto.getUserId()).orElse(null) != null) {
+            Long receiverId = messageTeamRequestDto.getUserId();
+            User receiver = userService.getUserById(receiverId);
+
+            Team team = teamService.belongToTeam(messageTeamRequestDto.getProject(), senderId);
+            if (team == null) {
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "팀 생성 후 다시 요청을 시도해주세요."));
+            } else if (teamService.ownTeam(team.getId(), senderId) == null) {
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 팀 합류 요청 권한이 없습니다."));
+            } else if ((team.getProject().equals("공통 프로젝트") && !team.getProjectTrack().equals(receiver.getCommonProjectTrack())) ||
+                    (team.getProject().equals("특화 프로젝트") && !team.getProjectTrack().equals(receiver.getSpecializationProjectTrack()))) {
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생의 프로젝트 트랙이 팀의 프로젝트 트랙과 일치하지 않습니다."));
+            } else if (teamService.belongToTeam(team.getProject(), receiverId) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생은 이미 다른 팀에 합류되어 있습니다"));
-            }
-            if(userTeamService.isRecruit(messageTeamRequestDto.getTeamId())==false){
+            } else if (!userTeamService.isRecruit(team.getId())) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
             }
-            requestMessageService.teamRequest(sender,messageTeamRequestDto.getUserId(),team, messageTeamRequestDto.getMessage());
+            requestMessageService.teamRequest(sender, messageTeamRequestDto.getUserId(), team, messageTeamRequestDto.getMessage());
 
 
-        }catch (Exception exception){
-            System.out.println(exception);
+        } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 팀 지원 요청 실패"));
         }
-        return ResponseEntity.status(200).body(ErrorResponseBody.of(200, true, "성공"));
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "팀 합류 요청이 완료되었습니다."));
     }
+
+    @GetMapping("/receiveRequest-list")
+    @ApiOperation(value = "받은 제안", notes = "사용자가 받은 팀/사용자 요청들")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
+            @ApiResponse(code = 409, message = "요청 불가"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> receiveRequest(
+            @RequestParam String project,
+            @AuthenticationPrincipal final String token) {
+        System.out.println(project);
+        List<RequestMessage> messages;
+        try {
+            User user = userService.getUserByEmail(token);
+
+            messages = requestMessageService.receiveList(user, project);
+
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 받은 제안 요청 실패"));
+        }
+        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages));
+    }
+
+    @GetMapping("/sendRequest-list")
+    @ApiOperation(value = "받은 제안", notes = "사용자가 받은 팀/사용자 요청들")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
+            @ApiResponse(code = 409, message = "요청 불가"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> sendRequest(
+            @RequestParam String project,
+            @AuthenticationPrincipal final String token) {
+        System.out.println(project);
+        List<RequestMessage> messages;
+        try {
+            User user = userService.getUserByEmail(token);
+
+            messages = requestMessageService.sendList(user, project);
+
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 실패"));
+        }
+        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages));
+    }
+
+    @PutMapping("/request_response")
+    @ApiOperation(value = "제안 수락/거절/취소", notes = "제안 수락/거절/취소")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
+            @ApiResponse(code = 409, message = "요청 불가"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> requestResponse(
+            @RequestParam Long requestId,
+            @RequestParam String response,
+            @AuthenticationPrincipal final String token) {
+        RequestMessage message;
+        User user;
+        Team team;
+        Integer answer = 0;
+        try {
+            user = userService.getUserByEmail(token);
+
+            message = requestMessageService.getRequest(requestId);
+
+            team = teamService.teamfind(message.getTeamId());
+
+            if (response.equals("cancellation")) {
+
+                if (!Objects.equals(message.getSenderId(), user.getId())) {
+                    return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "응답 권한이 없습니다."));
+                }
+                answer = requestMessageService.updateReadCheckRejection(requestId, response);
+            } else {
+                if (!Objects.equals(message.getReceiverId(), user.getId())) {
+                    return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "응답 권한이 없습니다."));
+                } else if (response.equals("rejection")) {
+                    answer = requestMessageService.updateReadCheckRejection(requestId, response);
+                } else if (response.equals("approval")) {
+                    answer = requestMessageService.updateReadCheckApproval(requestId, response, user, team);
+                }
+
+            }
+            if (answer <= 0) {
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 처리된 제안 입니다."));
+            }
+
+
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 실패"));
+        }
+        return ResponseEntity.status(200).body("");
+    }
+
 }

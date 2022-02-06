@@ -2,14 +2,10 @@ package com.ssafy.ssafymate.dto.TeamDto;
 
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.TeamStack;
-import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.entity.UserTeam;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +22,7 @@ public class TeamDetail {
     private String teamName;
     private String notice;
     private String introduction;
-    List<TeamStack> techStacks = new ArrayList<>();
+    List<TeamStackDto> techStacks = new ArrayList<>();
     List<TeamDetailUserDto> members = new ArrayList<>();
     private Integer totalRecruitment;
     private Integer frontendRecruitment;
@@ -45,7 +41,7 @@ public class TeamDetail {
         res.setTeamName(team.getTeamName());
         res.setNotice(team.getNotice());
         res.setIntroduction(team.getIntroduction());
-        res.setTechStacks(team.getTechStacks());
+        res.setTechStacks(TeamStackDto.of(team.getTechStacks()));
         res.setOwner(TeamDetailOwnerDto.of(team.getOwner()));
         res.setMembers(TeamDetailUserDto.of(team.getMembers()));
 

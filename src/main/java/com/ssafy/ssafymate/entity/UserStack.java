@@ -15,6 +15,7 @@ import javax.persistence.*;
 public class UserStack {
 
     @Id
+    @JsonBackReference
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

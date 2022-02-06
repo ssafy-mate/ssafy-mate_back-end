@@ -1,7 +1,6 @@
 package com.ssafy.ssafymate.dto.TeamDto;
 
 import com.ssafy.ssafymate.entity.User;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

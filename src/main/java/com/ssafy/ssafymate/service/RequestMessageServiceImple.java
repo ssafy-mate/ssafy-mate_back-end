@@ -78,13 +78,13 @@ public class RequestMessageServiceImple implements RequestMessageService {
     @Transactional
     @Modifying
     @Override
-    public Integer updateReadCheckApproval(Long id, String readCheck,User user, Team team) {
+    public Integer updateReadCheckApproval(Long id, String readCheck,Long userId, Team team) {
         Integer answer = requestMessageRepository.updateRead(id, readCheck);
         if(answer==1){
-            requestMessageRepository.updateReadExpiration(user.getId(),team.getProject());
+            requestMessageRepository.updateReadExpiration(userId,team.getProject());
             UserTeam userTeam = UserTeam.builder()
-                    .user(user)
-                    .team(team)
+                    .userId(userId)
+                    .teamId(team.getId())
                     .build();
             userTeamRepository.save(userTeam);
 

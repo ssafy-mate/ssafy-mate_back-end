@@ -65,8 +65,8 @@ public class TeamServiceImpl implements TeamService{
         System.out.println(team);
 
         UserTeam userTeam = UserTeam.builder()
-                .user(user)
-                .team(team)
+                .userId(user.getId())
+                .teamId(team.getId())
                 .build();
         userTeamRepository.save(userTeam);
 

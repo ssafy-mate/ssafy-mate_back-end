@@ -209,7 +209,12 @@ public class RequestController {
                 } else if (response.equals("rejection")) {
                     answer = requestMessageService.updateReadCheckRejection(requestId, response);
                 } else if (response.equals("approval")) {
-                    answer = requestMessageService.updateReadCheckApproval(requestId, response, user, team);
+                    Long userId = 0L;
+                    if(message.getType().equals("teamRequest"))
+                        userId = message.getReceiverId();
+                    else if(message.getType().equals("userRequest"))
+                        userId = message.getSenderId();
+                    answer = requestMessageService.updateReadCheckApproval(requestId, response, userId, team);
                 }
 
             }

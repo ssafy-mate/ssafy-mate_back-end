@@ -21,16 +21,4 @@ public class SsafyMateBackEndApplication extends SpringBootServletInitializer {
 		SpringApplication.run(SsafyMateBackEndApplication.class, args);
 	}
 
-	@Bean
-	public ServletWebServerFactory servletContainer(){
-		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
-		tomcat.addAdditionalTomcatConnectors(createStandardConnector());
-		return tomcat;
-	}
-
-	private Connector createStandardConnector(){
-		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-		connector.setPort(8081);
-		return connector;
-	}
 }

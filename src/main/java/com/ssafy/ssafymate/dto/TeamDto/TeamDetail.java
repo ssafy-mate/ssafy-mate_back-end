@@ -22,7 +22,7 @@ public class TeamDetail {
     private String teamName;
     private String notice;
     private String introduction;
-    List<TeamStack> techStacks = new ArrayList<>();
+    List<TeamStackDto> techStacks = new ArrayList<>();
     List<TeamDetailUserDto> members = new ArrayList<>();
     private Integer totalRecruitment;
     private Integer frontendRecruitment;
@@ -41,7 +41,7 @@ public class TeamDetail {
         res.setTeamName(team.getTeamName());
         res.setNotice(team.getNotice());
         res.setIntroduction(team.getIntroduction());
-        res.setTechStacks(team.getTechStacks());
+        res.setTechStacks(TeamStackDto.of(team.getTechStacks()));
         res.setOwner(TeamDetailOwnerDto.of(team.getOwner()));
         res.setMembers(TeamDetailUserDto.of(team.getMembers()));
 

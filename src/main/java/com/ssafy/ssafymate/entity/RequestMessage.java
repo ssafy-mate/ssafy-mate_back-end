@@ -28,9 +28,10 @@ public class RequestMessage {
     @NotNull
     private String type;
 
-    @ColumnDefault("false")
-    private Boolean readCheck;
+    @ColumnDefault("'pending'")
+    private String readCheck;
 
+    private String project;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", insertable = false, updatable = false)

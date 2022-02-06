@@ -33,4 +33,7 @@ public class TeamStack {
     @ManyToOne
     private Team team;
 
+    public TeamStack(Long techStackCode) {
+        this.techStackCode = techStackCode;
+    }
 }

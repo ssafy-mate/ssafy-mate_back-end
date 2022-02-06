@@ -11,5 +11,13 @@ public interface RequestMessageService {
 
     RequestMessage teamRequest(User sender, Long receiverId, Team team, String message);
 
-    List<RequestMessage> messageList(User user);
+    List<RequestMessage> receiveList(User user, String project);
+
+    List<RequestMessage> sendList(User user, String project);
+
+    RequestMessage getRequest(Long requestId);
+
+    Integer updateReadCheckRejection(Long id, String readCheck);
+
+    Integer updateReadCheckApproval(Long id, String readCheck,User user, Team team);
 }

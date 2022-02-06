@@ -8,6 +8,8 @@ import com.ssafy.ssafymate.repository.UserTeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Transient;
+
 @Service("userTeamService")
 public class UserTeamServiceImpl implements UserTeamService{
 
@@ -17,13 +19,14 @@ public class UserTeamServiceImpl implements UserTeamService{
     @Autowired
     TeamRepository teamRepository;
 
+    @Transient
     @Override
-    public UserTeam userTamSave(User user, Team team) {
+    public UserTeam userTeamSave(User user, Team team) {
+
         UserTeam userTeam = UserTeam.builder()
                 .user(user)
                 .team(team)
                 .build();
-        System.out.println(userTeam.toString());
         return userTeamRepository.save(userTeam);
     }
 

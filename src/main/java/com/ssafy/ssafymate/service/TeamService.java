@@ -15,22 +15,22 @@ import java.util.Optional;
 
 public interface TeamService {
     // 팀 상세 조회
-    Optional<Team> teamfind(Long teamId);
+    Team teamfind(Long teamId);
 
     // 팀 생성
     Team teamSave(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user) throws IOException;
 
     // 팀 수정
-    Team teamModify(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user, Long teamId) throws IOException;
+    Team teamModify(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user, Team team) throws IOException;
 
     // 팀 삭제
     void teamDelete(Long team_id);
 
     // 팀 참여 여부 조회
-    Optional<Team> belongToTeam(String selectedProject,Long userId);
+    Team belongToTeam(String selectedProject,Long userId);
 
     //팀장 여부 조회
-    Optional<Team> ownTeam(Long teamId, Long userId);
+    Team ownTeam(Long teamId, Long userId);
 
     Page<TeamInt> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total);
 

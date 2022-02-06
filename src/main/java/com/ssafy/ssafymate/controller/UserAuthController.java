@@ -56,7 +56,7 @@ public class UserAuthController {
         try {
             User user = userService.getUserByEmail(token);
             Long userId = user.getId();
-            Team team = teamService.belongToTeam(selectedProject, userId).orElse(null);
+            Team team = teamService.belongToTeam(selectedProject, userId);
             if (team == null) {
                 belongToTeam = true;
             }

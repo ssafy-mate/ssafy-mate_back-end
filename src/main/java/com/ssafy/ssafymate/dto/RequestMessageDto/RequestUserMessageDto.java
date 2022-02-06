@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestUserMessageDto {
+    Long id;
     Long userId;
     String profileImgUrl;
     String userName;
@@ -20,6 +21,7 @@ public class RequestUserMessageDto {
     public static RequestUserMessageDto of(RequestMessage requestMessages) {
         RequestUserMessageDto res = new RequestUserMessageDto();
         User user = requestMessages.getSender();
+        res.setId(requestMessages.getId());
         res.setUserId(user.getId());
         res.setProfileImgUrl(user.getProfileImg());
         res.setUserName(user.getStudentName());

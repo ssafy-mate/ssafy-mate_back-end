@@ -19,5 +19,5 @@ public interface RequestMessageService {
 
     Integer updateReadCheckRejection(Long id, String readCheck);
 
-    Integer updateReadCheckApproval(Long id, String readCheck,User user, Team team);
+    Integer updateReadCheckApproval(Long id, String readCheck,Long userId, Team teamId);
 }

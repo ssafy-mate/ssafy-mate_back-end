@@ -40,6 +40,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserStackRepository userStackRepository;
 
+    private String domainPrefix = "http://i6a402.p.ssafy.io:8080/resources/upload/";
+    private String defaultImg = "default_img.jpg";
+
     @Override
     public User getUserById(Long id) {
         User user = userRepository.findById(id).orElse(null);
@@ -55,18 +58,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
-
-        String domainPrefix = "http://i6a402.p.ssafy.io:8080/resources/upload/";
-        String defaultImg = "default_img.jpg";
         String profileImgUrl;
-
-        if(multipartFile == null || multipartFile.isEmpty()) {
+        if (multipartFile == null || multipartFile.isEmpty()) {
             profileImgUrl = domainPrefix + defaultImg;
-//            profileImgUrl = "C:\\image\\default_img.jpg";
         } else {
             String profileImgSaveUrl = "/var/webapps/upload/" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-//            profileImgUrl = "C:\\image\\" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-
             File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
             profileImgUrl = domainPrefix + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
@@ -115,37 +111,50 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Modifying
     @Override
-    public User userModify(UserModifyRequestDto userModifyRequestDto, MultipartFile multipartFile, User user) throws IOException {
-        // 기존 유저 스택 삭제
-        Long userId = user.getId();
-        List<UserStack> stackInDb = userStackRepository.findAllByUserId(userId);
-        if(stackInDb.size() > 0) {
-            userStackRepository.deleteByUserId(userId);
+    public User userModify(UserModifyRequestDto userModifyRequestDto, User user, String profileInfo) throws IOException {
+
+//        if (profileInfo.equals("ssafy-track")) {
+        if (userModifyRequestDto.getSsafyTrack() != null) {
+            user.setSsafyTrack(userModifyRequestDto.getSsafyTrack());
+
+        } else if (profileInfo.equals("profileImg")) {
+
+            String profileImgUrl = user.getProfileImg();
+            MultipartFile multipartFile = userModifyRequestDto.getProfileImg();
+            if (multipartFile != null || !multipartFile.isEmpty()) {
+                String profileImgSaveUrl = "/var/webapps/upload/" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+                File file = new File(profileImgSaveUrl);
+                multipartFile.transferTo(file);
+                profileImgUrl = domainPrefix + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
+            }
+            user.setProfileImg(profileImgUrl);
+
+        } else if (profileInfo.equals("self-introduction")) {
+
+            user.setSelfIntroduction(userModifyRequestDto.getSelfIntroduction());
+
+        } else if (profileInfo.equals("jobs")) {
+
+            user.setJob1(userModifyRequestDto.getJob1());
+            user.setJob2(userModifyRequestDto.getJob2());
+
+        } else if (profileInfo.equals("tech-stacks")) {
+
+            Long userId = user.getId();
+            List<UserStack> stackInDb = userStackRepository.findAllByUserId(userId);
+            if(stackInDb.size() > 0) {
+                userStackRepository.deleteByUserId(userId);
+            }
+            String jsonString = userModifyRequestDto.getTechStacks();
+            List<UserStack> techStacks = StringToTechStacks(jsonString);
+            user.setTechStacks(techStacks);
+
+        } else if (profileInfo.equals("urls")) {
+
+            user.setGithubUrl(userModifyRequestDto.getGithubUrl());
+            user.setEtcUrl(userModifyRequestDto.getEtcUrl());
+
         }
-
-        // 프로필 이미지 저장
-        String modifyProfileImgUrl;
-        if(multipartFile == null || multipartFile.isEmpty()) {
-            modifyProfileImgUrl = "/var/webapps/upload/default_img.jpg";
-//            modifyProfileImgUrl = "C:\\image\\default_img.jpg";
-        } else {
-            modifyProfileImgUrl = "/var/webapps/upload/" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-//            modifyProfileImgUrl = "C:\\image\\" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
-
-            File file = new File(modifyProfileImgUrl);
-            multipartFile.transferTo(file);
-        }
-
-        String jsonString = userModifyRequestDto.getTechStacks();
-        List<UserStack> techStacks = StringToTechStacks(jsonString);
-        
-        user.setProfileImg(modifyProfileImgUrl);
-        user.setSelfIntroduction(userModifyRequestDto.getSelfIntroduction());
-        user.setJob1(userModifyRequestDto.getJob1());
-        user.setJob2(userModifyRequestDto.getJob2());
-        user.setTechStacks(techStacks);
-        user.setGithubUrl(userModifyRequestDto.getGithubUrl());
-        user.setEtcUrl(userModifyRequestDto.getEtcUrl());
         return userRepository.save(user);
     }
 
@@ -174,8 +183,6 @@ public class UserServiceImpl implements UserService {
         System.out.println(1);
         return users;
     }
-
-
 
     @Override
     public List<UserBoardDto> userBoarConvert(List<UserBoardInterface> users, String project){

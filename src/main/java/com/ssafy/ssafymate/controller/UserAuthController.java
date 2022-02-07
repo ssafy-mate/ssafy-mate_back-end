@@ -8,7 +8,7 @@ import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserProjectLoginDto;
 import com.ssafy.ssafymate.dto.request.UserListRequestDto;
 import com.ssafy.ssafymate.dto.request.UserModifyRequestDto;
-import com.ssafy.ssafymate.dto.request.UserSelectProjectTrackRequsetDto;
+import com.ssafy.ssafymate.dto.request.UserSelectProjectTrackRequestDto;
 import com.ssafy.ssafymate.dto.response.*;
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.User;
@@ -111,7 +111,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(UserResponseDto.of(user));
     }
 
-    // 교육생 상제 정보 수정
+    // 교육생 상세 정보 수정
     @PutMapping("/info/{userId}/{profileInfo}")
     @ApiOperation(value = "교육생 상세 정보 수정", notes = "유저 아이디로 해당 교육생 상세 정보 수정")
     @ApiResponses({
@@ -135,11 +135,25 @@ public class UserAuthController {
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 상세 정보 수정 실패"));
         }
-        return ResponseEntity.status(200).body(MessageBody.of("교육생 상세 정보 수정이 완료되었습니다."));
+        String profileInfoName = "";
+        if (profileInfo.equals("ssafy-track")) {
+            profileInfoName = "교육 트랙";
+        } else if (profileInfo.equals("profileImg")) {
+            profileInfoName = "프로필 이미지";
+        } else if (profileInfo.equals("self-introduction")) {
+            profileInfoName = "자기 소개";
+        } else if (profileInfo.equals("jobs")) {
+            profileInfoName = "희망 직무";
+        } else if (profileInfo.equals("tech-stacks")) {
+            profileInfoName = "기술 스택";
+        } else if (profileInfo.equals("urls")) {
+            profileInfoName = "SNS 링크";
+        }
+        return ResponseEntity.status(200).body(MessageBody.of(profileInfoName + " 수정이 완료되었습니다."));
     }
 
     @GetMapping("/list")
-    @ApiOperation(value = "교욱생 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 교육생 리스트 조회")
+    @ApiOperation(value = "교육생 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 교육생 리스트 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 400, message = "인증 실패"),
@@ -196,17 +210,17 @@ public class UserAuthController {
     }
 
     @PostMapping("/project/track")
-    @ApiOperation(value = "교욱생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
+    @ApiOperation(value = "교육생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 400, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> selectProjectTrack(
-            @RequestBody @Valid UserSelectProjectTrackRequsetDto userSelectProjectTrackRequsetDto,
+            @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
             @AuthenticationPrincipal final String token
     ) {
-        String project = userSelectProjectTrackRequsetDto.getProject();
+        String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
             if (project.equals("공통 프로젝트")) {
@@ -218,43 +232,36 @@ public class UserAuthController {
                     return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "이미 " + project + " 트랙 선택을 완료 하였습니다."));
                 }
             }
-            userService.selectProjectTrack(user, userSelectProjectTrackRequsetDto);
+            userService.selectProjectTrack(user, userSelectProjectTrackRequestDto);
 
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 리스트 조회 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 트랙 선택 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
     }
 
     @PutMapping("/project/track")
-    @ApiOperation(value = "교욱생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
+    @ApiOperation(value = "교육생 프로젝트 트랙 수정", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 400, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> modifyProjectTrack(
-            @RequestBody @Valid UserSelectProjectTrackRequsetDto userSelectProjectTrackRequsetDto,
+            @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
             @AuthenticationPrincipal final String token) {
-        String project = userSelectProjectTrackRequsetDto.getProject();
+        String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
             Team team = teamService.belongToTeam(project, user.getId());
-            if (project.equals("공통 프로젝트")) {
-                if (user.getCommonProjectTrack() != null) {
-                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "이미 " + project + " 트랙 선택을 완료 하였습니다."));
-                }
-            } else if (project.equals("특화 프로젝트")) {
-                if (user.getSpecializationProjectTrack() != null) {
-                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "이미 " + project + " 트랙 선택을 완료 하였습니다."));
-                }
+            if (team != null) {
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "현재 소속팀이 있기에 수정이 불가능합니다."));
             }
-            userService.selectProjectTrack(user, userSelectProjectTrackRequsetDto);
-
+            userService.selectProjectTrack(user, userSelectProjectTrackRequestDto);
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 리스트 조회 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 트랙 수정 실패"));
         }
-        return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 수정이 완료되었습니다."));
     }
 
     // 교육생 프로젝트 정보 받기
@@ -277,5 +284,4 @@ public class UserAuthController {
         }
         return ResponseEntity.status(200).body(UserProjectResponseDto.of(UserProjectLoginDto.of(user.getTeams(), user)));
     }
-
 }

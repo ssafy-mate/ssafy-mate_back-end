@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserSelectProjectTrackRequsetDto {
+public class UserSelectProjectTrackRequestDto {
 
     private String project;
     private String projectTrack;

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "팀 리스트 API", tags = {"TeamList"})
@@ -56,9 +55,16 @@ public class TeamListController {
                 back = 1;
             }
         }
-        if(teamListRequestDto.getExclusion() != null && teamListRequestDto.getExclusion()){
+        if (teamListRequestDto.getExclusion() != null && teamListRequestDto.getExclusion()) {
             total = 1;
         }
+        if (teamListRequestDto.getCampus().equals("all") || teamListRequestDto.getCampus() == null) {
+            teamListRequestDto.setCampus("");
+        }
+        if (teamListRequestDto.getProject_track().equals("all") || teamListRequestDto.getProject_track() == null) {
+            teamListRequestDto.setProject_track("");
+        }
+
 
         int totalPage;
         int size = 8;

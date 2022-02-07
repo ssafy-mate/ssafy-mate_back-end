@@ -1,9 +1,9 @@
 package com.ssafy.ssafymate.controller;
 
-import com.ssafy.ssafymate.JWT.TokenProvider;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.dto.request.TeamRequestDto;
+import com.ssafy.ssafymate.dto.response.TeamDetailResponseDto;
 import com.ssafy.ssafymate.dto.response.TeamResponseDto;
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.User;
@@ -33,9 +33,6 @@ public class TeamController {
     @Autowired
     UserTeamService userTeamService;
 
-    @Autowired
-    private TokenProvider tokenProvider;
-
     @GetMapping("/info/{teamId}")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "팀 상세조회", notes = "팀 아이디로 해당 팀 상세 조회")
@@ -48,14 +45,14 @@ public class TeamController {
             @PathVariable final Long teamId) {
         Team teamdata;
         try {
-        teamdata = teamService.teamfind(teamId).orElse(null);
+        teamdata = teamService.teamfind(teamId);
         if (teamdata==null) {
             return ResponseEntity.status(405).body(ErrorResponseBody.of(405, false,  "해당 팀 정보가 존재하지 않습니다."));
         }
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 팀 상세 정보 조회 실패"));
         }
-        return ResponseEntity.status(200).body(TeamResponseDto.of(teamdata));
+        return ResponseEntity.status(200).body(TeamDetailResponseDto.of(teamdata));
     }
 
 
@@ -68,14 +65,20 @@ public class TeamController {
     public ResponseEntity<?> createTeam(
             @Valid TeamRequestDto teamRequestDto,
             @AuthenticationPrincipal String token) {
+        User user;
+        Team team;
         try {
-            User user = userService.getUserByEmail(token);
-            Team team = teamService.teamSave(teamRequestDto, teamRequestDto.getTeamImg(),user);
-            userTeamService.userTamSave(user,team);
+            user = userService.getUserByEmail(token);
+            team = teamService.belongToTeam(teamRequestDto.getProject(), user.getId());
+            if(team != null){
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false,  "사용자는 이미 팀에 속해있어 팀 생성이 불가능합니다."));
+            }
+            team = teamService.teamSave(teamRequestDto, teamRequestDto.getTeamImg(),user);
+//            userTeamService.userTeamSave(user,team);
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server, 팀 생성 실패"));
         }
-        return ResponseEntity.status(200).body(MessageBody.of("팀을 성공적으로 생성하였습니다."));
+        return ResponseEntity.status(200).body(TeamResponseDto.of(team.getId(),"팀을 성공적으로 생성하였습니다."));
     }
 
     @PutMapping("/info/{teamId}")
@@ -86,21 +89,23 @@ public class TeamController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> modifyTeam(
-            @RequestPart(value= "teamRequestDto") TeamRequestDto teamRequestDto,
+            @Valid TeamRequestDto teamRequestDto,
             @PathVariable final Long teamId,
             @AuthenticationPrincipal String token) {
+        User user;
+        Team team;
         try {
-            User user = userService.getUserByEmail(token);
+            user = userService.getUserByEmail(token);
             Long userId = user.getId();
-            Team team = teamService.ownTeam(teamId,userId).orElse(null);
+            team = teamService.ownTeam(teamId,userId);
             if (team==null || !team.getOwner().getEmail().equals(token)) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "팀 수정 권한이 없습니다."));
             }
-            teamService.teamModify(teamRequestDto, teamRequestDto.getTeamImg(), user, teamId);
+            teamService.teamModify(teamRequestDto, teamRequestDto.getTeamImg(), user, team);
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server, 팀 상세 정보 수정 실패"));
         }
-        return ResponseEntity.status(200).body(MessageBody.of("팀 상세 정보 수정이 완료되었습니다."));
+        return ResponseEntity.status(200).body(TeamResponseDto.of(team.getId(),"팀 상세 정보 수정이 완료되었습니다."));
     }
 
     @DeleteMapping("/info/{teamId}")
@@ -116,7 +121,7 @@ public class TeamController {
         try {
             User user = userService.getUserByEmail(token);
             Long userId = user.getId();
-            Team team = teamService.ownTeam(teamId, userId).orElse(null);
+            Team team = teamService.ownTeam(teamId, userId);
             if (team==null || !team.getOwner().getEmail().equals(token)) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "팀 삭제에 권한이 없습니다."));
             }

@@ -1,12 +1,9 @@
 package com.ssafy.ssafymate.dto.response;
 
-import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.dto.TeamDto.TeamBoardDto;
-import com.ssafy.ssafymate.dto.TeamDto.TeamInt;
 import com.ssafy.ssafymate.entity.Team;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import lombok.Getter;
 import lombok.Setter;
 

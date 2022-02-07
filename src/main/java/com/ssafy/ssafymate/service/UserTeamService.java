@@ -6,7 +6,7 @@ import com.ssafy.ssafymate.entity.UserTeam;
 
 public interface UserTeamService {
 
-    UserTeam userTamSave(User user, Team team);
+    UserTeam userTeamSave(User user, Team team);
 
     Boolean isRecruit(Long teamId);
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "기술 스택 API", tags = {"tech_stack"})
@@ -35,7 +34,7 @@ public class TechStackController {
     public ResponseEntity<?> userDetail() {
         List<TechStack> techStacks;
         try {
-            techStacks = techStackService.techstackList();
+            techStacks = techStackService.techStackList();
         } catch (Exception e) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 기술 스택 리스트 조회 실패"));
         }

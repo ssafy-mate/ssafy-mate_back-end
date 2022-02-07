@@ -18,7 +18,7 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Stri
 
     @Query(value = "SELECT UR.*,CH.CONTENT, CH.SENT_TIME \n" +
             "FROM \n" +
-            "    (SELECT CR.ROOM_ID, U.ID USER_ID, U.STUDENT_NAME username, U.PROFILE_IMG \n" +
+            "    (SELECT CR.ROOM_ID, U.ID USER_ID, U.STUDENT_NAME username, U.PROFILE_IMG, U.EMAIL \n" +
             "    FROM\n" +
             "        (SELECT ROOM_ID, (CASE WHEN USER_ID_SMALL = :userId THEN USER_ID_BIG \n" +
             "                ELSE USER_ID_SMALL END)\n" +

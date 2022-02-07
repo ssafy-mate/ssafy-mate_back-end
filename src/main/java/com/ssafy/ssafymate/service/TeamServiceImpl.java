@@ -9,6 +9,7 @@ import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.entity.*;
 import com.ssafy.ssafymate.repository.TeamRepository;
 import com.ssafy.ssafymate.repository.TeamStackRepository;
+import com.ssafy.ssafymate.repository.UserTeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("teamService")
@@ -34,43 +34,56 @@ public class TeamServiceImpl implements TeamService{
     @Autowired
     private TeamStackRepository teamStackRepository;
 
+    @Autowired
+    private UserTeamRepository userTeamRepository;
+
 
     @Override
-    public Optional<Team> teamfind(Long teamId) {
-        return teamRepository.findById(teamId);
+    public Team teamfind(Long teamId) {
+        return teamRepository.findById(teamId).orElse(null);
     }
+
+    String domainPrefix = "http://i6a402.p.ssafy.io:8080/resources/upload/images/team_image/";
 
     @Transactional
     @Override
     public Team teamSave(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user) throws IOException {
+
+
+        String defaultImg = "default_team_img.jpg";
         String teamImgUrl;
         if(multipartFile==null || multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정
-            teamImgUrl = "C:\\image\\team_image\\default_img.jpg";
+            teamImgUrl = domainPrefix + defaultImg;
+
         } else {
-//            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
-            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/"+ multipartFile.getOriginalFilename();
 
-
-            File file = new File(teamImgUrl);
+            File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
+            teamImgUrl = domainPrefix + multipartFile.getOriginalFilename();
         }
         System.out.println(teamImgUrl);
 
-        Team team = teamBuilder(teamRequestDto,teamImgUrl,user);
-        System.out.println(team.toString());
+        Team team = teamRepository.save(teamBuilder(teamRequestDto,teamImgUrl,user));
+        System.out.println(team);
 
+        UserTeam userTeam = UserTeam.builder()
+                .userId(user.getId())
+                .teamId(team.getId())
+                .build();
+        userTeamRepository.save(userTeam);
 
-
-        return teamRepository.save(team);
+        return team;
     }
 
 
     @Transactional
     @Modifying
     @Override
-    public Team teamModify(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user, Long teamId) throws IOException {
+    public Team teamModify(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user, Team team) throws IOException {
 
+        Long teamId = team.getId();
         // 기존 팀 스택 삭제
         List<TeamStack> stackInDb = teamStackRepository.findByTeamId(teamId);
         if(stackInDb.size() > 0){
@@ -79,39 +92,39 @@ public class TeamServiceImpl implements TeamService{
 
         String teamImgUrl;
 
+        //이미지가 비어있으면 기존 이미지로
         if(multipartFile==null || multipartFile.isEmpty()) {
-            // 기본 이미지 경로 설정
-            teamImgUrl = "C:\\image\\team_image\\default_img.jpg";
-        } else {
-            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+            teamImgUrl = team.getTeamImg();
+        } else {    // 아니면 새 이미지로
+            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/"+ multipartFile.getOriginalFilename();
 
-            File file = new File(teamImgUrl);
+            File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
+            teamImgUrl = domainPrefix + multipartFile.getOriginalFilename();
         }
 
 
-        Team team = teamBuilder(teamRequestDto,teamImgUrl,user);
-        team.setId(teamId);
+        Team modify_team = teamBuilder(teamRequestDto,teamImgUrl,user);
+        modify_team.setId(teamId);
 
 
-        return teamRepository.save(team);
+        return teamRepository.save(modify_team);
     }
 
     @Override
     public void teamDelete(Long team_id) {
         teamRepository.deleteById(team_id);
-        return ;
     }
 
     @Override
-    public Optional<Team> belongToTeam(String selectedProject, Long userId) {
-        return teamRepository.belongToTeam(selectedProject,userId);
+    public Team belongToTeam(String selectedProject, Long userId) {
+        return teamRepository.belongToTeam(selectedProject,userId).orElse(null);
     }
 
     @Override
-    public Optional<Team> ownTeam(Long teamId, Long userId) {
+    public Team ownTeam(Long teamId, Long userId) {
         System.out.println(teamId+" "+ userId);
-        return teamRepository.findByTeamIdAndUserIdJQL(teamId,userId);
+        return teamRepository.findByTeamIdAndUserIdJQL(teamId,userId).orElse(null);
     }
 
     @Override
@@ -128,7 +141,7 @@ public class TeamServiceImpl implements TeamService{
             techStacks.add(notin);
         }
 
-        List<Long> teamstacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
+        List<Long> teamstacks = techStacks.stream().map(TeamStack::getTechStackCode).collect(Collectors.toList());
         return teamRepository.findALLByteamStackJQL(pageable,
                 teamListRequestDto.getCampus(),
                 teamListRequestDto.getProject(),
@@ -177,11 +190,12 @@ public class TeamServiceImpl implements TeamService{
     public Team teamBuilder(TeamRequestDto teamRequestDto, String teamImgUrl, User user){
 
         String jsonString = teamRequestDto.getTechStacks();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Type listType = new TypeToken<ArrayList<TeamStack>>(){}.getType();
-        List<TeamStack> techStacks = gson.fromJson(jsonString, listType);
+        List<TeamStack> techStacks = new ArrayList<>();
 
-        Team team = Team.builder()
+        if(jsonString != null)
+            techStacks = StringToTechStacks(jsonString);
+
+        return Team.builder()
                 .campus(teamRequestDto.getCampus())
                 .project(teamRequestDto.getProject())
                 .projectTrack(teamRequestDto.getProjectTrack())
@@ -195,15 +209,15 @@ public class TeamServiceImpl implements TeamService{
                 .backendRecruitment(teamRequestDto.getBackendRecruitment())
                 .owner(user)
                 .build();
-        return team;
     }
 
     // String 형태의 techStacks를 UserStack 타입의 리스트로 변환하는 메서드
     public List<TeamStack> StringToTechStacks(String jsonString) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Type listType = new TypeToken<ArrayList<TeamStack>>(){}.getType();
-        List<TeamStack> techStacks = gson.fromJson(jsonString, listType);
-        return techStacks;
+        Type listType = new TypeToken<ArrayList<Long>>() {
+        }.getType();
+        List<Long> techStackCodes = gson.fromJson(jsonString, listType);
+        return techStackCodes.stream().map(TeamStack::new).collect(Collectors.toList());
     }
 
     // String 형태의 Long 를 UserStack 타입의 리스트로 변환하는 메서드

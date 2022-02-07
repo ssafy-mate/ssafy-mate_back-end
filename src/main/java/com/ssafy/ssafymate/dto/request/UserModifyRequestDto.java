@@ -15,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 @ApiModel(value = "회원 정보 수정", description = "프로필 사진, 자기소개, 희망직무, 기술 스택, Github URL 등 수정할 회원 정보를 담는 클래스")
 public class UserModifyRequestDto {
 
+    @ApiModelProperty(value = "교육 트랙", example = "Java Track")
+    private String ssafyTrack;
+
     @ApiModelProperty(value = "프로필 사진", example = ".jpg")
     private MultipartFile profileImg;
 

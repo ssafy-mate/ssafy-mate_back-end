@@ -28,9 +28,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "   WHERE campus LIKE %:campus% " +
             "   AND ssafy_track LIKE %:ssafyTrack% " +
             "   AND (CASE WHEN (:project='공통 프로젝트') " +
-            "       THEN (common_project_track LIKE %:projectTrack% OR (common_project_track IS NULL)) " +
+            "       THEN (common_project_track LIKE %:projectTrack% ) " +
             "       WHEN (:project='특화 프로젝트') " +
-            "       THEN (specialization_project_track LIKE %:projectTrack% OR specialization_project_track IS NULL)" +
+            "       THEN (specialization_project_track LIKE %:projectTrack% )" +
             "       ELSE " +
             "       1 " +
             "       END " +

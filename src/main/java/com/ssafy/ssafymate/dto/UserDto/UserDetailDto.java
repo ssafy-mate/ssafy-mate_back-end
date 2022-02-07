@@ -2,7 +2,6 @@ package com.ssafy.ssafymate.dto.UserDto;
 
 import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.entity.UserStack;
-import com.ssafy.ssafymate.entity.UserTeam;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +26,7 @@ public class UserDetailDto {
     private String job2;
 
     List<UserProjectDto> projects = new ArrayList<>();
-    List<UserStack> techStacks = new ArrayList<>();
+    List<UserStackDto> techStacks = new ArrayList<>();
 
     private String githubUrl;
 
@@ -47,7 +46,7 @@ public class UserDetailDto {
         res.setGithubUrl(user.getGithubUrl());
         res.setEtcUrl(user.getEtcUrl());
         res.setProjects(UserProjectDto.of(user.getTeams(),user));
-        res.setTechStacks(user.getTechStacks());
+        res.setTechStacks(UserStackDto.of(user.getTechStacks()));
 
         return res;
     }

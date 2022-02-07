@@ -3,8 +3,8 @@ package com.ssafy.ssafymate.controller;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.common.SuccessMessageBody;
-import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardDto;
+import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserProjectLoginDto;
 import com.ssafy.ssafymate.dto.request.UserListRequestDto;
 import com.ssafy.ssafymate.dto.request.UserModifyRequestDto;
@@ -64,6 +64,28 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 참여 여부 조회 실패"));
         }
         return ResponseEntity.status(200).body(BelongToTeam.of(belongToTeam));
+    }
+
+    // 나의 정보 받기
+    @GetMapping("/my-info")
+    @ApiOperation(value = "나의 정보 조회", notes = "로그인한 유저가 토큰을 담아 요청을 보내서 유저 정보 중 일부를 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 403, message = "인증 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> getMyInfo(
+            @AuthenticationPrincipal final String userEmail) {
+        User user;
+        try {
+            user = userService.getUserByEmail(userEmail);
+            if (user == null) {
+                return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "잘못된 접근입니다."));
+            }
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 응답 실패"));
+        }
+        return ResponseEntity.status(200).body(MyInfoResponseDto.of("success", user));
     }
 
     // 교육생 상세 정보 조회

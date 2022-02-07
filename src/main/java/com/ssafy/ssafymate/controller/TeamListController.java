@@ -55,9 +55,16 @@ public class TeamListController {
                 back = 1;
             }
         }
-        if(teamListRequestDto.getExclusion() != null && teamListRequestDto.getExclusion()){
+        if (teamListRequestDto.getExclusion() != null && teamListRequestDto.getExclusion()) {
             total = 1;
         }
+        if (teamListRequestDto.getCampus().equals("all") || teamListRequestDto.getCampus() == null) {
+            teamListRequestDto.setCampus("");
+        }
+        if (teamListRequestDto.getProject_track().equals("all") || teamListRequestDto.getProject_track() == null) {
+            teamListRequestDto.setProject_track("");
+        }
+
 
         int totalPage;
         int size = 8;

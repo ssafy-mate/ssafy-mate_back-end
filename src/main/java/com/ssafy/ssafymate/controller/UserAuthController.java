@@ -126,6 +126,21 @@ public class UserAuthController {
     ) {
         List<UserBoardInterface> userBoards;
 
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "잘못된 입력"));
+        }
+        if (userListReuestDto.getCampus().equals("all") || userListReuestDto.getCampus() == null) {
+            userListReuestDto.setCampus("");
+        }
+        if (userListReuestDto.getJob1().equals("all") || userListReuestDto.getJob1() == null) {
+            userListReuestDto.setJob1("");
+        }
+        if (userListReuestDto.getProject_track().equals("all") || userListReuestDto.getProject_track() == null) {
+            userListReuestDto.setProject_track("");
+        }
+        if (userListReuestDto.getSsafy_track().equals("all") || userListReuestDto.getSsafy_track() == null) {
+            userListReuestDto.setSsafy_track("");
+        }
         int totalPage;
         long totalElement;
         int size = 9;
@@ -137,9 +152,6 @@ public class UserAuthController {
             } else if (userListReuestDto.getSort().equals("name")) {
                 pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.ASC, "student_name");
             }
-        }
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "잘못된 입력"));
         }
         Page<UserBoardInterface> userPage;
         List<UserBoardDto> userBoards2;

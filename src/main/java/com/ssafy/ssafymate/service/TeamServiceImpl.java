@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("teamService")
@@ -44,20 +43,25 @@ public class TeamServiceImpl implements TeamService{
         return teamRepository.findById(teamId).orElse(null);
     }
 
+    String domainPrefix = "http://i6a402.p.ssafy.io:8080/resources/upload/images/team_image/";
+
     @Transactional
     @Override
     public Team teamSave(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user) throws IOException {
+
+
+        String defaultImg = "default_team_img.jpg";
         String teamImgUrl;
         if(multipartFile==null || multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정
-            teamImgUrl = "C:\\image\\team_image\\default_img.jpg";
+            teamImgUrl = domainPrefix + defaultImg;
+
         } else {
-//            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
-            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/"+ multipartFile.getOriginalFilename();
 
-
-            File file = new File(teamImgUrl);
+            File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
+            teamImgUrl = domainPrefix + multipartFile.getOriginalFilename();
         }
         System.out.println(teamImgUrl);
 
@@ -92,10 +96,11 @@ public class TeamServiceImpl implements TeamService{
         if(multipartFile==null || multipartFile.isEmpty()) {
             teamImgUrl = team.getTeamImg();
         } else {    // 아니면 새 이미지로
-            teamImgUrl = "C:\\image\\team_image\\"+ teamRequestDto.getTeamName()+"_"+ multipartFile.getOriginalFilename();
+            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/"+ multipartFile.getOriginalFilename();
 
-            File file = new File(teamImgUrl);
+            File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
+            teamImgUrl = domainPrefix + multipartFile.getOriginalFilename();
         }
 
 

@@ -66,6 +66,32 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(BelongToTeam.of(belongToTeam));
     }
 
+    @GetMapping("/team-id")
+    @ApiOperation(value = "팀 참여 여부 조회", notes = "유저 아이디와 선택한 프로젝트로 해당 프로젝트에서 이미 팀에 참여 했는지 여부를 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> belongToTeam2(
+            @RequestParam final String project,
+            @AuthenticationPrincipal final String token) {
+        User user;
+        Team team;
+        Long teamId = null;
+        try {
+            user = userService.getUserByEmail(token);
+            Long userId = user.getId();
+            team = teamService.belongToTeam(project, userId);
+
+            if(team != null){
+                teamId = team.getId();
+            }
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 참여 여부 조회 실패"));
+        }
+        return ResponseEntity.status(200).body(UserTeamIdResponseDto.of(teamId));
+    }
+
     // 나의 정보 받기
     @GetMapping("/my-info")
     @ApiOperation(value = "나의 정보 조회", notes = "로그인한 유저가 토큰을 담아 요청을 보내서 유저 정보 중 일부를 조회")

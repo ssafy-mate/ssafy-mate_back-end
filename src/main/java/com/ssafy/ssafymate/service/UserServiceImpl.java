@@ -113,8 +113,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User userModify(UserModifyRequestDto userModifyRequestDto, User user, String profileInfo) throws IOException {
 
-//        if (profileInfo.equals("ssafy-track")) {
-        if (userModifyRequestDto.getSsafyTrack() != null) {
+        if (profileInfo.equals("ssafy-track")) {
             user.setSsafyTrack(userModifyRequestDto.getSsafyTrack());
 
         } else if (profileInfo.equals("profileImg")) {
@@ -212,7 +211,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Modifying
     @Override
-    public String selectProjectTrack(User user, UserSelectProjectTrackRequsetDto userSelectProjectTrackRequsetDto) {
+    public String selectProjectTrack(User user, UserSelectProjectTrackRequestDto userSelectProjectTrackRequsetDto) {
         if(userSelectProjectTrackRequsetDto.getProject().equals("공통 프로젝트")){
             userRepository.updateCommonProjectTrack(user.getId(), userSelectProjectTrackRequsetDto.getProjectTrack());
         }

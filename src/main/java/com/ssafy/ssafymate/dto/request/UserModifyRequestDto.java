@@ -39,7 +39,4 @@ public class UserModifyRequestDto {
     @ApiModelProperty(value = "기타 URL", example = "https://velog.io/@ssafy-mate")
     private String etcUrl;
 
-    @ApiModelProperty(value = "프로젝트 트랙")
-    private String projects;
-
 }

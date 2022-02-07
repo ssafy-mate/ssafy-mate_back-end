@@ -36,5 +36,5 @@ public interface UserService {
     // 유저 리스트 변환
     List<UserBoardDto> userBoarConvert(List<UserBoardInterface> users, String project);
 
-    String selectProjectTrack(User user, UserSelectProjectTrackRequsetDto userSelectProjectTrackRequsetDto);
+    String selectProjectTrack(User user, UserSelectProjectTrackRequestDto userSelectProjectTrackRequsetDto);
 }

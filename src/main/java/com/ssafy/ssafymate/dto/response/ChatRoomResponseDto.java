@@ -22,6 +22,8 @@ public class ChatRoomResponseDto {
 
     private String sentTime;
 
+    private String userEmail;
+
     private String profileImgUrl;
 
     private String roomId;
@@ -35,6 +37,7 @@ public class ChatRoomResponseDto {
             crrd.setRoomId(rl.getRoom_id());
             crrd.setContent(rl.getContent());
             crrd.setSentTime(rl.getSent_time());
+            crrd.setUserEmail(rl.getEmail());
             crrd.setUserId(rl.getUser_id());
             crrd.setProfileImgUrl(rl.getProfile_img());
             crrd.setUserName(rl.getUsername());

@@ -93,7 +93,8 @@ public class UserAuthController {
     @ApiOperation(value = "교육생 상세 조회", notes = "유저 아이디로 해당 교육생 상세 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 400, message = "인증 실패"),
+            @ApiResponse(code = 401, message = "토큰이 유효하지 않음"),
+            @ApiResponse(code = 404, message = "해당 교육생 정보가 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> userDetail(
@@ -111,24 +112,26 @@ public class UserAuthController {
     }
 
     // 교육생 상제 정보 수정
-    @PutMapping("/info/{userId}")
+    @PutMapping("/info/{userId}/{profileInfo}")
     @ApiOperation(value = "교육생 상세 정보 수정", notes = "유저 아이디로 해당 교육생 상세 정보 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 400, message = "인증 실패"),
+            @ApiResponse(code = 403, message = "권한 없음"),
+            @ApiResponse(code = 409, message = "수정 불가능"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> userModify(
             @PathVariable final Long userId,
+            @PathVariable final String profileInfo,
             UserModifyRequestDto userModifyRequestDto,
-            @AuthenticationPrincipal String token) {
-        User user = userService.getUserByEmail(token);
-        Long reqUserId = user.getId();
-        if (!Objects.equals(reqUserId, userId)) {
-            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
-        }
+            @AuthenticationPrincipal String userEmail) {
         try {
-            userService.userModify(userModifyRequestDto, userModifyRequestDto.getProfileImg(), user);
+            User user = userService.getUserByEmail(userEmail);
+            Long reqUserId = user.getId();
+            if (!Objects.equals(reqUserId, userId)) {
+                return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
+            }
+            userService.userModify(userModifyRequestDto, user, profileInfo);
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 상세 정보 수정 실패"));
         }
@@ -142,7 +145,7 @@ public class UserAuthController {
             @ApiResponse(code = 400, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> SearchUserList(
+    public ResponseEntity<?> searchUserList(
             @Valid UserListRequestDto userListReuestDto, BindingResult bindingResult,
             @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage
     ) {
@@ -199,13 +202,44 @@ public class UserAuthController {
             @ApiResponse(code = 400, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> SearchUserList(
+    public ResponseEntity<?> selectProjectTrack(
             @RequestBody @Valid UserSelectProjectTrackRequsetDto userSelectProjectTrackRequsetDto,
             @AuthenticationPrincipal final String token
     ) {
         String project = userSelectProjectTrackRequsetDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
+            if (project.equals("공통 프로젝트")) {
+                if (user.getCommonProjectTrack() != null) {
+                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "이미 " + project + " 트랙 선택을 완료 하였습니다."));
+                }
+            } else if (project.equals("특화 프로젝트")) {
+                if (user.getSpecializationProjectTrack() != null) {
+                    return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "이미 " + project + " 트랙 선택을 완료 하였습니다."));
+                }
+            }
+            userService.selectProjectTrack(user, userSelectProjectTrackRequsetDto);
+
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 리스트 조회 실패"));
+        }
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
+    }
+
+    @PutMapping("/project/track")
+    @ApiOperation(value = "교욱생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "인증 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> modifyProjectTrack(
+            @RequestBody @Valid UserSelectProjectTrackRequsetDto userSelectProjectTrackRequsetDto,
+            @AuthenticationPrincipal final String token) {
+        String project = userSelectProjectTrackRequsetDto.getProject();
+        try {
+            User user = userService.getUserByEmail(token);
+            Team team = teamService.belongToTeam(project, user.getId());
             if (project.equals("공통 프로젝트")) {
                 if (user.getCommonProjectTrack() != null) {
                     return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "이미 " + project + " 트랙 선택을 완료 하였습니다."));
@@ -243,6 +277,5 @@ public class UserAuthController {
         }
         return ResponseEntity.status(200).body(UserProjectResponseDto.of(UserProjectLoginDto.of(user.getTeams(), user)));
     }
-
 
 }

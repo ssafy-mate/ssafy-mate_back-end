@@ -147,11 +147,11 @@ public class RequestController {
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 받은 제안 요청 실패"));
         }
-        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages));
+        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages,"receive"));
     }
 
     @GetMapping("/sendRequest")
-    @ApiOperation(value = "받은 제안", notes = "사용자가 받은 팀/사용자 요청들")
+    @ApiOperation(value = "보낸 제안", notes = "사용자가 받은 팀/사용자 요청들")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
             @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
@@ -171,7 +171,7 @@ public class RequestController {
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 실패"));
         }
-        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages));
+        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages,"send"));
     }
 
     @PutMapping("/response")

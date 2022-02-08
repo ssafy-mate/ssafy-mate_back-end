@@ -81,13 +81,16 @@ public class RequestMessageServiceImple implements RequestMessageService {
     public Integer updateReadCheckApproval(Long id, String readCheck,Long userId, Team team) {
         Integer answer = requestMessageRepository.updateRead(id, readCheck);
         if(answer==1){
-            requestMessageRepository.updateReadExpiration(userId,team.getProject());
             UserTeam userTeam = UserTeam.builder()
                     .userId(userId)
                     .teamId(team.getId())
                     .build();
             userTeamRepository.save(userTeam);
+            requestMessageRepository.updateReadExpirationUser(userId,team.getProject());
 
+        }
+        if(!teamRepository.isRecruit(team.getId())){
+            requestMessageRepository.updateReadExpirationTeam(team.getId(),team.getProject());
         }
         return answer;
     }

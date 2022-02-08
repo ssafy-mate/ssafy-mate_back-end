@@ -18,13 +18,13 @@ public class RequestMessageListResponseDto {
     List<RequestTeamMessageDto> teamRequests = new ArrayList<>();
     List<RequestUserMessageDto> userRequests = new ArrayList<>();
 
-    public static RequestMessageListResponseDto of(List<RequestMessage> requestMessages){
+    public static RequestMessageListResponseDto of(List<RequestMessage> requestMessages, String type){
         RequestMessageListResponseDto res = new RequestMessageListResponseDto();
         for (RequestMessage requestMessage : requestMessages){
-            if(requestMessage.getType().equals("userRequest")){
+            if((type.equals("receiver")&&requestMessage.getType().equals("userRequest")) ||(type.equals("sender")&&requestMessage.getType().equals("teamRequest"))){
                 res.userRequests.add(RequestUserMessageDto.of(requestMessage));
             }
-            else if(requestMessage.getType().equals("teamRequest")){
+            else if((type.equals("receiver")&&requestMessage.getType().equals("teamRequest")) ||(type.equals("sender")&&requestMessage.getType().equals("userRequest"))){
                 res.teamRequests.add(RequestTeamMessageDto.of(requestMessage));
             }
         }

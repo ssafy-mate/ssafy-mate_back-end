@@ -163,7 +163,7 @@ public class UserAuthController {
         String profileInfoName = "";
         if (profileInfo.equals("ssafy-track")) {
             profileInfoName = "교육 트랙";
-        } else if (profileInfo.equals("profileImg")) {
+        } else if (profileInfo.equals("profile-img")) {
             profileInfoName = "프로필 이미지";
         } else if (profileInfo.equals("self-introduction")) {
             profileInfoName = "자기 소개";

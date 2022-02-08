@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
         if (profileInfo.equals("ssafy-track")) {
             user.setSsafyTrack(userModifyRequestDto.getSsafyTrack());
 
-        } else if (profileInfo.equals("profileImg")) {
+        } else if (profileInfo.equals("profile-img")) {
 
             String profileImgUrl = user.getProfileImg();
             MultipartFile multipartFile = userModifyRequestDto.getProfileImg();

@@ -66,6 +66,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(BelongToTeam.of(belongToTeam));
     }
 
+
     @GetMapping("/team-id")
     @ApiOperation(value = "팀 참여 여부 조회", notes = "유저 아이디와 선택한 프로젝트로 해당 프로젝트에서 이미 팀에 참여 했는지 여부를 조회")
     @ApiResponses({
@@ -91,6 +92,7 @@ public class UserAuthController {
         }
         return ResponseEntity.status(200).body(UserTeamIdResponseDto.of(teamId));
     }
+
 
     // 나의 정보 받기
     @GetMapping("/my-info")

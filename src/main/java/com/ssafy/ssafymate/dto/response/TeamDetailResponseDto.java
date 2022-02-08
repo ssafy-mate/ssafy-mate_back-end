@@ -2,6 +2,8 @@ package com.ssafy.ssafymate.dto.response;
 
 import com.ssafy.ssafymate.dto.TeamDto.TeamDetail;
 import com.ssafy.ssafymate.entity.Team;
+import com.ssafy.ssafymate.entity.User;
+import com.ssafy.ssafymate.entity.UserTeam;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,10 +14,23 @@ public class TeamDetailResponseDto {
     @ApiModelProperty(name="팀 상세정보", example = "team :{}")
     TeamDetail teamData;
 
-    public static TeamDetailResponseDto of(Team team){
+    String role;
+
+    public static TeamDetailResponseDto of(Team team, User user){
         TeamDetailResponseDto res = new TeamDetailResponseDto();
 
         res.setTeamData(TeamDetail.of(team));
+        res.setRole("outsider");
+        if(team.getOwner().getId().equals(user.getId()))
+            res.setRole("owner");
+        else{
+            for(UserTeam member: team.getMembers()){
+                if(member.getUser().getId().equals(user.getId())){
+                    res.setRole("member");
+                    break;
+                }
+            }
+        }
         return res;
     }
 }

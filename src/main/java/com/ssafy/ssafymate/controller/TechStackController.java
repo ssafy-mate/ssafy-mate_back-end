@@ -19,7 +19,7 @@ import java.util.List;
 
 @Api(value = "기술 스택 API", tags = {"tech_stack"})
 @RestController
-@RequestMapping("/api/techstack-list")
+@RequestMapping("/api/techstacks")
 public class TechStackController {
 
     @Autowired

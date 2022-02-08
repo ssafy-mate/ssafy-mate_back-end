@@ -34,7 +34,7 @@ import java.util.Objects;
 
 @Api(value = "교육생 auth API", tags = {"UserAuth"})
 @RestController
-@RequestMapping("/api/auth/user")
+@RequestMapping("/api/auth/users")
 public class UserAuthController {
 
     @Autowired
@@ -67,7 +67,7 @@ public class UserAuthController {
     }
 
 
-    @GetMapping("/team-id")
+    @GetMapping("/{userId}/team-id")
     @ApiOperation(value = "팀 참여 여부 조회", notes = "유저 아이디와 선택한 프로젝트로 해당 프로젝트에서 이미 팀에 참여 했는지 여부를 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -75,14 +75,13 @@ public class UserAuthController {
     })
     public ResponseEntity<?> belongToTeam2(
             @RequestParam final String project,
-            @AuthenticationPrincipal final String token) {
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
         User user;
         Team team;
         Long teamId = null;
         try {
             user = userService.getUserByEmail(token);
-            Long userId = user.getId();
-            team = teamService.belongToTeam(project, userId);
+            team = teamService.belongToTeam(project, user.getId());
 
             if(team != null){
                 teamId = team.getId();
@@ -95,7 +94,7 @@ public class UserAuthController {
 
 
     // 나의 정보 받기
-    @GetMapping("/my-info")
+    @GetMapping("/{userId}/my-info")
     @ApiOperation(value = "나의 정보 조회", notes = "로그인한 유저가 토큰을 담아 요청을 보내서 유저 정보 중 일부를 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -103,7 +102,7 @@ public class UserAuthController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> getMyInfo(
-            @AuthenticationPrincipal final String userEmail) {
+            @AuthenticationPrincipal final String userEmail, @PathVariable String userId) {
         User user;
         try {
             user = userService.getUserByEmail(userEmail);
@@ -117,7 +116,7 @@ public class UserAuthController {
     }
 
     // 교육생 상세 정보 조회
-    @GetMapping("/info/{userId}")
+    @GetMapping("/{userId}")
     @ApiOperation(value = "교육생 상세 조회", notes = "유저 아이디로 해당 교육생 상세 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -140,7 +139,7 @@ public class UserAuthController {
     }
 
     // 교육생 상세 정보 수정
-    @PutMapping("/info/{userId}/{profileInfo}")
+    @PutMapping("/{userId}/{profileInfo}")
     @ApiOperation(value = "교육생 상세 정보 수정", notes = "유저 아이디로 해당 교육생 상세 정보 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -180,7 +179,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(MessageBody.of(profileInfoName + " 수정이 완료되었습니다."));
     }
 
-    @GetMapping("/list")
+    @GetMapping("")
     @ApiOperation(value = "교육생 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 교육생 리스트 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -237,7 +236,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListReuestDto.getProject(), nowPage, totalPage, totalElement));
     }
 
-    @PostMapping("/project/track")
+    @PostMapping("/{userId}/project-track")
     @ApiOperation(value = "교육생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -246,8 +245,8 @@ public class UserAuthController {
     })
     public ResponseEntity<?> selectProjectTrack(
             @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
-            @AuthenticationPrincipal final String token
-    ) {
+            @AuthenticationPrincipal final String token,
+            @PathVariable String userId) {
         String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
@@ -268,7 +267,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
     }
 
-    @PutMapping("/project/track")
+    @PutMapping("/{userId}/project-track")
     @ApiOperation(value = "교육생 프로젝트 트랙 수정", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -277,7 +276,7 @@ public class UserAuthController {
     })
     public ResponseEntity<?> modifyProjectTrack(
             @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
-            @AuthenticationPrincipal final String token) {
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
         String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
@@ -293,7 +292,7 @@ public class UserAuthController {
     }
 
     // 교육생 프로젝트 정보 받기
-    @GetMapping("/projects")
+    @GetMapping("/{userId}/projects")
     @ApiOperation(value = "교육생 프로젝트 정보 받기", notes = "교육생 프로젝트 정보 받기")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -301,7 +300,7 @@ public class UserAuthController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> userProjects(@AuthenticationPrincipal final String token) {
+    public ResponseEntity<?> userProjects(@AuthenticationPrincipal final String token, @PathVariable String userId) {
 
         User user;
         try {

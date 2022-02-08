@@ -156,7 +156,7 @@ public class UserAuthController {
         System.out.println(userModifyRequestDto);
         try {
             User user = userService.getUserByEmail(userEmail);
-            System.out.println(user);
+            System.out.println("유저 정보: " + user);
             Long reqUserId = user.getId();
             if (!Objects.equals(reqUserId, userId)) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "사용자는 정보를 수정할 수 있는 권한이 없습니다."));

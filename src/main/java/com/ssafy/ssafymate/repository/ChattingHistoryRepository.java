@@ -18,19 +18,22 @@ import java.util.Optional;
 @Repository
 public interface ChattingHistoryRepository extends JpaRepository<ChattingHistory, Long> {
 
-    @Query(value = "select CH.room_id, CH.sender_id, U.student_name username, CH.content, CH.sent_time\n" +
+    @Query(value = "select CH.id, CH.room_id, CH.sender_id, U.student_name username, CH.content, CH.sent_time\n" +
             "from chatting_history AS CH\n" +
             "join user as U\n" +
             "on U.id = CH.sender_id\n" +
-            "WHERE CH.room_id = :roomId AND CH.sent_time < :entryTime", nativeQuery = true)
-    List<ContentList> getHistoryList(Pageable pageable, @Param("roomId") String roomId, @Param("entryTime") String entryTime);
-//    Optional<List<ContentList>> getHistoryList(@Param("roomId") String roomId);
+            "WHERE CH.room_id = :roomId AND CH.id < :id\n" +
+            "ORDER BY CH.id DESC \n"+
+            "limit :size", nativeQuery = true)
+    List<ContentList> getHistoryList(@Param("roomId") String roomId, @Param("id") Long id, @Param("size") int size);
 
-    @Query(value = "select count(*) from chatting_history where room_id = :roomId", nativeQuery = true)
-    int countByChattingRoomId(@Param("roomId") String roomId);
+    @Query(value = "select CH.id, CH.room_id, CH.sender_id, U.student_name username, CH.content, CH.sent_time\n" +
+            "from chatting_history AS CH\n" +
+            "join user as U\n" +
+            "on U.id = CH.sender_id\n" +
+            "WHERE CH.room_id = :roomId\n" +
+            "ORDER BY CH.id DESC\n "+
+            "limit :size", nativeQuery = true)
+    List<ContentList> getLatestHistoryList(@Param("roomId") String roomId, @Param("size") int size);
 
-    @Modifying
-    @Query(value = "insert into chatting_history(room_id, sender_id, sent_time, content) values (:roomId, :senderId, :sentTime, :content)", nativeQuery = true)
-    @Transactional
-    int saveHistory(@Param("roomId") String roomId, @Param("senderId") Long senderId, @Param("sentTime") String sentTime, @Param("content") String content);
 }

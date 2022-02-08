@@ -11,9 +11,7 @@ public interface ChattingService {
 
     List<RoomList> getRoomList(Long userId);
 
-    List<ContentList> getHistoryList(Pageable pageable, String roomId, String entryTime);
-
-    int getTotalLogCount(String roomId);
+    List<ContentList> getHistoryList(String roomId, Long id, int size);
 
     ChattingRoom findRoom(String roomId);
 

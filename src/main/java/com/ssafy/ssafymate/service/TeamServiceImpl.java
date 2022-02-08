@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("teamService")
-public class TeamServiceImpl implements TeamService{
+public class TeamServiceImpl implements TeamService {
 
     @Autowired
     private TeamRepository teamRepository;
@@ -52,12 +52,12 @@ public class TeamServiceImpl implements TeamService{
 
         String defaultImg = "default_team_img.jpg";
         String teamImgUrl;
-        if(multipartFile==null || multipartFile.isEmpty()) {
+        if (multipartFile == null || multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정
-            teamImgUrl = domainPrefix + defaultImg;
+            teamImgUrl = null;
 
         } else {
-            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/"+ multipartFile.getOriginalFilename();
+            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/" + multipartFile.getOriginalFilename();
 
             File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
@@ -65,7 +65,7 @@ public class TeamServiceImpl implements TeamService{
         }
         System.out.println(teamImgUrl);
 
-        Team team = teamRepository.save(teamBuilder(teamRequestDto,teamImgUrl,user));
+        Team team = teamRepository.save(teamBuilder(teamRequestDto, teamImgUrl, user));
         System.out.println(team);
 
         UserTeam userTeam = UserTeam.builder()
@@ -86,17 +86,19 @@ public class TeamServiceImpl implements TeamService{
         Long teamId = team.getId();
         // 기존 팀 스택 삭제
         List<TeamStack> stackInDb = teamStackRepository.findByTeamId(teamId);
-        if(stackInDb.size() > 0){
+        if (stackInDb.size() > 0) {
             teamStackRepository.deleteByTeamId(teamId);
         }
 
         String teamImgUrl;
 
         //이미지가 비어있으면 기존 이미지로
-        if(multipartFile==null || multipartFile.isEmpty()) {
-            teamImgUrl = team.getTeamImg();
+        if (multipartFile == null || multipartFile.isEmpty()) {
+
+            teamImgUrl = teamRequestDto.getTeamImgUrl();
+
         } else {    // 아니면 새 이미지로
-            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/"+ multipartFile.getOriginalFilename();
+            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/" + multipartFile.getOriginalFilename();
 
             File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
@@ -104,7 +106,7 @@ public class TeamServiceImpl implements TeamService{
         }
 
 
-        Team modify_team = teamBuilder(teamRequestDto,teamImgUrl,user);
+        Team modify_team = teamBuilder(teamRequestDto, teamImgUrl, user);
         modify_team.setId(teamId);
 
 
@@ -118,13 +120,13 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public Team belongToTeam(String selectedProject, Long userId) {
-        return teamRepository.belongToTeam(selectedProject,userId).orElse(null);
+        return teamRepository.belongToTeam(selectedProject, userId).orElse(null);
     }
 
     @Override
     public Team ownTeam(Long teamId, Long userId) {
-        System.out.println(teamId+" "+ userId);
-        return teamRepository.findByTeamIdAndUserIdJQL(teamId,userId).orElse(null);
+        System.out.println(teamId + " " + userId);
+        return teamRepository.findByTeamIdAndUserIdJQL(teamId, userId).orElse(null);
     }
 
     @Override
@@ -133,9 +135,9 @@ public class TeamServiceImpl implements TeamService{
         String jsonString = teamListRequestDto.getTechstack_code();
         List<TeamStack> techStacks = new ArrayList<>();
 
-        if(jsonString != null)
+        if (jsonString != null)
             techStacks = StringToTechStacks2(jsonString);
-        if((techStacks.size() == 0)){
+        if ((techStacks.size() == 0)) {
             TeamStack notin = new TeamStack();
             notin.setTechStackCode(0L);
             techStacks.add(notin);
@@ -154,16 +156,16 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public List<Team> teamListTransfer(List<TeamInt> teamIs){
+    public List<Team> teamListTransfer(List<TeamInt> teamIs) {
         List<Team> teams = new ArrayList<>();
 
-        for (TeamInt teamI : teamIs){
+        for (TeamInt teamI : teamIs) {
             teams.add(teamTransfer(teamI));
         }
         return teams;
     }
 
-    public Team teamTransfer(TeamInt teamI){
+    public Team teamTransfer(TeamInt teamI) {
         Team team = Team.builder()
                 .id(teamI.getId())
                 .teamImg(teamI.getTeam_img())
@@ -187,12 +189,12 @@ public class TeamServiceImpl implements TeamService{
     }
 
     // teamrequestDto 와 이미지Url을 team 으로 빌드
-    public Team teamBuilder(TeamRequestDto teamRequestDto, String teamImgUrl, User user){
+    public Team teamBuilder(TeamRequestDto teamRequestDto, String teamImgUrl, User user) {
 
         String jsonString = teamRequestDto.getTechStacks();
         List<TeamStack> techStacks = new ArrayList<>();
 
-        if(jsonString != null)
+        if (jsonString != null)
             techStacks = StringToTechStacks(jsonString);
 
         return Team.builder()

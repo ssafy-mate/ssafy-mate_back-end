@@ -66,7 +66,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(BelongToTeam.of(belongToTeam));
     }
 
-    @GetMapping("/team-id")
+    @GetMapping("/{userId}/team-id")
     @ApiOperation(value = "팀 참여 여부 조회", notes = "유저 아이디와 선택한 프로젝트로 해당 프로젝트에서 이미 팀에 참여 했는지 여부를 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -74,14 +74,13 @@ public class UserAuthController {
     })
     public ResponseEntity<?> belongToTeam2(
             @RequestParam final String project,
-            @AuthenticationPrincipal final String token) {
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
         User user;
         Team team;
         Long teamId = null;
         try {
             user = userService.getUserByEmail(token);
-            Long userId = user.getId();
-            team = teamService.belongToTeam(project, userId);
+            team = teamService.belongToTeam(project, user.getId());
 
             if(team != null){
                 teamId = team.getId();
@@ -183,7 +182,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(MessageBody.of(profileInfoName + " 수정이 완료되었습니다."));
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     @ApiOperation(value = "교육생 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 교육생 리스트 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -239,7 +238,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListReuestDto.getProject(), nowPage, totalPage, totalElement));
     }
 
-    @PostMapping("/project/track")
+    @PostMapping("/{userId}/project-track")
     @ApiOperation(value = "교육생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -248,8 +247,8 @@ public class UserAuthController {
     })
     public ResponseEntity<?> selectProjectTrack(
             @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
-            @AuthenticationPrincipal final String token
-    ) {
+            @AuthenticationPrincipal final String token,
+            @PathVariable String userId) {
         String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
@@ -270,7 +269,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
     }
 
-    @PutMapping("/project/track")
+    @PutMapping("/{userId}/project-track")
     @ApiOperation(value = "교육생 프로젝트 트랙 수정", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -279,7 +278,7 @@ public class UserAuthController {
     })
     public ResponseEntity<?> modifyProjectTrack(
             @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
-            @AuthenticationPrincipal final String token) {
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
         String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);

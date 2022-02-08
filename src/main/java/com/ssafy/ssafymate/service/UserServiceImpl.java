@@ -120,12 +120,14 @@ public class UserServiceImpl implements UserService {
 
             String profileImgUrl = user.getProfileImg();
             MultipartFile multipartFile = userModifyRequestDto.getProfileImg();
+            System.out.println(multipartFile);
             if (multipartFile != null || !multipartFile.isEmpty()) {
                 String profileImgSaveUrl = "/var/webapps/upload/" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
                 File file = new File(profileImgSaveUrl);
                 multipartFile.transferTo(file);
                 profileImgUrl = domainPrefix + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
             }
+            System.out.println(profileImgUrl);
             user.setProfileImg(profileImgUrl);
 
         } else if (profileInfo.equals("self-introduction")) {

@@ -52,15 +52,10 @@ public class ChattingController {
     })
     public ResponseEntity<?> getHistoryList(
             @PathVariable("roomId") String roomId,
-            @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage,
-            @RequestParam("entryTime") String entryTime) {
-
+            @RequestParam("id") Long id
+    ) {
         // 스트링 파싱하기
         String[] ids = roomId.split("-");
-//        Long userId1 = Long.parseLong(ids[0]);
-//        Long userId2 = Long.parseLong(ids[1]);
-//        System.out.println(userId1);
-//        System.out.println(userId2);
 
         // 채팅방의 존재 여부 확인
         if (chattingService.findRoom(roomId) == null) {
@@ -72,19 +67,8 @@ public class ChattingController {
         }
         // 20개씩 전송
         int size = 20;
-        Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
 
-//        if (nowPage == 1) {
-//        int totalLogCount = chattingService.getTotalLogCount(roomId);
-//        int totalPages = totalLogCount / size;
-//        if (totalLogCount % size != 0) {
-//            totalPages += 1;
-//        }
-//        List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
-//        return ResponseEntity.status(200).body(ChatHistoryTotalPagesResponseDto.of(contentList, totalPages));
-//        }
-
-        List<ContentList> contentList = chattingService.getHistoryList(pageable, roomId, entryTime);
+        List<ContentList> contentList = chattingService.getHistoryList(roomId, id, size);
         return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(contentList));
     }
 }

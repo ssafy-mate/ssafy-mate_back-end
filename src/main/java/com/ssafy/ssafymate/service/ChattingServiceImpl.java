@@ -28,16 +28,14 @@ public class ChattingServiceImpl implements ChattingService{
     }
 
     @Override
-    public List<ContentList> getHistoryList(Pageable pageable, String roomId, String entryTime) {
-
-//        List<ContentList> list = chattingHistoryRepository.getHistoryList(roomId).orElse(null);
-        List<ContentList> list = chattingHistoryRepository.getHistoryList(pageable, roomId, entryTime);
+    public List<ContentList> getHistoryList(String roomId, Long id, int size) {
+        List<ContentList> list;
+        if(id == 0){
+            list = chattingHistoryRepository.getLatestHistoryList(roomId, size);
+        }else{
+            list = chattingHistoryRepository.getHistoryList(roomId, id, size);
+        }
         return list;
-    }
-
-    @Override
-    public int getTotalLogCount(String roomId) {
-        return chattingHistoryRepository.countByChattingRoomId(roomId);
     }
 
     @Override

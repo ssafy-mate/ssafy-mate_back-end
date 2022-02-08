@@ -27,7 +27,7 @@ public class ChattingController {
     private ChattingService chattingService;
 
 
-    @GetMapping("/room/{userId}")
+    @GetMapping("/rooms/{userId}")
     @ApiOperation(value = "채팅방 리스트 불러오기", notes = "사용자가 대화한 채팅방 리스트를 불러온다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -43,7 +43,7 @@ public class ChattingController {
         return ResponseEntity.status(200).body(ChatRoomResponseDto.of(roomList));
     }
 
-    @GetMapping("/log/{roomId}")
+    @GetMapping("/logs/{roomId}")
     @ApiOperation(value = "대화 내용 불러오기", notes = "대화 내용을 페이징하여 보내준다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

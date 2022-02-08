@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
 //                .antMatchers("/admin/**").hasRole("ADMIN")  // 인증 요구
 //                .antMatchers("/user/**").hasRole("USER")    // 인증 요구
-                    .antMatchers("/api/auth/team/**").access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+                    .antMatchers("/api/auth/teams/**").access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 //                    .antMatchers("/api/chat/**").access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
                     .anyRequest().permitAll()    // 그 외 나머지 요청 다 허용
                 .and()

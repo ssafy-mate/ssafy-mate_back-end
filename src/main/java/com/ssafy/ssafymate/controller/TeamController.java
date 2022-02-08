@@ -21,7 +21,7 @@ import javax.validation.Valid;
 
 @Api(value = "팀 API", tags = {"Team"})
 @RestController
-@RequestMapping("/api/auth/team")
+@RequestMapping("/api/auth/teams")
 public class TeamController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class TeamController {
     @Autowired
     UserTeamService userTeamService;
 
-    @GetMapping("/info/{teamId}")
+    @GetMapping("/{teamId}")
     @ApiOperation(value = "팀 상세조회", notes = "팀 아이디로 해당 팀 상세 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -58,7 +58,7 @@ public class TeamController {
     }
 
 
-    @PostMapping("/info")
+    @PostMapping("")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "팀 생성", notes = "작성된 팀 정보와 유저 아이디를 가지고 팀생성")
     @ApiResponses({
@@ -84,7 +84,7 @@ public class TeamController {
         return ResponseEntity.status(200).body(TeamResponseDto.of(team.getId(), "팀을 성공적으로 생성하였습니다."));
     }
 
-    @PutMapping("/info/{teamId}")
+    @PutMapping("/{teamId}")
     @ApiOperation(value = "팀 수정", notes = "수정된 팀 정보를 가지고 팀 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -111,7 +111,7 @@ public class TeamController {
         return ResponseEntity.status(200).body(TeamResponseDto.of(team.getId(), "팀 상세 정보 수정이 완료되었습니다."));
     }
 
-    @DeleteMapping("/info/{teamId}")
+    @DeleteMapping("/{teamId}")
     @ApiOperation(value = "팀 삭제", notes = "팀장이 팀 삭제")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -135,5 +135,34 @@ public class TeamController {
         return ResponseEntity.status(200).body(MessageBody.of("팀 삭제가 완료되었습니다."));
     }
 
+    @DeleteMapping("/{teamId}/leave")
+    @ApiOperation(value = "팀 탈퇴", notes = "팀원이 팀 탈퇴")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "인증 실패"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> deleteUserTeam(
+            @PathVariable final Long teamId,
+            @AuthenticationPrincipal String token) {
+        try {
+            User user = userService.getUserByEmail(token);
+            Long userId = user.getId();
+            Team team = teamService.teamfind(teamId);
+            if (team == null) {
+                return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "팀이 없습니다."));
+            }
+            else if(userTeamService.userTeamFind(userId,teamId) == null){
+                return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "합류된 팀이 아닙니다."));
+            }
+            else if(team.getOwner().getId().equals(userId)){
+                return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "팀장은 팀을 탈퇴 할 수 없습니다."));
+            }
+            userTeamService.userTeamDelete(userId,teamId);
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 삭제 실패"));
+        }
+        return ResponseEntity.status(200).body(MessageBody.of("탈퇴 처리가 완료되었습니다."));
+    }
 
 }

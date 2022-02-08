@@ -154,6 +154,7 @@ public class UserAuthController {
             UserModifyRequestDto userModifyRequestDto,
             @AuthenticationPrincipal String userEmail) {
         System.out.println(userModifyRequestDto);
+        System.out.println(userEmail);
         try {
             User user = userService.getUserByEmail(userEmail);
             System.out.println("유저 정보: " + user);

@@ -37,5 +37,15 @@ public interface RequestMessageRepository extends JpaRepository<RequestMessage, 
             "AND read_check='pending' ",
             nativeQuery = true
     )
-    Integer updateReadExpiration(@Param("userId") Long userId,@Param("project") String project );
+    Integer updateReadExpirationUser(@Param("userId") Long userId,@Param("project") String project );
+
+    @Modifying
+    @Query(value = "UPDATE request_message " +
+            "SET read_check = 'expiration' " +
+            "WHERE team_id=:teamId " +
+            "AND project=:project " +
+            "AND read_check='pending' ",
+            nativeQuery = true
+    )
+    Integer updateReadExpirationTeam(@Param("teamId") Long teamId,@Param("project") String project );
 }

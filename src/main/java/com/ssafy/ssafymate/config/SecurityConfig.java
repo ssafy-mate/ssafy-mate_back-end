@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin().disable()
                     .authorizeRequests()
                     .antMatchers("/api/auth/teams/**").access("hasRole('USER')")
-                    .antMatchers("/api/auth/users/**").access("hasRole('USER')")
+//                    .antMatchers("/api/auth/users/**").access("hasRole('USER')")
                     .anyRequest().permitAll()    // 그 외 나머지 요청 다 허용
                 .and()
                     .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class); // JwtFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다

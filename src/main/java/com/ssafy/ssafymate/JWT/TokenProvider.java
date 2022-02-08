@@ -67,7 +67,8 @@ public class TokenProvider {
 
     // Request의 Header에서 token 값을 가져온다. "Authorization" : Bearer + "TOKEN 값'
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization").substring(7);
+//        return request.getHeader("Authorization").substring(7);
+        return request.getHeader("Authorization");
     }
 
     // 토큰의 유효성 + 만료일자 확인

@@ -52,7 +52,7 @@ public class ChattingController {
     })
     public ResponseEntity<?> getHistoryList(
             @PathVariable("roomId") String roomId,
-            @RequestParam("id") Long id
+            @RequestParam("messageId") Long messageId
     ) {
         // 스트링 파싱하기
         String[] ids = roomId.split("-");
@@ -68,7 +68,7 @@ public class ChattingController {
         // 20개씩 전송
         int size = 20;
 
-        List<ContentList> contentList = chattingService.getHistoryList(roomId, id, size);
+        List<ContentList> contentList = chattingService.getHistoryList(roomId, messageId, size);
         return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(contentList));
     }
 }

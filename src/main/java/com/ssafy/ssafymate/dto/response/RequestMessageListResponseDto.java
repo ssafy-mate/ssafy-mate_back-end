@@ -15,17 +15,17 @@ import java.util.List;
 @NoArgsConstructor
 public class RequestMessageListResponseDto {
 
-    List<RequestTeamMessageDto> teamMessage = new ArrayList<>();
-    List<RequestUserMessageDto> userMessage = new ArrayList<>();
+    List<RequestTeamMessageDto> teamRequests = new ArrayList<>();
+    List<RequestUserMessageDto> userRequests = new ArrayList<>();
 
     public static RequestMessageListResponseDto of(List<RequestMessage> requestMessages){
         RequestMessageListResponseDto res = new RequestMessageListResponseDto();
         for (RequestMessage requestMessage : requestMessages){
             if(requestMessage.getType().equals("userRequest")){
-                res.userMessage.add(RequestUserMessageDto.of(requestMessage));
+                res.userRequests.add(RequestUserMessageDto.of(requestMessage));
             }
             else if(requestMessage.getType().equals("teamRequest")){
-                res.teamMessage.add(RequestTeamMessageDto.of(requestMessage));
+                res.teamRequests.add(RequestTeamMessageDto.of(requestMessage));
             }
         }
         return res;

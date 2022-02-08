@@ -18,11 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-@Api(value = "로그인 API", tags = {"signin"})
+@Api(value = "로그인 API", tags = {"sign-in"})
 @RestController
-@RequestMapping("/api/user/sign-in")
-public class LoginContoller {
+@RequestMapping("/api/users/sign-in")
+public class LoginController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;

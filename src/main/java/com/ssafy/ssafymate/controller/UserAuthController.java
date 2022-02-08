@@ -149,11 +149,11 @@ public class UserAuthController {
             @PathVariable final Long userId,
             @PathVariable final String profileInfo,
             UserModifyRequestDto userModifyRequestDto,
-            @AuthenticationPrincipal final String userEmail) {
+            @AuthenticationPrincipal final String token) {
         System.out.println(userModifyRequestDto);
-        System.out.println(userEmail);
+        System.out.println(token);
         try {
-            User user = userService.getUserByEmail(userEmail);
+            User user = userService.getUserByEmail(token);
             System.out.println("유저 정보: " + user);
             Long reqUserId = user.getId();
             if (!Objects.equals(reqUserId, userId)) {

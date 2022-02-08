@@ -150,19 +150,14 @@ public class UserAuthController {
             @PathVariable final String profileInfo,
             UserModifyRequestDto userModifyRequestDto,
             @AuthenticationPrincipal final String token) {
-        System.out.println(userModifyRequestDto);
-        System.out.println(token);
         try {
             User user = userService.getUserByEmail(token);
-            System.out.println("유저 정보: " + user);
             Long reqUserId = user.getId();
             if (!Objects.equals(reqUserId, userId)) {
                 return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
             }
             userService.userModify(userModifyRequestDto, user, profileInfo);
-            System.out.println("데이터는 저장됨");
         } catch (Exception exception) {
-            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 상세 정보 수정 실패"));
         }
         String profileInfoName = "";

@@ -127,7 +127,6 @@ public class UserServiceImpl implements UserService {
                 multipartFile.transferTo(file);
                 profileImgUrl = domainPrefix + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
             }
-            System.out.println("이미지 저장 경로다 : " + profileImgUrl);
             user.setProfileImg(profileImgUrl);
 
         } else if (profileInfo.equals("self-introduction")) {

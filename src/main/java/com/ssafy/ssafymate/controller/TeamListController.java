@@ -25,13 +25,13 @@ import java.util.List;
 
 @Api(value = "팀 리스트 API", tags = {"TeamList"})
 @RestController
-@RequestMapping("/api/auth/project")
+@RequestMapping("/api/auth/")
 public class TeamListController {
 
     @Autowired
     TeamService teamService;
 
-    @GetMapping("/team-list")
+    @GetMapping("/teams")
     @ApiOperation(value = "팀 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 팀 리스트 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

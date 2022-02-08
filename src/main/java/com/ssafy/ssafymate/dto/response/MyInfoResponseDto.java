@@ -34,12 +34,8 @@ public class MyInfoResponseDto {
     @ApiModelProperty(name="projects")
     List<UserProjectLoginDto> projects = new ArrayList<>();
 
-    @ApiModelProperty(name="message", example = "success")
-    private String message;
-
-    public static MyInfoResponseDto of(String message, User user) {
+    public static MyInfoResponseDto of(User user) {
         MyInfoResponseDto body = new MyInfoResponseDto();
-        body.setMessage(message);
         body.setUserId(user.getId());
         body.setUserName(user.getStudentName());
         body.setUserEmail(user.getEmail());

@@ -29,7 +29,7 @@ import java.io.UnsupportedEncodingException;
 
 @Api(value = "유저 API", tags = {"User"})
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
@@ -69,7 +69,7 @@ public class UserController {
     }
 
     // 회원가입 2단계 - 이메일 인증
-    @GetMapping("/sign-up/verification/email")
+    @GetMapping("/sign-up/verification/emails")
     @ApiOperation(value = "이메일 인증 요청 & 재요청", notes = "사용자가 입력한 이메일에 인증코드 전송")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -94,7 +94,7 @@ public class UserController {
     }
 
     // 회원가입 2단계 - 이메일 인증 확인
-    @PutMapping("/sign-up/verification/email")
+    @PutMapping("/sign-up/verification/emails")
     @ApiOperation(value = "이메일 인증 코드 확인", notes = "이메일로 발송한 인증 코드를 확인")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -130,9 +130,8 @@ public class UserController {
     })
     public ResponseEntity<?> signUp(
             @Valid UserRequestDto userRequestDto, BindingResult bindingResult) throws Exception {
-        // @Valid 유효성 검사를 통과하지 못하면 500 에러 반환
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false,  "계정 생성이 실패하였습니다."));
+            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "계정 생성이 실패하였습니다."));
         }
         try {
             userService.userSave(userRequestDto, userRequestDto.getProfileImg());
@@ -143,7 +142,7 @@ public class UserController {
     }
 
     // 아이디 찾기
-    @GetMapping("/id-search")
+    @GetMapping("/id/searching")
     @ApiOperation(value = "아이디 찾기", notes = "SSAFY 학번, 이름으로 아이디(이메일) 찾기")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -157,16 +156,16 @@ public class UserController {
         try {
             user = userService.getUserByStudentNumberAndStudentName(studentNumber, userName);
             if (user == null) {
-                return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "일치하는 회원 정보가 없습니다."));
+                return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "가입 시 입력하신 회원 정보가 맞는지 다시 한번 확인해 주세요."));
             }
         } catch (Exception exception) {
-            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "일치하는 회원 정보가 없습니다."));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 아이디 찾기 실패"));
         }
         return ResponseEntity.status(200).body(EmailResponseDto.of(true, "%s님의 싸피메이트 계정을 찾았습니다.", user.getStudentName(), user.getEmail()));
     }
 
     // 비밀번호 재설정 - 이메일 인증
-    @GetMapping("/pw-search")
+    @GetMapping("/password/new")
     @ApiOperation(value = "비밀번호 재설정 - 이메일 인증 코드 발송", notes = "이메일, 학번, 이름으로 사용자 인증 후 인증코드가 담긴 이메일 발송")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -176,21 +175,21 @@ public class UserController {
     })
     public ResponseEntity<?> pwSearch(
             @RequestParam("userEmail") String userEmail) throws Exception {
-        String pwVerification;
-        User user = userService.getUserByEmail(userEmail);
-        if (user == null) {
-            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "가입 시 입력하신 회원 정보가 맞는지 다시 한번 확인해 주세요."));
-        }
         try {
+            String pwVerification;
+            User user = userService.getUserByEmail(userEmail);
+            if (user == null) {
+                return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "가입 시 입력하신 회원 정보가 맞는지 다시 한번 확인해 주세요."));
+            }
             pwVerification = emailService.sendPwSimpleMessage(userEmail);
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "이메일 전송에 실패하였습니다."));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 이메일 전송 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "입력한 이메일로 인증 메일을 발송했습니다.\n 이메일에 표시된 인증코드를 입력해주세요."));
     }
 
     // 비밀번호 재설정 - 이메일 인증 코드 확인
-    @PostMapping("/pw-search")
+    @PostMapping("/password/new")
     @ApiOperation(value = "비밀번호 재설정 - 이메일 인증 코드 확인", notes = "이메일로 발송한 인증 코드를 확인")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -214,7 +213,7 @@ public class UserController {
     }
 
     // 비밀번호 재설정
-    @PutMapping("/pw-search")
+    @PutMapping("/password/new")
     @ApiOperation(value = "비밀번호 재설정", notes = "인증절차를 거친 후 사용자가 비밀번호를 재설정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -224,7 +223,6 @@ public class UserController {
     })
     public ResponseEntity<?> modifyPassword(
             @RequestBody @Valid PwModifyRequestDto pwModifyRequestDto, BindingResult bindingResult) {
-        // @Valid 유효성 검사를 통과하지 못하면 500 에러 반환
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 비밀번호 재설정 실패"));
         }

@@ -34,7 +34,7 @@ import java.util.Objects;
 
 @Api(value = "교육생 auth API", tags = {"UserAuth"})
 @RestController
-@RequestMapping("/api/auth/user")
+@RequestMapping("/api/auth/users")
 public class UserAuthController {
 
     @Autowired
@@ -66,8 +66,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(BelongToTeam.of(belongToTeam));
     }
 
-
-    @GetMapping("/team-id")
+    @GetMapping("/{userId}/team-id")
     @ApiOperation(value = "팀 참여 여부 조회", notes = "유저 아이디와 선택한 프로젝트로 해당 프로젝트에서 이미 팀에 참여 했는지 여부를 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -75,14 +74,13 @@ public class UserAuthController {
     })
     public ResponseEntity<?> belongToTeam2(
             @RequestParam final String project,
-            @AuthenticationPrincipal final String token) {
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
         User user;
         Team team;
         Long teamId = null;
         try {
             user = userService.getUserByEmail(token);
-            Long userId = user.getId();
-            team = teamService.belongToTeam(project, userId);
+            team = teamService.belongToTeam(project, user.getId());
 
             if(team != null){
                 teamId = team.getId();
@@ -93,9 +91,8 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(UserTeamIdResponseDto.of(teamId));
     }
 
-
     // 나의 정보 받기
-    @GetMapping("/my-info")
+    @GetMapping("/{userId}/my-info")
     @ApiOperation(value = "나의 정보 조회", notes = "로그인한 유저가 토큰을 담아 요청을 보내서 유저 정보 중 일부를 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -103,21 +100,21 @@ public class UserAuthController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> getMyInfo(
-            @AuthenticationPrincipal final String userEmail) {
+            @PathVariable final Long userId) {
         User user;
         try {
-            user = userService.getUserByEmail(userEmail);
+            user = userService.getUserById(userId);
             if (user == null) {
                 return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "잘못된 접근입니다."));
             }
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 응답 실패"));
         }
-        return ResponseEntity.status(200).body(MyInfoResponseDto.of("success", user));
+        return ResponseEntity.status(200).body(MyInfoResponseDto.of(user));
     }
 
     // 교육생 상세 정보 조회
-    @GetMapping("/info/{userId}")
+    @GetMapping("/{userId}")
     @ApiOperation(value = "교육생 상세 조회", notes = "유저 아이디로 해당 교육생 상세 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -131,7 +128,7 @@ public class UserAuthController {
         try {
             user = userService.getUserById(userId);
             if (user == null) {
-                return ResponseEntity.status(405).body(ErrorResponseBody.of(405, false, "해당 교육생 정보가 존재하지 않습니다."));
+                return ResponseEntity.status(404).body(ErrorResponseBody.of(404, false, "해당 교육생 정보가 존재하지 않습니다."));
             }
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 상세 정보 조회 실패"));
@@ -140,7 +137,7 @@ public class UserAuthController {
     }
 
     // 교육생 상세 정보 수정
-    @PutMapping("/info/{userId}/{profileInfo}")
+    @PutMapping("/{userId}/{profileInfo}")
     @ApiOperation(value = "교육생 상세 정보 수정", notes = "유저 아이디로 해당 교육생 상세 정보 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -152,7 +149,7 @@ public class UserAuthController {
             @PathVariable final Long userId,
             @PathVariable final String profileInfo,
             UserModifyRequestDto userModifyRequestDto,
-            @AuthenticationPrincipal String userEmail) {
+            @AuthenticationPrincipal final String userEmail) {
         System.out.println(userModifyRequestDto);
         System.out.println(userEmail);
         try {
@@ -160,7 +157,7 @@ public class UserAuthController {
             System.out.println("유저 정보: " + user);
             Long reqUserId = user.getId();
             if (!Objects.equals(reqUserId, userId)) {
-                return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
+                return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
             }
             userService.userModify(userModifyRequestDto, user, profileInfo);
             System.out.println("데이터는 저장됨");
@@ -185,7 +182,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(MessageBody.of(profileInfoName + " 수정이 완료되었습니다."));
     }
 
-    @GetMapping("/list")
+    @GetMapping("")
     @ApiOperation(value = "교육생 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 교육생 리스트 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -194,8 +191,7 @@ public class UserAuthController {
     })
     public ResponseEntity<?> searchUserList(
             @Valid UserListRequestDto userListReuestDto, BindingResult bindingResult,
-            @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage
-    ) {
+            @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage) {
         List<UserBoardInterface> userBoards;
 
         if (bindingResult.hasErrors()) {
@@ -236,13 +232,13 @@ public class UserAuthController {
             totalPage = userPage.getTotalPages();
             totalElement = userPage.getTotalElements();
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 리스트 조회 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 공고 조회 실패"));
         }
 
         return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListReuestDto.getProject(), nowPage, totalPage, totalElement));
     }
 
-    @PostMapping("/project/track")
+    @PostMapping("/{userId}/project-track")
     @ApiOperation(value = "교육생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -251,8 +247,8 @@ public class UserAuthController {
     })
     public ResponseEntity<?> selectProjectTrack(
             @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
-            @AuthenticationPrincipal final String token
-    ) {
+            @AuthenticationPrincipal final String token,
+            @PathVariable String userId) {
         String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
@@ -273,7 +269,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
     }
 
-    @PutMapping("/project/track")
+    @PutMapping("/{userId}/project-track")
     @ApiOperation(value = "교육생 프로젝트 트랙 수정", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -282,7 +278,7 @@ public class UserAuthController {
     })
     public ResponseEntity<?> modifyProjectTrack(
             @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
-            @AuthenticationPrincipal final String token) {
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
         String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
@@ -298,7 +294,7 @@ public class UserAuthController {
     }
 
     // 교육생 프로젝트 정보 받기
-    @GetMapping("/projects")
+    @GetMapping("/{userId}/projects")
     @ApiOperation(value = "교육생 프로젝트 정보 받기", notes = "교육생 프로젝트 정보 받기")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -306,14 +302,14 @@ public class UserAuthController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> userProjects(@AuthenticationPrincipal final String token) {
-
+    public ResponseEntity<?> userProjects(
+            @AuthenticationPrincipal final String token,
+            @PathVariable String userId) {
         User user;
         try {
             user = userService.getUserByEmail(token);
-
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 프로젝트 정보 갱신 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 내 프로젝트 정보 갱신 실패"));
         }
         return ResponseEntity.status(200).body(UserProjectResponseDto.of(UserProjectLoginDto.of(user.getTeams(), user)));
     }

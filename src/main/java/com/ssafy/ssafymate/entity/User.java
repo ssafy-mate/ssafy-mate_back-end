@@ -28,7 +28,6 @@ public class User {
     private String campus;
 
     @NotNull
-    @Column(updatable = false)
     private String ssafyTrack;
 
     @NotNull

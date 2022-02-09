@@ -116,18 +116,16 @@ public class UserServiceImpl implements UserService {
         if (profileInfo.equals("ssafy-track")) {
             user.setSsafyTrack(userModifyRequestDto.getSsafyTrack());
 
-        } else if (profileInfo.equals("profileImg")) {
+        } else if (profileInfo.equals("profile-img")) {
 
             String profileImgUrl = user.getProfileImg();
             MultipartFile multipartFile = userModifyRequestDto.getProfileImg();
-            System.out.println("이미지다: " + multipartFile);
             if (multipartFile != null || !multipartFile.isEmpty()) {
                 String profileImgSaveUrl = "/var/webapps/upload/" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
                 File file = new File(profileImgSaveUrl);
                 multipartFile.transferTo(file);
                 profileImgUrl = domainPrefix + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
             }
-            System.out.println("이미지 저장 경로다 : " + profileImgUrl);
             user.setProfileImg(profileImgUrl);
 
         } else if (profileInfo.equals("self-introduction")) {
@@ -213,14 +211,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Modifying
     @Override
-    public String selectProjectTrack(User user, UserSelectProjectTrackRequestDto userSelectProjectTrackRequsetDto) {
-        if(userSelectProjectTrackRequsetDto.getProject().equals("공통 프로젝트")){
-            userRepository.updateCommonProjectTrack(user.getId(), userSelectProjectTrackRequsetDto.getProjectTrack());
+    public String selectProjectTrack(User user, UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto) {
+        if(userSelectProjectTrackRequestDto.getProject().equals("공통 프로젝트")){
+            userRepository.updateCommonProjectTrack(user.getId(), userSelectProjectTrackRequestDto.getProjectTrack());
         }
-        else if(userSelectProjectTrackRequsetDto.getProject().equals("특화 프로젝트")){
-            userRepository.updateSpecialProjectTrack(user.getId(), userSelectProjectTrackRequsetDto.getProjectTrack());
+        else if(userSelectProjectTrackRequestDto.getProject().equals("특화 프로젝트")){
+            userRepository.updateSpecialProjectTrack(user.getId(), userSelectProjectTrackRequestDto.getProjectTrack());
         }
-        return userSelectProjectTrackRequsetDto.getProject();
+        return userSelectProjectTrackRequestDto.getProject();
     }
 
     // String 형태의 techStacks를 UserStack 타입의 리스트로 변환하는 메서드

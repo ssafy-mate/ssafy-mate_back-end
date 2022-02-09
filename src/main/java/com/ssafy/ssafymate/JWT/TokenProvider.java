@@ -29,8 +29,8 @@ public class TokenProvider {
 
     private String secretKey = "tkvlapdlxmvmfhwprxmfmfwlsgodgkaustjtlzbflxltlzmfltzlfmfaksemfrhwkgksek";
 
-    // 토큰 유효 시간 1시간
-    private long tokenValidTime = 60 * 60 * 1000L;
+    // 토큰 유효 시간 72시간
+    private long tokenValidTime = 72 * 60 * 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
 
@@ -65,16 +65,17 @@ public class TokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    // Request의 Header에서 token 값을 가져온다. "Authentication" : "TOKEN 값'
+    // Request의 Header에서 token 값을 가져온다. "Authorization" : Bearer + "TOKEN 값'
     public String resolveToken(HttpServletRequest request) {
-
-        return request.getHeader("Authentication");
+//        return request.getHeader("Authorization").substring(7);
+        return request.getHeader("Authorization");
     }
 
     // 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            String subToken = jwtToken.substring(7, jwtToken.length());
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(subToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;

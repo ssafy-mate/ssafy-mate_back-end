@@ -149,26 +149,21 @@ public class UserAuthController {
             @PathVariable final Long userId,
             @PathVariable final String profileInfo,
             UserModifyRequestDto userModifyRequestDto,
-            @AuthenticationPrincipal final String userEmail) {
-        System.out.println(userModifyRequestDto);
-        System.out.println(userEmail);
+            @AuthenticationPrincipal final String token) {
         try {
-            User user = userService.getUserByEmail(userEmail);
-            System.out.println("유저 정보: " + user);
+            User user = userService.getUserByEmail(token);
             Long reqUserId = user.getId();
             if (!Objects.equals(reqUserId, userId)) {
                 return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "사용자는 정보를 수정할 수 있는 권한이 없습니다."));
             }
             userService.userModify(userModifyRequestDto, user, profileInfo);
-            System.out.println("데이터는 저장됨");
         } catch (Exception exception) {
-            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 상세 정보 수정 실패"));
         }
         String profileInfoName = "";
         if (profileInfo.equals("ssafy-track")) {
             profileInfoName = "교육 트랙";
-        } else if (profileInfo.equals("profileImg")) {
+        } else if (profileInfo.equals("profile-img")) {
             profileInfoName = "프로필 이미지";
         } else if (profileInfo.equals("self-introduction")) {
             profileInfoName = "자기 소개";
@@ -238,7 +233,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListReuestDto.getProject(), nowPage, totalPage, totalElement));
     }
 
-    @PostMapping("/{userId}/project-track")
+    @PostMapping("/{userId}/project-tracks")
     @ApiOperation(value = "교육생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -269,7 +264,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
     }
 
-    @PutMapping("/{userId}/project-track")
+    @PutMapping("/{userId}/project-tracks")
     @ApiOperation(value = "교육생 프로젝트 트랙 수정", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

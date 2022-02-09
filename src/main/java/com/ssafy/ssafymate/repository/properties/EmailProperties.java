@@ -1,4 +1,4 @@
-package com.ssafy.ssafymate.properties;
+package com.ssafy.ssafymate.repository.properties;
 
 import lombok.Getter;
 import lombok.Setter;

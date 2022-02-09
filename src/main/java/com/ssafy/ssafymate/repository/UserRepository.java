@@ -69,8 +69,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Modifying
     @Query(value = "" +
-            "UPDATE USER SET " +
-            "COMMON_PROJECT_TRACK=:projectTrack " +
+            "UPDATE user SET " +
+            "common_project_track=:projectTrack " +
             "WHERE id=:userId"
             , nativeQuery = true)
     int updateCommonProjectTrack(@Param("userId") Long userId, @Param("projectTrack") String projectTrack);
@@ -78,8 +78,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Modifying
     @Query(value = "" +
-            "UPDATE USER SET " +
-            "SPECIALIZATION_PROJECT_TRACK=:projectTrack " +
+            "UPDATE user SET " +
+            "specialization_project_track=:projectTrack " +
             "WHERE id=:userId"
             , nativeQuery = true)
     int updateSpecialProjectTrack(@Param("userId") Long userId, @Param("projectTrack") String projectTrack);

@@ -49,7 +49,7 @@ public class ChattingController {
     })
     public ResponseEntity<?> getHistoryList(
             @PathVariable("roomId") String roomId,
-            @RequestParam("messageId") Long messageId
+            @RequestParam("nextCursor") Long messageId
     ) {
         // 스트링 파싱하기
         String[] ids = roomId.split("-");

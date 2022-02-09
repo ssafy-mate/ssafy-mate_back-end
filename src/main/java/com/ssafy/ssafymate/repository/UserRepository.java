@@ -21,10 +21,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByStudentNumberAndStudentName(String studentNumber, String studentName);
 
     @Query(value = "SELECT " +
-            " (CASE WHEN UT.TEAM_ID IS NULL THEN 'False' ELSE 'True' END) AS BELONG_TO_TEAM," +
-            " U.ID, U.PROFILE_IMG, U.CAMPUS, U.SSAFY_TRACK, U.STUDENT_NAME, U.JOB1, U.JOB2, U.GITHUB_URL, U.COMMON_PROJECT_TRACK, U.Specialization_project_track   " +
+            " (CASE WHEN UT.team_id IS NULL THEN 'False' ELSE 'True' END) AS belong_to_team," +
+            " U.id, U.profile_img, U.campus, U.ssafy_track, U.student_name, U.job1, U.job2, U.github_url, U.common_project_track, U.specialization_project_track   " +
             "FROM " +
-            "   (SELECT * FROM USER " +
+            "   (SELECT * FROM user " +
             "   WHERE campus LIKE %:campus% " +
             "   AND ssafy_track LIKE %:ssafyTrack% " +
             "   AND (CASE WHEN (:project='공통 프로젝트') " +
@@ -35,22 +35,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "       1 " +
             "       END " +
             "       )" +
-            "   AND JOB1 LIKE %:job% " +
-            "   AND STUDENT_NAME LIKE %:studentName% " +
+            "   AND job1 LIKE %:job% " +
+            "   AND student_name LIKE %:studentName% " +
             "   AND CASE WHEN 0 NOT IN (:userStacks) " +
-            "   THEN (ID IN (SELECT USER_ID FROM USER_STACK WHERE TECH_STACK_CODE IN (:userStacks))) " +
+            "   THEN (id IN (SELECT user_id FROM user_stack WHERE tech_stack_code IN (:userStacks))) " +
             "       " +
             "   ELSE 1 END " +
             " ) U "     +
             "LEFT JOIN " +
-            "   (select * from USER_TEAM " +
-            "   WHERE TEAM_ID IN " +
-            "       (SELECT ID FROM TEAM " +
-            "       WHERE PROJECT=:project)) " +
+            "   (select * from user_team " +
+            "   WHERE team_id IN " +
+            "       (SELECT id FROM TEAM " +
+            "       WHERE project=:project)) " +
             "UT " +
             "ON U.id = UT.user_id " +
             "WHERE 1=(CASE WHEN :exclusion=true THEN " +
-            "       (CASE WHEN UT.TEAM_ID IS NULL THEN 1 ELSE 0 END) " +
+            "       (CASE WHEN UT.team_id IS NULL THEN 1 ELSE 0 END) " +
             "   ELSE 1 END)"
             ,
             nativeQuery = true

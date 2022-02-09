@@ -34,8 +34,8 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
 
 
     // 팀 리스트 조회(스택 검색)
-    @Query(value = "select t.ID ,  t.BACKEND_RECRUITMENT,  t.CAMPUS,   t.FRONTEND_RECRUITMENT,  t.NOTICE,  t.PROJECT, " +
-            "t.PROJECT_TRACK,  t.TEAM_IMG,  t.TEAM_NAME,  t.TOTAL_RECRUITMENT, uut.FRONTEND_HEADCOUNT,  uut.BACKEND_HEADCOUNT,  uut.TOTAL_HEADCOUNT " +
+    @Query(value = "select t.id ,  t.backend_recruitment, t.create_date_time,  t.campus,   t.frontend_recruitment,  t.notice,  t.project, " +
+            "t.project_track,  t.team_img,  t.team_name,  t.total_recruitment, uut.frontend_headcount,  uut.backend_headcount,  uut.total_headcount " +
             "from (select * from team where campus LIKE %:campus% " +
             "           AND project=:project " +
             "           AND project_track Like %:projectTrack% " +
@@ -48,35 +48,35 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             "           ) t " +
             "JOIN \n" +
             "           (SELECT ut.team_id, \n" +
-            "           count(case when u.job1 like '%Front%' then 1 end) as FRONTEND_HEADCOUNT,\n" +
-            "           count(case when u.job1 like '%Back%' then 1 end) as BACKEND_HEADCOUNT,\n" +
-            "           count(*) as TOTAL_HEADCOUNT \n" +
+            "           count(case when u.job1 like '%Front%' then 1 end) as frontend_headcount,\n" +
+            "           count(case when u.job1 like '%Back%' then 1 end) as backend_headcount,\n" +
+            "           count(*) as total_headcount \n" +
             "           from user u \n" +
             "           join (select * from user_team ) ut\n" +
             "           on u.id = ut.user_id\n" +
             "           group by ut.team_id) uut \n" +
             "on t.id = uut.team_id " +
-            "where t.BACKEND_RECRUITMENT - uut.BACKEND_HEADCOUNT >= :back " +
-            "and t.FRONTEND_RECRUITMENT - uut.FRONTEND_HEADCOUNT >= :front " +
-            "and t.TOTAL_RECRUITMENT - uut.TOTAL_HEADCOUNT >= :total"
+            "where t.backend_recruitment - uut.backend_headcount >= :back " +
+            "and t.frontend_recruitment - uut.frontend_headcount >= :front " +
+            "and t.total_recruitment - uut.total_headcount >= :total"
             ,nativeQuery = true)
-    Page<TeamInt> findALLByteamStackJQL(Pageable pageable,
-                                         @Param("campus") String campus,
-                                         @Param("project") String project,
-                                         @Param("projectTrack") String projectTrack,
-                                         @Param("teamName") String teamName,
-                                         @Param("front") Integer front,
-                                         @Param("back") Integer back,
-                                         @Param("total") Integer total,
-                                         @Param("teamStacks") List<Long> teamStacks);
+    Page<TeamInt> findALLByTeamStackJQL(Pageable pageable,
+                                        @Param("campus") String campus,
+                                        @Param("project") String project,
+                                        @Param("projectTrack") String projectTrack,
+                                        @Param("teamName") String teamName,
+                                        @Param("front") Integer front,
+                                        @Param("back") Integer back,
+                                        @Param("total") Integer total,
+                                        @Param("teamStacks") List<Long> teamStacks);
 
     @Query(value = "select " +
-            "   (case when t.TOTAL_RECRUITMENT > ut.TOTAL_HEADCOUNT then true" +
+            "   (case when t.total_recruitment > ut.total_headcount then true" +
             "   else false end ) as is_recruit " +
             "from " +
             "   (select * from team where id=:teamId) t " +
             "join " +
-            "   (select team_id, count(*) as TOTAL_HEADCOUNT " +
+            "   (select team_id, count(*) as total_headcount " +
             "   from user_team " +
             "   where team_id=:teamId " +
             "   group by team_id) ut " +

@@ -233,7 +233,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListReuestDto.getProject(), nowPage, totalPage, totalElement));
     }
 
-    @PostMapping("/{userId}/project-track")
+    @PostMapping("/{userId}/project-tracks")
     @ApiOperation(value = "교육생 프로젝트 트랙 선택", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 선택")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -264,7 +264,7 @@ public class UserAuthController {
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
     }
 
-    @PutMapping("/{userId}/project-track")
+    @PutMapping("/{userId}/project-tracks")
     @ApiOperation(value = "교육생 프로젝트 트랙 수정", notes = "프로젝트, 프로젝트 트랙을 가지고 교육생 프로젝트 트랙 수정")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

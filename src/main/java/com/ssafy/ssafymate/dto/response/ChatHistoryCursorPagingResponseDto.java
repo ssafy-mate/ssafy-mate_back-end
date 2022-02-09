@@ -11,18 +11,24 @@ import java.util.List;
 @Getter
 @Setter
 @ApiModel("ChatHistoryTotalPagesResponseDto")
-public class ChatHistoryTotalPagesResponseDto {
+public class ChatHistoryCursorPagingResponseDto {
 
     @ApiModelProperty(name = "대화내용 리스트", example = "contentLists: []")
     List<ChatHistoryResponseDto> contentList;
 
-    @ApiModelProperty(name = "전체 페이지 수", example = "3")
-    int totalPages;
+    @ApiModelProperty(name = "마지막 인덱스", example = "56")
+    Long nextCursor;
 
-    public static ChatHistoryTotalPagesResponseDto of(List<ContentList> contentList, int totalPages) {
-        ChatHistoryTotalPagesResponseDto res = new ChatHistoryTotalPagesResponseDto();
+    public static ChatHistoryCursorPagingResponseDto of(List<ContentList> contentList) {
+        ChatHistoryCursorPagingResponseDto res = new ChatHistoryCursorPagingResponseDto();
         res.setContentList(ChatHistoryResponseDto.of(contentList));
-        res.setTotalPages(totalPages);
+
+        int lastIndex = contentList.size();
+        Long nextCursor = 0L;
+        if(lastIndex != 0){
+            nextCursor = contentList.get(lastIndex-1).getId();
+        }
+        res.setNextCursor(nextCursor);
         return res;
     }
 }

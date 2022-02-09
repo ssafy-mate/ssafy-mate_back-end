@@ -1,7 +1,7 @@
 package com.ssafy.ssafymate.service;
 
 import com.ssafy.ssafymate.exception.EmailCodeException;
-import com.ssafy.ssafymate.properties.EmailProperties;
+import com.ssafy.ssafymate.repository.properties.EmailProperties;
 import com.ssafy.ssafymate.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;

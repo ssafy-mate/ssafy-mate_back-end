@@ -211,14 +211,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Modifying
     @Override
-    public String selectProjectTrack(User user, UserSelectProjectTrackRequestDto userSelectProjectTrackRequsetDto) {
-        if(userSelectProjectTrackRequsetDto.getProject().equals("공통 프로젝트")){
-            userRepository.updateCommonProjectTrack(user.getId(), userSelectProjectTrackRequsetDto.getProjectTrack());
+    public String selectProjectTrack(User user, UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto) {
+        if(userSelectProjectTrackRequestDto.getProject().equals("공통 프로젝트")){
+            userRepository.updateCommonProjectTrack(user.getId(), userSelectProjectTrackRequestDto.getProjectTrack());
         }
-        else if(userSelectProjectTrackRequsetDto.getProject().equals("특화 프로젝트")){
-            userRepository.updateSpecialProjectTrack(user.getId(), userSelectProjectTrackRequsetDto.getProjectTrack());
+        else if(userSelectProjectTrackRequestDto.getProject().equals("특화 프로젝트")){
+            userRepository.updateSpecialProjectTrack(user.getId(), userSelectProjectTrackRequestDto.getProjectTrack());
         }
-        return userSelectProjectTrackRequsetDto.getProject();
+        return userSelectProjectTrackRequestDto.getProject();
     }
 
     // String 형태의 techStacks를 UserStack 타입의 리스트로 변환하는 메서드

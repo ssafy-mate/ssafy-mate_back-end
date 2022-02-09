@@ -42,6 +42,7 @@ public class ChatHistoryResponseDto {
 
             res.add(chr);
         }
+
         return res;
     }
 }

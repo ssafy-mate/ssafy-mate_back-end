@@ -92,6 +92,12 @@ public class TeamServiceImpl implements TeamService {
 
         String teamImgUrl;
 
+        if(team.getTeamImg() != null && teamRequestDto.getTeamImgUrl() == null){
+            File old_file = new File("/var/webapps/upload/images/team_image/"+getFileNameFromURL(team.getTeamImg()));
+            if(old_file.exists()){
+                old_file.delete();
+            }
+        }
         //이미지가 비어있으면 기존 이미지로
         if (multipartFile == null || multipartFile.isEmpty()) {
 
@@ -115,6 +121,14 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void teamDelete(Long team_id) {
+        Team team = teamRepository.getById(team_id);
+        if(team.getTeamImg() != null){
+            File old_file = new File("/var/webapps/upload/images/team_image/"+getFileNameFromURL(team.getTeamImg()));
+            if(old_file.exists()){
+                old_file.delete();
+            }
+        }
+
         teamRepository.deleteById(team_id);
     }
 
@@ -144,7 +158,7 @@ public class TeamServiceImpl implements TeamService {
         }
 
         List<Long> teamstacks = techStacks.stream().map(TeamStack::getTechStackCode).collect(Collectors.toList());
-        return teamRepository.findALLByteamStackJQL(pageable,
+        return teamRepository.findALLByTeamStackJQL(pageable,
                 teamListRequestDto.getCampus(),
                 teamListRequestDto.getProject(),
                 teamListRequestDto.getProject_track(),
@@ -229,5 +243,10 @@ public class TeamServiceImpl implements TeamService {
         techstack.setTechStackCode(Long.parseLong(jsonString));
         techStacks.add(techstack);
         return techStacks;
+    }
+
+    // url 에서 파일 이름 추출
+    public static String getFileNameFromURL(String url) {
+        return url.substring(url.lastIndexOf('/') + 1, url.length());
     }
 }

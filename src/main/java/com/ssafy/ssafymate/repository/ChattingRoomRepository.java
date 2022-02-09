@@ -16,28 +16,28 @@ import java.util.Optional;
 @Repository
 public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, String> {
 
-    @Query(value = "SELECT UR.*,CH.CONTENT, CH.SENT_TIME \n" +
+    @Query(value = "SELECT UR.*,CH.content, CH.sent_time \n" +
             "FROM \n" +
-            "    (SELECT CR.ROOM_ID, U.ID USER_ID, U.STUDENT_NAME username, U.PROFILE_IMG, U.EMAIL \n" +
+            "    (SELECT CR.room_id, U.id user_id, U.student_name username, U.profile_img, U.email \n" +
             "    FROM\n" +
-            "        (SELECT ROOM_ID, (CASE WHEN USER_ID_SMALL = :userId THEN USER_ID_BIG \n" +
-            "                ELSE USER_ID_SMALL END)\n" +
-            "                 USER_ID \n" +
-            "        FROM CHATTING_ROOM \n" +
-            "        WHERE USER_ID_SMALL = :userId OR USER_ID_BIG=:userId) CR\n" +
+            "        (SELECT room_id, (CASE WHEN user_id_small = :userId THEN user_id_big \n" +
+            "                ELSE user_id_small END)\n" +
+            "                 user_id \n" +
+            "        FROM chatting_room \n" +
+            "        WHERE user_id_small = :userId OR user_id_big=:userId) CR\n" +
             "    JOIN \n" +
             "        USER U\n" +
-            "    ON U.ID = CR.USER_ID) UR\n" +
+            "    ON U.id = CR.user_id) UR\n" +
             "JOIN\n" +
-            "    (SELECT CH1.ROOM_ID, CH1.SENT_TIME, CH1.CONTENT\n" +
+            "    (SELECT CH1.room_id, CH1.sent_time, CH1.content\n" +
             "    FROM \n" +
-            "        CHATTING_HISTORY CH1\n" +
+            "        chatting_history CH1\n" +
             "    JOIN\n" +
-            "        (SELECT ROOM_ID, MAX(SENT_TIME) SENT_TIME\n" +
-            "        FROM CHATTING_HISTORY \n" +
-            "        GROUP BY ROOM_ID) CH2\n" +
-            "    ON CH1.ROOM_ID = CH2.ROOM_ID AND  CH1.SENT_TIME =  CH2.SENT_TIME) CH\n" +
-            "ON UR. ROOM_ID = CH.ROOM_ID"
+            "        (SELECT room_id, MAX(sent_time) sent_time\n" +
+            "        FROM chatting_history \n" +
+            "        GROUP BY room_id) CH2\n" +
+            "    ON CH1.room_id = CH2.room_id AND  CH1.sent_time =  CH2.sent_time) CH\n" +
+            "ON UR.room_id = CH.room_id"
     , nativeQuery = true)
     Optional<List<RoomList>> getChattingRoom(@Param("userId") Long userId);
 

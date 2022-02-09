@@ -283,6 +283,7 @@ public class UserAuthController {
             }
             userService.selectProjectTrack(user, userSelectProjectTrackRequestDto);
         } catch (Exception exception) {
+            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 트랙 수정 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 수정이 완료되었습니다."));

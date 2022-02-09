@@ -73,11 +73,17 @@ public class TeamController {
         User user;
         Team team;
         try {
+            String project = teamRequestDto.getProject();
             user = userService.getUserByEmail(token);
-            team = teamService.belongToTeam(teamRequestDto.getProject(), user.getId());
+            team = teamService.belongToTeam(project, user.getId());
             if (team != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 이미 팀에 속해있어 팀 생성이 불가능합니다."));
             }
+            if((project.equals("특화 프로젝트") && !Objects.equals(teamRequestDto.getProjectTrack(), user.getSpecializationProjectTrack())) ||
+                    (project.equals("공통 프로젝트") && !Objects.equals(teamRequestDto.getProjectTrack(), user.getCommonProjectTrack()))){
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자의 트랙과 일치하지 않아 팀 생성이 불가능합니다."));
+            }
+
             team = teamService.teamSave(teamRequestDto, teamRequestDto.getTeamImg(), user);
 //            userTeamService.userTeamSave(user,team);
         } catch (Exception exception) {

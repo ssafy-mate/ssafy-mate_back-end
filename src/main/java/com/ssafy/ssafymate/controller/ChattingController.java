@@ -3,17 +3,14 @@ package com.ssafy.ssafymate.controller;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
+import com.ssafy.ssafymate.dto.response.ChatHistoryCursorPagingResponseDto;
 import com.ssafy.ssafymate.dto.response.ChatHistoryResponseDto;
-import com.ssafy.ssafymate.dto.response.ChatHistoryTotalPagesResponseDto;
 import com.ssafy.ssafymate.dto.response.ChatRoomResponseDto;
 import com.ssafy.ssafymate.service.ChattingService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +49,7 @@ public class ChattingController {
     })
     public ResponseEntity<?> getHistoryList(
             @PathVariable("roomId") String roomId,
-            @RequestParam("messageId") Long messageId
+            @RequestParam("nextCursor") Long messageId
     ) {
         // 스트링 파싱하기
         String[] ids = roomId.split("-");
@@ -69,6 +66,7 @@ public class ChattingController {
         int size = 20;
 
         List<ContentList> contentList = chattingService.getHistoryList(roomId, messageId, size);
-        return ResponseEntity.status(200).body(ChatHistoryResponseDto.of(contentList));
+
+        return ResponseEntity.status(200).body(ChatHistoryCursorPagingResponseDto.of(contentList));
     }
 }

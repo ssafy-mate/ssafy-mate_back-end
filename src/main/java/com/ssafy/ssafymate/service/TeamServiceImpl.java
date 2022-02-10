@@ -43,7 +43,7 @@ public class TeamServiceImpl implements TeamService {
         return teamRepository.findById(teamId).orElse(null);
     }
 
-    String domainPrefix = "http://i6a402.p.ssafy.io:8080/resources/upload/images/team_image/";
+    String domainPrefix = "https://i6a402.p.ssafy.io:8082/resources/upload/images/team_image/";
 
     @Transactional
     @Override

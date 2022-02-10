@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserStackRepository userStackRepository;
 
-    private String domainPrefix = "http://i6a402.p.ssafy.io:8080/resources/upload/";
+    private String domainPrefix = "https://i6a402.p.ssafy.io:8082/resources/upload/";
     private String defaultImg = "default_img.jpg";
 
     @Override

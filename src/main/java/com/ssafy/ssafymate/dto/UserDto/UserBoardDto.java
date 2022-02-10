@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserBoardDto {
     Long userId;
-    String profileImg;
+    String profileImgUrl;
     String campus;
     String projectTrack;
     String ssafyTrack;

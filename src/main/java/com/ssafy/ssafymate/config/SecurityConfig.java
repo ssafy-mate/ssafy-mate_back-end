@@ -57,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers("/api/auth/teams/**").access("hasRole('USER')")
                     .antMatchers("/api/auth/users/**").access("hasRole('USER')")
+                    .antMatchers("/api/chats/**").access("hasRole('USER')")
                     .anyRequest().permitAll()    // 그 외 나머지 요청 다 허용
                 .and()
                     .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class); // JwtFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
@@ -85,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://youthful-kirch-818851.netlify.app/", "https://ssafymate.site"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://youthful-kirch-818851.netlify.app/", "https://www.ssafymate.site", "https://i6a402.p.ssafy.io"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

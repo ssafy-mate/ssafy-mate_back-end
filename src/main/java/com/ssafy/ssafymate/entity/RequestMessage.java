@@ -1,6 +1,7 @@
 package com.ssafy.ssafymate.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -33,31 +34,31 @@ public class RequestMessage {
 
     private String project;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", insertable = false, updatable = false)
     User sender;
 
     @NotNull
-    @JsonBackReference
     @Column(name = "sender_id")
     private Long senderId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", insertable = false, updatable = false)
     User receiver;
 
     @NotNull
-    @JsonBackReference
     @Column(name = "receiver_id")
     private Long receiverId;
 
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", insertable = false, updatable = false)
     Team team;
 
     @NotNull
-    @JsonBackReference
     @Column(name = "team_id")
     private Long teamId;
 

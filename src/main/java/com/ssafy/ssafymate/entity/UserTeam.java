@@ -14,14 +14,13 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class UserTeam {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",insertable = false,updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     User user;
@@ -31,7 +30,7 @@ public class UserTeam {
     Long userId;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id",insertable = false,updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     Team team;

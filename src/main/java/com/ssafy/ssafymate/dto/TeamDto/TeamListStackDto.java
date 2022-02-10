@@ -18,7 +18,7 @@ public class TeamListStackDto {
 
         for(TeamStack teamStack : teamStacks){
             TeamListStackDto teamListStackDto = new TeamListStackDto();
-            teamListStackDto.setId(teamStack.getTechStack().getId());
+            teamListStackDto.setId(teamStack.getTechStack().getTechStackId());
             teamListStackDto.setTechStackName(teamStack.getTechStack().getTechStackName());
 
             res.add(teamListStackDto);

@@ -14,10 +14,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class UserProjectLoginDto {
-    private Long id;
-    private String name;
+    private Long projectId;
+    private String project;
     private String projectTrack;
-    private Long projectTeamId;
+    private Long teamId;
 
     public static List<UserProjectLoginDto> of(List<UserTeam> teams , User user){
         List<UserProjectLoginDto> res = new ArrayList<>();
@@ -31,13 +31,13 @@ public class UserProjectLoginDto {
             Team team = userTeam.getTeam();
             switch (team.getProject()){
                 case "공통 프로젝트":
-                    commonProjectTrack.setProjectTeamId(team.getId());
+                    commonProjectTrack.setTeamId(team.getId());
                     break;
                 case "특화 프로젝트":
-                    specializationProjectTrack.setProjectTeamId(team.getId());
+                    specializationProjectTrack.setTeamId(team.getId());
                     break;
                 case "자율 프로젝트":
-                    autonomyProjectTrack.setProjectTeamId(team.getId());
+                    autonomyProjectTrack.setTeamId(team.getId());
                     break;
             }
         }

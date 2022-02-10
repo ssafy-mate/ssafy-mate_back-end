@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class UserListStackDto {
 
-    private Long id;
+    private Long techStackId;
     private String techStackName;
 
     public static List<UserListStackDto> of (List<UserStack> userStacks){
@@ -19,7 +19,7 @@ public class UserListStackDto {
 
         for(UserStack userStack : userStacks){
             UserListStackDto userListStackDto = new UserListStackDto();
-            userListStackDto.setId(userStack.getTechStack().getId());
+            userListStackDto.setTechStackId(userStack.getTechStack().getTechStackId());
             userListStackDto.setTechStackName(userStack.getTechStack().getTechStackName());
 
             res.add(userListStackDto);

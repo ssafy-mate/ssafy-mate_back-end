@@ -50,12 +50,12 @@ public class UserAuthController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> belongToTeam(
-            @RequestParam final String selectedProject,
+            @RequestParam final String project,
             @AuthenticationPrincipal final String token, @PathVariable String userId) {
         Boolean belongToTeam = false;
         try {
             User user = userService.getUserByEmail(token);
-            Team team = teamService.belongToTeam(selectedProject, user.getId());
+            Team team = teamService.belongToTeam(project, user.getId());
             if (team == null) {
                 belongToTeam = true;
             }

@@ -31,7 +31,7 @@ public class TechStackController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> userDetail() {
+    public ResponseEntity<?> techStacksAll() {
         List<TechStack> techStacks;
         try {
             techStacks = techStackService.techStackList();

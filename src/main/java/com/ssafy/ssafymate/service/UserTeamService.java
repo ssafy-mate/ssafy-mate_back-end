@@ -8,5 +8,5 @@ public interface UserTeamService {
 
     Integer userTeamDelete(Long userId, Long teamId);
 
-    Boolean isRecruit(Long teamId);
+    String isRecruit(Long teamId);
 }

@@ -82,5 +82,5 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             "   group by team_id) ut " +
             "on t.id = ut.team_id"
             ,nativeQuery = true)
-    Boolean isRecruit(@Param("teamId") Long teamId);
+    String isRecruit(@Param("teamId") Long teamId);
 }

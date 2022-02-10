@@ -69,7 +69,7 @@ public class RequestController {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자 프로젝트 트랙과 해당 팀 트랙이 일치하지 않습니다."));
             } else if (teamService.belongToTeam(team.getProject(), senderId) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 이미 팀에 속해있어 요청이 불가능합니다."));
-            } else if (!userTeamService.isRecruit(messageUserRequestDto.getTeamId())) {
+            } else if (userTeamService.isRecruit(messageUserRequestDto.getTeamId()).equals("false")) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
             }
             requestMessageService.userRequest(sender, team, messageUserRequestDto.getMessage());
@@ -115,7 +115,7 @@ public class RequestController {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생의 프로젝트 트랙이 팀의 프로젝트 트랙과 일치하지 않습니다."));
             } else if (teamService.belongToTeam(team.getProject(), receiverId) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생은 이미 다른 팀에 합류되어 있습니다"));
-            } else if (!userTeamService.isRecruit(team.getId())) {
+            } else if (userTeamService.isRecruit(team.getId()).equals("false")) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
             }
             System.out.println(team);

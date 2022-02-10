@@ -45,14 +45,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        return user;
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
     public User getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        return user;
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     @Transactional
@@ -94,8 +92,7 @@ public class UserServiceImpl implements UserService {
     // 아이디 찾기
     @Override
     public User getUserByStudentNumberAndStudentName(String studentNumber, String studentName) {
-        User user = userRepository.findByStudentNumberAndStudentName(studentNumber, studentName).orElse(null);
-        return user;
+        return userRepository.findByStudentNumberAndStudentName(studentNumber, studentName).orElse(null);
     }
 
     // 비밀번호 재설정
@@ -160,7 +157,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserBoardInterface> userList(Pageable pageable, UserListRequestDto user) {
 
-        String jsonString = user.getTech_stacks();
+        String jsonString = user.getTechstack_id();
         List<UserStack> techStacks = new ArrayList<>();
         if(jsonString != null)
             techStacks = StringToTechStacks2(jsonString);
@@ -225,8 +222,7 @@ public class UserServiceImpl implements UserService {
     public List<UserStack> StringToTechStacks(String jsonString) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Type listType = new TypeToken<ArrayList<UserStack>>(){}.getType();
-        List<UserStack> techStacks = gson.fromJson(jsonString, listType);
-        return techStacks;
+        return gson.fromJson(jsonString, listType);
     }
 
     // String 형태의 Long 를 UserStack 타입의 리스트로 변환하는 메서드

@@ -71,8 +71,8 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
                                         @Param("teamStacks") List<Long> teamStacks);
 
     @Query(value = "select " +
-            "   (case when t.total_recruitment > ut.total_headcount then true" +
-            "   else false end ) as is_recruit " +
+            "   (case when t.total_recruitment > ut.total_headcount then 'true'" +
+            "   else 'false' end ) as is_recruit " +
             "from " +
             "   (select * from team where id=:teamId) t " +
             "join " +

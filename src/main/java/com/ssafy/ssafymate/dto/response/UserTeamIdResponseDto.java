@@ -6,11 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserTeamIdResponseDto {
-    private Long projectId;
+    private Long teamId;
 
     public static UserTeamIdResponseDto of(Long id){
         UserTeamIdResponseDto res = new UserTeamIdResponseDto();
-        res.setProjectId(id);
+        res.setTeamId(id);
         return res;
     }
 }

@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
         String profileImgUrl;
         if (multipartFile == null || multipartFile.isEmpty()) {
-            profileImgUrl = domainPrefix + defaultImg;
+            profileImgUrl = null;
         } else {
             String profileImgSaveUrl = "/var/webapps/upload/" + userRequestDto.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
             File file = new File(profileImgSaveUrl);
@@ -118,6 +118,12 @@ public class UserServiceImpl implements UserService {
             String profileImgUrl = user.getProfileImg();
             MultipartFile multipartFile = userModifyRequestDto.getProfileImg();
             if (multipartFile != null || !multipartFile.isEmpty()) {
+                if(user.getProfileImg() !=null) {
+                    File old_file = new File("/var/webapps/upload/" + getFileNameFromURL(user.getProfileImg()));
+                    if (old_file.exists()) {
+                        old_file.delete();
+                    }
+                }
                 String profileImgSaveUrl = "/var/webapps/upload/" + user.getStudentNumber() + "_" + multipartFile.getOriginalFilename();
                 File file = new File(profileImgSaveUrl);
                 multipartFile.transferTo(file);
@@ -233,6 +239,11 @@ public class UserServiceImpl implements UserService {
         techstack.setTechStackCode(Long.parseLong(jsonString));
         techStacks.add(techstack);
         return techStacks;
+    }
+
+    // url 에서 파일 이름 추출
+    public static String getFileNameFromURL(String url) {
+        return url.substring(url.lastIndexOf('/') + 1, url.length());
     }
 
 }

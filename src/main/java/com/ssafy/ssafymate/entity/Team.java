@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Team{
 
     @Id
@@ -51,6 +50,7 @@ public class Team{
     @ManyToOne
     @JoinColumn(name = "owner_id")
     User owner;
+
 
     @OneToMany(mappedBy = "team",fetch = FetchType.LAZY)
     List<UserTeam> members = new ArrayList<>();

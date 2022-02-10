@@ -50,7 +50,6 @@ public class TeamServiceImpl implements TeamService {
     public Team teamSave(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user) throws IOException {
 
 
-        String defaultImg = "default_team_img.jpg";
         String teamImgUrl;
         if (multipartFile == null || multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정

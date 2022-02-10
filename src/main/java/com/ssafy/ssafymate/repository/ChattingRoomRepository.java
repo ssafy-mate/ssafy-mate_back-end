@@ -32,7 +32,7 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Stri
             "    (SELECT CH1.room_id, CH1.sent_time, CH1.content\n" +
             "    FROM \n" +
             "        chatting_history CH1\n" +
-            "    JOIN\n" +
+            "    LEFT JOIN\n" +
             "        (SELECT room_id, MAX(sent_time) sent_time\n" +
             "        FROM chatting_history \n" +
             "        GROUP BY room_id) CH2\n" +

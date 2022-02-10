@@ -5,6 +5,8 @@ import com.ssafy.ssafymate.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class RequestUserMessageDto {
@@ -17,6 +19,7 @@ public class RequestUserMessageDto {
     String job1;
     String readCheck;
     String message;
+    LocalDateTime creatTime;
 
     public static RequestUserMessageDto of(RequestMessage requestMessages) {
         RequestUserMessageDto res = new RequestUserMessageDto();
@@ -30,6 +33,7 @@ public class RequestUserMessageDto {
         res.setJob1(user.getJob1());
         res.setReadCheck(requestMessages.getReadCheck());
         res.setMessage(requestMessages.getMessage());
+        res.setCreatTime(requestMessages.getCreateDateTime());
         return res;
     }
 }

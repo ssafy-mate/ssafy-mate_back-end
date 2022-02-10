@@ -27,7 +27,7 @@ import java.util.Objects;
 
 @Api(value = "지원 요청 API", tags = {"requset"})
 @RestController
-@RequestMapping("/api/auth/requests")
+@RequestMapping("/api/auth")
 public class RequestController {
 
     @Autowired
@@ -42,7 +42,7 @@ public class RequestController {
     @Autowired
     RequestMessageService requestMessageService;
 
-    @PostMapping("/users")
+    @PostMapping("/requests/users")
     @ApiOperation(value = "팀 지원 요청", notes = "팀 지원 요청 (사용자 -> 팀)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -81,7 +81,7 @@ public class RequestController {
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "팀 지원이 완료되었습니다."));
     }
 
-    @PostMapping("/teams")
+    @PostMapping("/requests/teams")
     @ApiOperation(value = "팀 합류 요청", notes = "팀 합류 요청 (팀 (팀장) -> 사용자)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -126,7 +126,7 @@ public class RequestController {
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "팀 합류 요청이 완료되었습니다."));
     }
 
-    @GetMapping("/receiveRequest")
+    @GetMapping("/users/{userId}/receive-requests")
     @ApiOperation(value = "받은 제안", notes = "사용자가 받은 팀/사용자 요청들")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -136,7 +136,7 @@ public class RequestController {
     })
     public ResponseEntity<?> receiveRequest(
             @RequestParam String project,
-            @AuthenticationPrincipal final String token) {
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
         System.out.println(project);
         List<RequestMessage> messages;
         try {
@@ -147,10 +147,10 @@ public class RequestController {
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 받은 제안 요청 실패"));
         }
-        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages,"receive"));
+        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages, "receiver"));
     }
 
-    @GetMapping("/sendRequest")
+    @GetMapping("/users/{userId}/send-requests")
     @ApiOperation(value = "보낸 제안", notes = "사용자가 받은 팀/사용자 요청들")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -160,7 +160,7 @@ public class RequestController {
     })
     public ResponseEntity<?> sendRequest(
             @RequestParam String project,
-            @AuthenticationPrincipal final String token) {
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
         System.out.println(project);
         List<RequestMessage> messages;
         try {
@@ -168,13 +168,14 @@ public class RequestController {
 
             messages = requestMessageService.sendList(user, project);
 
+
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 실패"));
         }
-        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages,"send"));
+        return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages, "sender"));
     }
 
-    @PutMapping("/response")
+    @PutMapping("/requests/response")
     @ApiOperation(value = "제안 수락/거절/취소", notes = "제안 수락/거절/취소")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -210,10 +211,23 @@ public class RequestController {
                     answer = requestMessageService.updateReadCheckRejection(requestId, response);
                 } else if (response.equals("approval")) {
                     Long userId = 0L;
-                    if(message.getType().equals("teamRequest"))
+                    if (team.getTotalHeadcount() >= team.getTotalRecruitment()) {
+                        requestMessageService.updateReadCheckRejection(requestId, "cancellation");
+                        return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
+                    } else if (message.getType().equals("teamRequest")) {
                         userId = message.getReceiverId();
-                    else if(message.getType().equals("userRequest"))
+                        if (teamService.belongToTeam(team.getProject(), userId) != null) {
+                            requestMessageService.updateReadCheckRejection(requestId, "cancellation");
+                            return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 이미 팀에 속해있어 응답이 불가능합니다."));
+                        }
+                    } else if (message.getType().equals("userRequest")) {
                         userId = message.getSenderId();
+
+                        if (teamService.belongToTeam(team.getProject(), userId) != null) {
+                            requestMessageService.updateReadCheckRejection(requestId, "cancellation");
+                            return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생은 이미 다른 팀에 합류되어 있습니다."));
+                        }
+                    }
                     answer = requestMessageService.updateReadCheckApproval(requestId, response, userId, team);
                 }
 

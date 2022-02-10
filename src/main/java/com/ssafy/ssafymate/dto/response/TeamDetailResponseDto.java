@@ -19,15 +19,21 @@ public class TeamDetailResponseDto {
     public static TeamDetailResponseDto of(Team team, User user){
         TeamDetailResponseDto res = new TeamDetailResponseDto();
 
-        res.setTeamData(TeamDetail.of(team));
-        res.setRole("outsider");
-        if(team.getOwner().getId().equals(user.getId()))
-            res.setRole("owner");
-        else{
-            for(UserTeam member: team.getMembers()){
-                if(member.getUser().getId().equals(user.getId())){
-                    res.setRole("member");
-                    break;
+        if(team == null){
+            res.setTeamData(null);
+            res.setRole(null);
+        }
+        else {
+            res.setTeamData(TeamDetail.of(team));
+            res.setRole("outsider");
+            if (team.getOwner().getId().equals(user.getId()))
+                res.setRole("owner");
+            else {
+                for (UserTeam member : team.getMembers()) {
+                    if (member.getUser().getId().equals(user.getId())) {
+                        res.setRole("member");
+                        break;
+                    }
                 }
             }
         }

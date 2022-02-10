@@ -15,6 +15,8 @@ public class TeamBoardDto {
     private Long teamId;
     private String teamImgUrl;
     private String campus;
+    private String project;
+    private String projectTrack;
     private String teamName;
     private String notice;
     List<TeamListStackDto> techStacks = new ArrayList<>();
@@ -37,6 +39,8 @@ public class TeamBoardDto {
             teamBoardDto.setTeamName(team.getTeamName());
             teamBoardDto.setTeamImgUrl(team.getTeamImg());
             teamBoardDto.setCampus(team.getCampus());
+            teamBoardDto.setProject(team.getProject());
+            teamBoardDto.setProjectTrack(team.getProjectTrack());
             teamBoardDto.setNotice(team.getNotice());
             teamBoardDto.setTechStacks(TeamListStackDto.of(team.getTechStacks()));
             teamBoardDto.setTotalRecruitment(team.getTotalRecruitment());

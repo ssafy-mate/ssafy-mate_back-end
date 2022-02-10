@@ -48,7 +48,7 @@ public class TeamBoardDto {
             teamBoardDto.setBackendHeadcount(team.getBackendHeadcount());
 
             teamBoardDto.setCreateDateTime(team.getCreateDateTime());
-            if(team.getTotalRecruitment() < team.getTotalHeadcount()){
+            if(team.getTotalRecruitment() > team.getTotalHeadcount()){
                 teamBoardDto.setIsRecruiting(true);
             }
 

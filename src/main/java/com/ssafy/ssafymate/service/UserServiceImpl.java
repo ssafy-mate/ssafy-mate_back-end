@@ -169,10 +169,10 @@ public class UserServiceImpl implements UserService {
             techStacks = StringToTechStacks2(jsonString);
         if((techStacks.size() == 0)){
             UserStack notin = new UserStack();
-            notin.setTechStackCode(0L);
+            notin.setTechStackId(0L);
             techStacks.add(notin);
         }
-        List<Long> userStacks = techStacks.stream().map(e -> e.getTechStackCode()).collect(Collectors.toList());
+        List<Long> userStacks = techStacks.stream().map(e -> e.getTechStackId()).collect(Collectors.toList());
         Page<UserBoardInterface> users = userRepository.findStudentListJPQL(pageable,
                 user.getCampus(),
                 user.getSsafy_track(),
@@ -235,9 +235,9 @@ public class UserServiceImpl implements UserService {
     public List<UserStack> StringToTechStacks2(String jsonString) {
 
         List<UserStack> techStacks = new ArrayList<>();
-        UserStack techstack = new UserStack();
-        techstack.setTechStackCode(Long.parseLong(jsonString));
-        techStacks.add(techstack);
+        UserStack techStack = new UserStack();
+        techStack.setTechStackId(Long.parseLong(jsonString));
+        techStacks.add(techStack);
         return techStacks;
     }
 

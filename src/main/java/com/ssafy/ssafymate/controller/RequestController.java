@@ -42,7 +42,7 @@ public class RequestController {
     @Autowired
     RequestMessageService requestMessageService;
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     @ApiOperation(value = "팀 지원 요청", notes = "팀 지원 요청 (사용자 -> 팀)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -81,7 +81,7 @@ public class RequestController {
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "팀 지원이 완료되었습니다."));
     }
 
-    @PostMapping("/team")
+    @PostMapping("/teams")
     @ApiOperation(value = "팀 합류 요청", notes = "팀 합류 요청 (팀 (팀장) -> 사용자)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),

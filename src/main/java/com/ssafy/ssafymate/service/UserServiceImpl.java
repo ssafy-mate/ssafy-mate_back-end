@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService {
         for (UserBoardInterface user : users){
             UserBoardDto userBoardDto = new UserBoardDto();
             userBoardDto.setUserId(user.getId());
-            userBoardDto.setProfileImg(        user.getProfile_img());
+            userBoardDto.setProfileImgUrl(user.getProfile_img());
             userBoardDto.setCampus(user.getCampus());
             userBoardDto.setSsafyTrack(user.getSsafy_track());
             userBoardDto.setUserName(user.getStudent_name());

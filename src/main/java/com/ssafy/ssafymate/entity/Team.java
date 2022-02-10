@@ -1,5 +1,6 @@
 package com.ssafy.ssafymate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -39,7 +40,6 @@ public class Team{
     private String notice;
 
     private String introduction;
-
 
     @NotNull
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)

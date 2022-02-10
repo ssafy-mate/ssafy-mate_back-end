@@ -3,11 +3,10 @@ package com.ssafy.ssafymate.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -52,9 +51,9 @@ public class RequestMessage {
     @Column(name = "receiver_id")
     private Long receiverId;
 
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "team_id", insertable = false, updatable = false)
     Team team;
 

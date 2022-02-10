@@ -6,12 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Setter
 @Getter
 public class RequestTeamMessageDto {
-    Long id;
+    Long requestId;
     Long teamId;
     String teamImgUrl;
     String notice;
@@ -24,7 +23,7 @@ public class RequestTeamMessageDto {
     public static RequestTeamMessageDto of(RequestMessage requestMessages){
         RequestTeamMessageDto res = new RequestTeamMessageDto();
         Team team = requestMessages.getTeam();
-        res.setId(requestMessages.getId());
+        res.setRequestId(requestMessages.getId());
         res.setTeamId(team.getId());
         res.setTeamImgUrl(team.getTeamImg());
         res.setNotice(team.getNotice());

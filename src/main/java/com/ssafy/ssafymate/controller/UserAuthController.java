@@ -44,18 +44,18 @@ public class UserAuthController {
     TeamService teamService;
 
     @GetMapping("/{userId}/belong-to-team")
-    @ApiOperation(value = "팀 참여 여부 조회", notes = "유저 아이디와 선택한 프로젝트로 해당 프로젝트에서 이미 팀에 참여 했는지 여부를 조회")
+    @ApiOperation(value = "팀 참여 가능 여부 조회", notes = "유저 아이디와 선택한 프로젝트로 해당 프로젝트에서 이미 팀에 참여 했는지 여부를 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> belongToTeam(
-            @RequestParam final String selectedProject,
+            @RequestParam final String project,
             @AuthenticationPrincipal final String token, @PathVariable String userId) {
         Boolean belongToTeam = false;
         try {
             User user = userService.getUserByEmail(token);
-            Team team = teamService.belongToTeam(selectedProject, user.getId());
+            Team team = teamService.belongToTeam(project, user.getId());
             if (team == null) {
                 belongToTeam = true;
             }

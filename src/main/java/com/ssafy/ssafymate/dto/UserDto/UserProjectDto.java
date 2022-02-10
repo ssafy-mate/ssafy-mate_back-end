@@ -14,8 +14,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class UserProjectDto {
-    private Long id;
-    private String name;
+    private Long projectId;
+    private String project;
     private String projectTrack;
     private UserProjectTeamDto projectTeam;
 

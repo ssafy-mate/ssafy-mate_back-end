@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 public class TeamStackDto {
 
-    Long id;
+    Long techStackId;
     String techStackName;
     String techStackImgUrl;
 
@@ -21,7 +21,7 @@ public class TeamStackDto {
         for (TeamStack teamStack : teamStacks){
             TechStack techStack = teamStack.getTechStack();
             TeamStackDto teamStackDto = new TeamStackDto();
-            teamStackDto.setId(techStack.getId());
+            teamStackDto.setTechStackId(techStack.getTechStackId());
             teamStackDto.setTechStackName(techStack.getTechStackName());
             teamStackDto.setTechStackImgUrl(techStack.getTechStackImgUrl());
             res.add(teamStackDto);

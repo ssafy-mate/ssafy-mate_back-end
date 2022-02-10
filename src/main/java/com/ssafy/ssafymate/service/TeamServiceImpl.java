@@ -146,7 +146,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Page<TeamInt> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total) {
 
-        String jsonString = teamListRequestDto.getTechstack_code();
+        String jsonString = teamListRequestDto.getTechstack_id();
         List<TeamStack> techStacks = new ArrayList<>();
 
         if (jsonString != null)

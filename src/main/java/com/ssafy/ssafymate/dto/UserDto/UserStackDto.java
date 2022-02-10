@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 public class UserStackDto {
 
-    Long id;
+    Long techStackId;
     String techStackName;
     String techStackImgUrl;
     String techStackLevel;
@@ -22,7 +22,7 @@ public class UserStackDto {
         for (UserStack userStack : userStacks){
             TechStack techStack = userStack.getTechStack();
             UserStackDto teamStackDto = new UserStackDto();
-            teamStackDto.setId(techStack.getId());
+            teamStackDto.setTechStackId(techStack.getTechStackId());
             teamStackDto.setTechStackName(techStack.getTechStackName());
             teamStackDto.setTechStackImgUrl(techStack.getTechStackImgUrl());
             teamStackDto.setTechStackLevel(userStack.getTechStackLevel());

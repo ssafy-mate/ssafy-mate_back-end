@@ -19,7 +19,7 @@ public class TeamListRequestDto {
     private String project_track="";
 
     @ApiModelProperty(value = "기술 스택")
-    private String techstack_code;
+    private String techstack_id;
 
     @ApiModelProperty(value = "팀 이름", example = "우수상")
     private String team_name="";

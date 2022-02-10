@@ -1,14 +1,9 @@
 package com.ssafy.ssafymate.dto.request;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.validation.constraints.NotNull;
 
 
 @ToString
@@ -35,7 +30,7 @@ public class UserListRequestDto {
     private String user_name= "";
 
     @ApiModelProperty(value = "기술 스택")
-    private String tech_stacks="0";
+    private String techstack_id ="0";
 
     @ApiModelProperty(value = "정렬", example = "최신순")
     private String sort= "";

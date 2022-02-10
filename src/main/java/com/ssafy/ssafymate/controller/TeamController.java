@@ -6,8 +6,10 @@ import com.ssafy.ssafymate.dto.request.TeamRequestDto;
 import com.ssafy.ssafymate.dto.response.TeamDetailResponseDto;
 import com.ssafy.ssafymate.dto.response.TeamModifyResponseDto;
 import com.ssafy.ssafymate.dto.response.TeamResponseDto;
+import com.ssafy.ssafymate.entity.ProjectDeadline;
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.User;
+import com.ssafy.ssafymate.service.ProjectDeadlineService;
 import com.ssafy.ssafymate.service.TeamService;
 import com.ssafy.ssafymate.service.UserService;
 import com.ssafy.ssafymate.service.UserTeamService;
@@ -19,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Api(value = "팀 API", tags = {"Team"})
@@ -35,6 +38,9 @@ public class TeamController {
     @Autowired
     UserTeamService userTeamService;
 
+    @Autowired
+    ProjectDeadlineService projectDeadlineService;
+
     @GetMapping("/{teamId}")
     @ApiOperation(value = "팀 상세조회", notes = "팀 아이디로 해당 팀 상세 조회")
     @ApiResponses({
@@ -46,17 +52,18 @@ public class TeamController {
             @PathVariable final Long teamId,
             @AuthenticationPrincipal String token) {
         User user;
-        Team teamdata;
+        Team team;
         try {
             user = userService.getUserByEmail(token);
-            teamdata = teamService.teamfind(teamId);
-            if (teamdata == null) {
+            team = teamService.teamFind(teamId);
+
+            if (team == null) {
                 return ResponseEntity.status(405).body(ErrorResponseBody.of(405, false, "해당 팀 정보가 존재하지 않습니다."));
             }
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 팀 상세 정보 조회 실패"));
         }
-        return ResponseEntity.status(200).body(TeamDetailResponseDto.of(teamdata,user));
+        return ResponseEntity.status(200).body(TeamDetailResponseDto.of(team, user));
     }
 
 
@@ -74,13 +81,19 @@ public class TeamController {
         Team team;
         try {
             String project = teamRequestDto.getProject();
+
+//            ResponseEntity<?> check =this.checkDeadline(project);
+//            if(check!=null){
+//                return check;
+//            }
+
             user = userService.getUserByEmail(token);
             team = teamService.belongToTeam(project, user.getId());
             if (team != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 이미 팀에 속해있어 팀 생성이 불가능합니다."));
             }
-            if((project.equals("특화 프로젝트") && !Objects.equals(teamRequestDto.getProjectTrack(), user.getSpecializationProjectTrack())) ||
-                    (project.equals("공통 프로젝트") && !Objects.equals(teamRequestDto.getProjectTrack(), user.getCommonProjectTrack()))){
+            if ((project.equals("특화 프로젝트") && !Objects.equals(teamRequestDto.getProjectTrack(), user.getSpecializationProjectTrack())) ||
+                    (project.equals("공통 프로젝트") && !Objects.equals(teamRequestDto.getProjectTrack(), user.getCommonProjectTrack()))) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자의 트랙과 일치하지 않아 팀 생성이 불가능합니다."));
             }
 
@@ -92,6 +105,7 @@ public class TeamController {
         return ResponseEntity.status(200).body(TeamResponseDto.of(team.getId(), "팀을 성공적으로 생성하였습니다."));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{teamId}/edit")
     @ApiOperation(value = "팀 수정 정보 조회", notes = "팀 아이디로 해당 팀 수정 정보 조회")
     @ApiResponses({
@@ -106,10 +120,10 @@ public class TeamController {
         Team team;
         try {
             user = userService.getUserByEmail(token);
-            team = teamService.teamfind(teamId);
+            team = teamService.teamFind(teamId);
             if (team == null) {
                 return ResponseEntity.status(405).body(ErrorResponseBody.of(405, false, "해당 팀 정보가 존재하지 않습니다."));
-            }else if(!Objects.equals(team.getOwner().getId(), user.getId())){
+            } else if (!Objects.equals(team.getOwner().getId(), user.getId())) {
                 return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "팀을 수정할 수 있는 권한이 없습니다."));
             }
         } catch (Exception exception) {
@@ -118,6 +132,7 @@ public class TeamController {
         return ResponseEntity.status(200).body(TeamModifyResponseDto.of(team));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/{teamId}")
     @ApiOperation(value = "팀 수정", notes = "수정된 팀 정보를 가지고 팀 수정")
     @ApiResponses({
@@ -169,6 +184,7 @@ public class TeamController {
         return ResponseEntity.status(200).body(MessageBody.of("새로운 팀에 지원해보세요."));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{teamId}/leave")
     @ApiOperation(value = "팀 탈퇴", notes = "팀원이 팀 탈퇴")
     @ApiResponses({
@@ -182,21 +198,29 @@ public class TeamController {
         try {
             User user = userService.getUserByEmail(token);
             Long userId = user.getId();
-            Team team = teamService.teamfind(teamId);
+            Team team = teamService.teamFind(teamId);
             if (team == null) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "팀이 없습니다."));
-            }
-            else if(userTeamService.userTeamFind(userId,teamId) == null){
+            } else if (userTeamService.userTeamFind(userId, teamId) == null) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "합류된 팀이 아닙니다."));
-            }
-            else if(team.getOwner().getId().equals(userId)){
+            } else if (team.getOwner().getId().equals(userId)) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "팀장은 팀을 탈퇴 할 수 없습니다."));
             }
-            userTeamService.userTeamDelete(userId,teamId);
+            userTeamService.userTeamDelete(userId, teamId);
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 삭제 실패"));
         }
         return ResponseEntity.status(200).body(MessageBody.of("탈퇴 처리가 완료되었습니다."));
+    }
+
+    public ResponseEntity<?> checkDeadline(String project) {
+        ProjectDeadline projectDeadline = projectDeadlineService.findProjectDeadline(project);
+        if (projectDeadline == null || projectDeadline.getDeadline() == null) {
+            return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "아직 팀빌딩 기간이 아닙니다."));
+        } else if (projectDeadline.getDeadline().isBefore(LocalDateTime.now())) {
+            return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "팀빌딩 기간이 끝났습니다."));
+        }
+        return null;
     }
 
 }

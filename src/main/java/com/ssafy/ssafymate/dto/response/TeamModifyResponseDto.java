@@ -1,47 +1,49 @@
 package com.ssafy.ssafymate.dto.response;
 
-import com.ssafy.ssafymate.dto.TeamDto.TeamDetailOwnerDto;
-import com.ssafy.ssafymate.dto.TeamDto.TeamDetailUserDto;
 import com.ssafy.ssafymate.dto.TeamDto.TeamStackDto;
 import com.ssafy.ssafymate.entity.Team;
 import com.ssafy.ssafymate.entity.UserTeam;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class TeamModifyResponseDto {
-    private Long teamId;
-    private String teamName;
-    private String teamImgUrl;
-    private String campus;
-    private String project;
-    private String projectTrack;
-    private String notice;
-    private String introduction;
+    protected Long teamId;
+    protected String teamName;
+    protected String teamImgUrl;
+    protected String campus;
+    protected String project;
+    protected String projectTrack;
+    protected String notice;
+    protected String introduction;
     List<TeamStackDto> techStacks = new ArrayList<>();
-    private Integer totalRecruitment;
-    private Integer frontendRecruitment;
-    private Integer backendRecruitment;
+    protected Integer totalRecruitment;
+    protected Integer frontendRecruitment;
+    protected Integer backendRecruitment;
     Integer totalHeadcount;
     Integer frontendHeadcount;
     Integer backendHeadcount;
 
     public static TeamModifyResponseDto of(Team team){
-        TeamModifyResponseDto res = new TeamModifyResponseDto();
-        res.setTeamId(team.getId());
-        res.setTeamName(team.getTeamName());
-        res.setTeamImgUrl(team.getTeamImg());
-        res.setCampus(team.getCampus());
-        res.setProject(team.getProject());
-        res.setProjectTrack(team.getProjectTrack());
-        res.setNotice(team.getNotice());
-        res.setIntroduction(team.getIntroduction());
-        res.setTechStacks(TeamStackDto.of(team.getTechStacks()));
+        return new TeamModifyResponseDto(team);
+    }
+
+    public TeamModifyResponseDto (Team team){
+        this.setTeamId(team.getId());
+        this.setTeamName(team.getTeamName());
+        this.setTeamImgUrl(team.getTeamImg());
+        this.setCampus(team.getCampus());
+        this.setProject(team.getProject());
+        this.setProjectTrack(team.getProjectTrack());
+        this.setNotice(team.getNotice());
+        this.setIntroduction(team.getIntroduction());
+        this.setTechStacks(TeamStackDto.of(team.getTechStacks()));
 
         int front = 0;
         int back = 0;
@@ -53,12 +55,11 @@ public class TeamModifyResponseDto {
                 back++;
             }
         }
-        res.setTotalRecruitment(team.getTotalRecruitment());
-        res.setFrontendRecruitment(team.getFrontendRecruitment());
-        res.setBackendRecruitment(team.getBackendRecruitment());
-        res.setTotalHeadcount(front+back);
-        res.setFrontendHeadcount(front);
-        res.setBackendHeadcount(back);
-        return res;
+        this.setTotalRecruitment(team.getTotalRecruitment());
+        this.setFrontendRecruitment(team.getFrontendRecruitment());
+        this.setBackendRecruitment(team.getBackendRecruitment());
+        this.setTotalHeadcount(front+back);
+        this.setFrontendHeadcount(front);
+        this.setBackendHeadcount(back);
     }
 }

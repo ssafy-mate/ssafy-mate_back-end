@@ -121,6 +121,7 @@ public class RequestController {
 
 
         } catch (Exception exception) {
+            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 팀 지원 요청 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "팀 합류 요청이 완료되었습니다."));

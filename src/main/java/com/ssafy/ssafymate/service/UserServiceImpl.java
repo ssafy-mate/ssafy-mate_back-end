@@ -235,9 +235,9 @@ public class UserServiceImpl implements UserService {
     public List<UserStack> StringToTechStacks2(String jsonString) {
 
         List<UserStack> techStacks = new ArrayList<>();
-        UserStack techstack = new UserStack();
-        techstack.setTechStackId(Long.parseLong(jsonString));
-        techStacks.add(techstack);
+        UserStack techStack = new UserStack();
+        techStack.setTechStackId(Long.parseLong(jsonString));
+        techStacks.add(techStack);
         return techStacks;
     }
 

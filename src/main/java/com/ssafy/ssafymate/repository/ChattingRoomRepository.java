@@ -26,7 +26,7 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Stri
             "        FROM chatting_room \n" +
             "        WHERE user_id_small = :userId OR user_id_big=:userId) CR\n" +
             "    JOIN \n" +
-            "        USER U\n" +
+            "        user U\n" +
             "    ON U.id = CR.user_id) UR\n" +
             "JOIN\n" +
             "    (SELECT CH1.room_id, CH1.sent_time, CH1.content\n" +

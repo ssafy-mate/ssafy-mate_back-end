@@ -105,6 +105,7 @@ public class RequestController {
             User receiver = userService.getUserById(receiverId);
 
             Team team = teamService.belongToTeam(messageTeamRequestDto.getProject(), senderId);
+            System.out.println(team);
             if (team == null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "팀 생성 후 다시 요청을 시도해주세요."));
             } else if (teamService.ownTeam(team.getId(), senderId) == null) {
@@ -117,6 +118,7 @@ public class RequestController {
             } else if (!userTeamService.isRecruit(team.getId())) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
             }
+            System.out.println(team);
             requestMessageService.teamRequest(sender, messageTeamRequestDto.getUserId(), team, messageTeamRequestDto.getMessage());
 
 

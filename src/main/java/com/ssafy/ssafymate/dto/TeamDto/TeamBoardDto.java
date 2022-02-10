@@ -25,6 +25,7 @@ public class TeamBoardDto {
     Integer frontendHeadcount;
     Integer backendHeadcount;
     private LocalDateTime createDateTime;
+    Boolean isRecruiting = false;
 
     public static List<TeamBoardDto> of (List<Team> teams){
         List<TeamBoardDto> res = new ArrayList<>();
@@ -47,6 +48,9 @@ public class TeamBoardDto {
             teamBoardDto.setBackendHeadcount(team.getBackendHeadcount());
 
             teamBoardDto.setCreateDateTime(team.getCreateDateTime());
+            if(team.getTotalRecruitment() > team.getTotalHeadcount()){
+                teamBoardDto.setIsRecruiting(true);
+            }
 
 
             res.add(teamBoardDto);

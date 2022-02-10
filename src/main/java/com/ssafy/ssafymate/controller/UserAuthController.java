@@ -205,44 +205,45 @@ public class UserAuthController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> searchUserList(
-            @Valid UserListRequestDto userListReuestDto, BindingResult bindingResult,
+            @Valid UserListRequestDto userListRequestDto, BindingResult bindingResult,
             @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage) {
-        List<UserBoardInterface> userBoards;
+
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "잘못된 입력"));
         }
-        if (userListReuestDto.getCampus().equals("all") || userListReuestDto.getCampus() == null) {
-            userListReuestDto.setCampus("");
+        if (userListRequestDto.getCampus().equals("all") || userListRequestDto.getCampus() == null) {
+            userListRequestDto.setCampus("");
         }
-        if (userListReuestDto.getJob1().equals("all") || userListReuestDto.getJob1() == null) {
-            userListReuestDto.setJob1("");
+        if (userListRequestDto.getJob1().equals("all") || userListRequestDto.getJob1() == null) {
+            userListRequestDto.setJob1("");
         }
-        if (userListReuestDto.getProject_track().equals("all") || userListReuestDto.getProject_track() == null) {
-            userListReuestDto.setProject_track("");
+        if (userListRequestDto.getProject_track().equals("all") || userListRequestDto.getProject_track() == null) {
+            userListRequestDto.setProject_track("");
         }
-        if (userListReuestDto.getSsafy_track().equals("all") || userListReuestDto.getSsafy_track() == null) {
-            userListReuestDto.setSsafy_track("");
+        if (userListRequestDto.getSsafy_track().equals("all") || userListRequestDto.getSsafy_track() == null) {
+            userListRequestDto.setSsafy_track("");
         }
         int totalPage;
         long totalElement;
         int size = 9;
         Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
 
-        if (userListReuestDto.getSort() != null) {
-            if (userListReuestDto.getSort().equals("recent")) {
+        if (userListRequestDto.getSort() != null) {
+            if (userListRequestDto.getSort().equals("recent")) {
                 pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
-            } else if (userListReuestDto.getSort().equals("name")) {
+            } else if (userListRequestDto.getSort().equals("name")) {
                 pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.ASC, "student_name");
             }
         }
         Page<UserBoardInterface> userPage;
+        List<UserBoardInterface> userBoards;
         List<UserBoardDto> userBoards2;
         try {
-            userPage = userService.userList(pageable, userListReuestDto);
+            userPage = userService.userList(pageable, userListRequestDto);
 
             userBoards = userPage.getContent();
-            userBoards2 = userService.userBoarConvert(userBoards, userListReuestDto.getProject());
+            userBoards2 = userService.userBoarConvert(userBoards, userListRequestDto.getProject());
 
             totalPage = userPage.getTotalPages();
             totalElement = userPage.getTotalElements();
@@ -250,7 +251,7 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 공고 조회 실패"));
         }
 
-        return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListReuestDto.getProject(), nowPage, totalPage, totalElement));
+        return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListRequestDto.getProject(), nowPage, totalPage, totalElement));
     }
 
     @PostMapping("/{userId}/project-tracks")

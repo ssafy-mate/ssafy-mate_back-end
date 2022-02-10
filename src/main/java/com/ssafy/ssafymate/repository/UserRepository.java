@@ -45,7 +45,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LEFT JOIN " +
             "   (select * from user_team " +
             "   WHERE team_id IN " +
-            "       (SELECT id FROM TEAM " +
+            "       (SELECT id FROM team " +
             "       WHERE project=:project)) " +
             "UT " +
             "ON U.id = UT.user_id " +

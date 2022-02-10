@@ -108,7 +108,7 @@ public class RequestController {
             System.out.println(team);
             if (team == null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "팀 생성 후 다시 요청을 시도해주세요."));
-            } else if (teamService.ownTeam(team.getId(), senderId) == null) {
+            } else if (!Objects.equals(team.getOwner().getId(), senderId)) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 팀 합류 요청 권한이 없습니다."));
             } else if ((team.getProject().equals("공통 프로젝트") && !team.getProjectTrack().equals(receiver.getCommonProjectTrack())) ||
                     (team.getProject().equals("특화 프로젝트") && !team.getProjectTrack().equals(receiver.getSpecializationProjectTrack()))) {

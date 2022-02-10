@@ -1,7 +1,5 @@
 package com.ssafy.ssafymate.service;
 
-import com.ssafy.ssafymate.entity.Team;
-import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.entity.UserTeam;
 import com.ssafy.ssafymate.repository.TeamRepository;
 import com.ssafy.ssafymate.repository.UserTeamRepository;

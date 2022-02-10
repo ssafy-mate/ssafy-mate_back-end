@@ -43,7 +43,7 @@ public class UserAuthController {
     @Autowired
     TeamService teamService;
 
-    @GetMapping("/team")
+    @GetMapping("/{userId}/belong-to-team")
     @ApiOperation(value = "팀 참여 여부 조회", notes = "유저 아이디와 선택한 프로젝트로 해당 프로젝트에서 이미 팀에 참여 했는지 여부를 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -51,12 +51,11 @@ public class UserAuthController {
     })
     public ResponseEntity<?> belongToTeam(
             @RequestParam final String selectedProject,
-            @AuthenticationPrincipal final String token) {
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
         Boolean belongToTeam = false;
         try {
             User user = userService.getUserByEmail(token);
-            Long userId = user.getId();
-            Team team = teamService.belongToTeam(selectedProject, userId);
+            Team team = teamService.belongToTeam(selectedProject, user.getId());
             if (team == null) {
                 belongToTeam = true;
             }
@@ -72,7 +71,7 @@ public class UserAuthController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> belongToTeam2(
+    public ResponseEntity<?> myTeamId(
             @RequestParam final String project,
             @AuthenticationPrincipal final String token, @PathVariable String userId) {
         User user;
@@ -89,6 +88,27 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 참여 여부 조회 실패"));
         }
         return ResponseEntity.status(200).body(UserTeamIdResponseDto.of(teamId));
+    }
+
+    @GetMapping("/{userId}/my-team")
+    @ApiOperation(value = "참여 중인 조회", notes = "참여 중인 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> myTeam(
+            @RequestParam final String project,
+            @AuthenticationPrincipal final String token, @PathVariable String userId) {
+        User user;
+        Team team;
+        try {
+            user = userService.getUserByEmail(token);
+            team = teamService.belongToTeam(project, user.getId());
+
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 참여 여부 조회 실패"));
+        }
+        return ResponseEntity.status(200).body(TeamDetailResponseDto.of(team,user));
     }
 
     // 나의 정보 받기
@@ -283,7 +303,6 @@ public class UserAuthController {
             }
             userService.selectProjectTrack(user, userSelectProjectTrackRequestDto);
         } catch (Exception exception) {
-            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 트랙 수정 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 수정이 완료되었습니다."));

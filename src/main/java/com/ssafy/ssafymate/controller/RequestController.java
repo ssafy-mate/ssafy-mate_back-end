@@ -61,7 +61,7 @@ public class RequestController {
             }
             User sender = userService.getUserByEmail(token);
             Long senderId = sender.getId();
-            Team team = teamService.teamfind(messageUserRequestDto.getTeamId());
+            Team team = teamService.teamFind(messageUserRequestDto.getTeamId());
             if (team == null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 존재하지 않습니다."));
             } else if ((team.getProject().equals("공통 프로젝트") && !team.getProjectTrack().equals(sender.getCommonProjectTrack())) ||
@@ -195,7 +195,7 @@ public class RequestController {
 
             message = requestMessageService.getRequest(requestId);
 
-            team = teamService.teamfind(message.getTeamId());
+            team = teamService.teamFind(message.getTeamId());
 
             if (response.equals("cancellation")) {
 

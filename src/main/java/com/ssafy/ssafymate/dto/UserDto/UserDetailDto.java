@@ -1,7 +1,6 @@
 package com.ssafy.ssafymate.dto.UserDto;
 
 import com.ssafy.ssafymate.entity.User;
-import com.ssafy.ssafymate.entity.UserStack;
 import lombok.Getter;
 import lombok.Setter;
 

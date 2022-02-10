@@ -32,7 +32,7 @@ public class UserTeamServiceImpl implements UserTeamService{
     }
 
     @Override
-    public Boolean isRecruit(Long teamId) {
+    public String isRecruit(Long teamId) {
         return teamRepository.isRecruit(teamId);
     }
 }

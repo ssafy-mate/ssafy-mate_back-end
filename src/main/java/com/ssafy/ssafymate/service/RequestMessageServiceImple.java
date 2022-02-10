@@ -88,7 +88,7 @@ public class RequestMessageServiceImple implements RequestMessageService {
             requestMessageRepository.updateReadExpirationUser(userId,team.getProject());
 
         }
-        if(!teamRepository.isRecruit(team.getId())){
+        if(teamRepository.isRecruit(team.getId()).equals("false")){
             requestMessageRepository.updateReadExpirationTeam(team.getId(),team.getProject());
         }
         return answer;

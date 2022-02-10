@@ -84,8 +84,6 @@ public class TeamListController {
             teamInts = teamService.teamSearch(pageable,
                     teamListRequestDto,
                     front, back, total);
-            System.out.println(teamInts.getContent().get(0));
-            System.out.println(teamInts.getContent().get(0).getBackend_headcount());
 
             teams = teamService.teamListTransfer(teamInts.getContent());
             totalPage = teamInts.getTotalPages();

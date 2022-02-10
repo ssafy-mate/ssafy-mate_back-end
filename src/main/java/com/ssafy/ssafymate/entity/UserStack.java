@@ -21,7 +21,7 @@ public class UserStack {
 
     @JsonBackReference
     @Column(name = "tech_stack_code")
-    private Long techStackId;
+    private Long techStackCode;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tech_stack_code", insertable = false, updatable = false)

@@ -62,7 +62,6 @@ public class TeamServiceImpl implements TeamService {
             multipartFile.transferTo(file);
             teamImgUrl = domainPrefix + multipartFile.getOriginalFilename();
         }
-        System.out.println(teamImgUrl);
 
         Team team = teamRepository.save(teamBuilder(teamRequestDto, teamImgUrl, user));
         System.out.println(team);
@@ -226,7 +225,7 @@ public class TeamServiceImpl implements TeamService {
                 .build();
     }
 
-    // String 형태의 techStacks를 UserStack 타입의 리스트로 변환하는 메서드
+    // String 형태의 리스트 Long TeamStack 타입의 리스트로 변환하는 메서드
     public List<TeamStack> StringToTechStacks(String jsonString) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Type listType = new TypeToken<ArrayList<Long>>() {
@@ -235,7 +234,7 @@ public class TeamServiceImpl implements TeamService {
         return techStackCodes.stream().map(TeamStack::new).collect(Collectors.toList());
     }
 
-    // String 형태의 Long 를 UserStack 타입의 리스트로 변환하는 메서드
+    // String 형태의 Long 를 TeamStack 타입의 리스트로 변환하는 메서드
     public List<TeamStack> StringToTechStacks2(String jsonString) {
         List<TeamStack> techStacks = new ArrayList<>();
         TeamStack techstack = new TeamStack();

@@ -224,7 +224,7 @@ public class UserAuthController {
         if (userListRequestDto.getSsafy_track().equals("all") || userListRequestDto.getSsafy_track() == null) {
             userListRequestDto.setSsafy_track("");
         }
-        System.out.println(userListRequestDto);
+
         int totalPage;
         long totalElement;
         int size = 9;

@@ -53,11 +53,11 @@ public class TeamServiceImpl implements TeamService {
             // 기본 이미지 경로 설정
             teamImgUrl = null;
         } else {
-            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/" + multipartFile.getOriginalFilename();
+            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/" + teamRequestDto.getProject() + user.getId() + "_" + multipartFile.getOriginalFilename();
 
             File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
-            teamImgUrl = domainPrefix + multipartFile.getOriginalFilename();
+            teamImgUrl = domainPrefix + teamRequestDto.getProject() + user.getId() + "_" + multipartFile.getOriginalFilename();
         }
 
         Team team = teamRepository.save(teamBuilder(teamRequestDto, teamImgUrl, user));
@@ -86,9 +86,9 @@ public class TeamServiceImpl implements TeamService {
 
         String teamImgUrl;
 
-        if(team.getTeamImg() != null && teamRequestDto.getTeamImgUrl() == null){
-            File old_file = new File("/var/webapps/upload/images/team_image/"+getFileNameFromURL(team.getTeamImg()));
-            if(old_file.exists()){
+        if (team.getTeamImg() != null && teamRequestDto.getTeamImgUrl() == null) {
+            File old_file = new File("/var/webapps/upload/images/team_image/" + getFileNameFromURL(team.getTeamImg()));
+            if (old_file.exists()) {
                 old_file.delete();
             }
         }
@@ -98,11 +98,11 @@ public class TeamServiceImpl implements TeamService {
             teamImgUrl = teamRequestDto.getTeamImgUrl();
 
         } else {    // 아니면 새 이미지로
-            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/" + multipartFile.getOriginalFilename();
+            String profileImgSaveUrl = "/var/webapps/upload/images/team_image/" + teamRequestDto.getProject() + user.getId() + "_" + multipartFile.getOriginalFilename();
 
             File file = new File(profileImgSaveUrl);
             multipartFile.transferTo(file);
-            teamImgUrl = domainPrefix + multipartFile.getOriginalFilename();
+            teamImgUrl = domainPrefix + teamRequestDto.getProject() + user.getId() + "_" + multipartFile.getOriginalFilename();
         }
 
         Team modify_team = teamBuilder(teamRequestDto, teamImgUrl, user);
@@ -116,9 +116,9 @@ public class TeamServiceImpl implements TeamService {
     public void teamDelete(Long team_id) {
 
         Team team = teamRepository.getById(team_id);
-        if(team.getTeamImg() != null){
-            File old_file = new File("/var/webapps/upload/images/team_image/"+getFileNameFromURL(team.getTeamImg()));
-            if(old_file.exists()){
+        if (team.getTeamImg() != null) {
+            File old_file = new File("/var/webapps/upload/images/team_image/" + getFileNameFromURL(team.getTeamImg()));
+            if (old_file.exists()) {
                 old_file.delete();
             }
         }

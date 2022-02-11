@@ -14,8 +14,6 @@ public class RequestUserMessageDto {
     Long userId;
     String profileImgUrl;
     String userName;
-    String campus;
-    String ssafyTrack;
     String job1;
     String requestStatus;
     String message;
@@ -28,8 +26,6 @@ public class RequestUserMessageDto {
         res.setUserId(user.getId());
         res.setProfileImgUrl(user.getProfileImg());
         res.setUserName(user.getStudentName());
-        res.setCampus(user.getCampus());
-        res.setSsafyTrack(user.getSsafyTrack());
         res.setJob1(user.getJob1());
         res.setRequestStatus(requestMessages.getRequestStatus());
         res.setMessage(requestMessages.getMessage());

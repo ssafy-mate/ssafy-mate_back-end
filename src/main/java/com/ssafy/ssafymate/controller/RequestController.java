@@ -1,6 +1,7 @@
 package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.common.ErrorResponseBody;
+import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.common.SuccessMessageBody;
 import com.ssafy.ssafymate.dto.request.MessageTeamRequestDto;
 import com.ssafy.ssafymate.dto.request.MessageUserRequestDto;
@@ -175,7 +176,7 @@ public class RequestController {
         return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages, "sender"));
     }
 
-    @PutMapping("/requests/response")
+    @PutMapping("/requests/responses")
     @ApiOperation(value = "제안 수락/거절/취소", notes = "제안 수락/거절/취소")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -187,26 +188,28 @@ public class RequestController {
             @RequestParam Long requestId,
             @RequestParam String response,
             @AuthenticationPrincipal final String token) {
-        RequestMessage message;
+        RequestMessage requestMessage;
         User user;
         Team team;
         Integer answer = 0;
+        String message="응답 완료";
         try {
             user = userService.getUserByEmail(token);
 
-            message = requestMessageService.getRequest(requestId);
+            requestMessage = requestMessageService.getRequest(requestId);
 
-            team = teamService.teamFind(message.getTeamId());
+            team = teamService.teamFind(requestMessage.getTeamId());
 
             if (response.equals("cancellation")) {
 
-                if (!Objects.equals(message.getSenderId(), user.getId())) {
-                    return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "응답 권한이 없습니다."));
+                if (!Objects.equals(requestMessage.getSenderId(), user.getId())) {
+                    return ResponseEntity.status(409).body(ErrorResponseBody.of(403, false, "응답 권한이 없습니다."));
                 }
                 answer = requestMessageService.updateReadCheckRejection(requestId, response);
+                message = "요청 취소 완료";
             } else {
-                if (!Objects.equals(message.getReceiverId(), user.getId())) {
-                    return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "응답 권한이 없습니다."));
+                if (!Objects.equals(requestMessage.getReceiverId(), user.getId())) {
+                    return ResponseEntity.status(409).body(ErrorResponseBody.of(403, false, "응답 권한이 없습니다."));
                 } else if (response.equals("rejection")) {
                     answer = requestMessageService.updateReadCheckRejection(requestId, response);
                 } else if (response.equals("approval")) {
@@ -214,14 +217,14 @@ public class RequestController {
                     if (team.getTotalHeadcount() >= team.getTotalRecruitment()) {
                         requestMessageService.updateReadCheckRejection(requestId, "cancellation");
                         return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
-                    } else if (message.getType().equals("teamRequest")) {
-                        userId = message.getReceiverId();
+                    } else if (requestMessage.getType().equals("teamRequest")) {
+                        userId = requestMessage.getReceiverId();
                         if (teamService.belongToTeam(team.getProject(), userId) != null) {
                             requestMessageService.updateReadCheckRejection(requestId, "cancellation");
                             return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 이미 팀에 속해있어 응답이 불가능합니다."));
                         }
-                    } else if (message.getType().equals("userRequest")) {
-                        userId = message.getSenderId();
+                    } else if (requestMessage.getType().equals("userRequest")) {
+                        userId = requestMessage.getSenderId();
 
                         if (teamService.belongToTeam(team.getProject(), userId) != null) {
                             requestMessageService.updateReadCheckRejection(requestId, "cancellation");
@@ -238,9 +241,9 @@ public class RequestController {
 
 
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 응답 실패"));
         }
-        return ResponseEntity.status(200).body(SuccessMessageBody.of(true,"제안 응답 성공"));
+        return ResponseEntity.status(200).body(MessageBody.of(message));
     }
 
 }

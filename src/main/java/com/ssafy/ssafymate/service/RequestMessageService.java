@@ -22,4 +22,6 @@ public interface RequestMessageService {
 
     Integer updateReadCheckApproval(Long id, String readCheck,Long userId, Team teamId);
 
+    RequestMessage findSameRequest(Long senderId, Long teamId, Long receiverId);
+
 }

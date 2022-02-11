@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,6 +20,7 @@ public class TeamStack {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @JsonBackReference
     @Column(name = "tech_stack_code")
     private Long techStackCode;
@@ -27,8 +29,7 @@ public class TeamStack {
     @JoinColumn(name = "tech_stack_code", insertable = false, updatable = false)
     TechStack techStack;
 
-
-
+    @NotNull
     @JsonIgnore
     @ManyToOne
     private Team team;
@@ -36,4 +37,5 @@ public class TeamStack {
     public TeamStack(Long techStackCode) {
         this.techStackCode = techStackCode;
     }
+
 }

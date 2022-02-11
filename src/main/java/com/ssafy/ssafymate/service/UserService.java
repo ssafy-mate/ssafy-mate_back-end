@@ -1,7 +1,7 @@
 package com.ssafy.ssafymate.service;
 
-import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardDto;
+import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.request.*;
 import com.ssafy.ssafymate.entity.User;
 import org.springframework.data.domain.Page;
@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
+
     // 유저 조회 - ID로 찾기
     User getUserById(Long id);
 
@@ -37,4 +38,5 @@ public interface UserService {
     List<UserBoardDto> userBoarConvert(List<UserBoardInterface> users, String project);
 
     String selectProjectTrack(User user, UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto);
+
 }

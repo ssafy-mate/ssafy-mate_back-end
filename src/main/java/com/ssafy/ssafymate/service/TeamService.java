@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface TeamService {
+
     // 팀 상세 조회
     Team teamFind(Long teamId);
 
@@ -34,7 +35,5 @@ public interface TeamService {
     Page<TeamInt> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total);
 
     List<Team> teamListTransfer(List<TeamInt> teamIs);
-
-
 
 }

@@ -8,6 +8,9 @@ import java.util.List;
 
 @Repository
 public interface TeamStackRepository extends JpaRepository<TeamStack,Long> {
+
     List<TeamStack> findByTeamId (Long teamId);
+
     Integer deleteByTeamId (Long teamId);
+
 }

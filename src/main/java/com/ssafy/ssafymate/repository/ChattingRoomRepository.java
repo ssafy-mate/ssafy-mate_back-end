@@ -3,7 +3,6 @@ package com.ssafy.ssafymate.repository;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import com.ssafy.ssafymate.entity.ChattingRoom;
 import io.lettuce.core.dynamic.annotation.Param;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -47,4 +46,5 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Stri
     @Query(value = "insert into chatting_room (room_id, user_id_small, user_id_big) values (:roomId, :userIdSmall, :userIdBig)", nativeQuery = true)
     @Transactional
     int saveRoom(@Param("roomId") String roomId, @Param("userIdSmall") Long userIdSmall, @Param("userIdBig") Long userIdBig);
+
 }

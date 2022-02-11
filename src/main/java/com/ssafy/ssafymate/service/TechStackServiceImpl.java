@@ -17,4 +17,5 @@ public class TechStackServiceImpl implements TechStackService{
     public List<TechStack> techStackList() {
         return techStackRepository.findAll();
     }
+
 }

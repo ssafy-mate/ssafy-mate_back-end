@@ -36,7 +36,4 @@ public class UserTeamController {
         return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 가입된 교육생 입니다."));
     }
 
-
-
-
 }

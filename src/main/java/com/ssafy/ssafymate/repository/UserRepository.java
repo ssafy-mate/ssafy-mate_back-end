@@ -16,8 +16,11 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
     Optional<User> findById(Long id);
+
     Optional<User> findByEmail(String email);
+
     Optional<User> findByStudentNumberAndStudentName(String studentNumber, String studentName);
 
     @Query(value = "SELECT " +
@@ -63,8 +66,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                    @Param("project") String project,
                                    @Param("projectTrack") String projectTrack,
                                    @Param("userStacks") List<Long> userStacks,
-                                   @Param("exclusion") Boolean exclusion
-    );
+                                   @Param("exclusion") Boolean exclusion);
 
     @Transactional
     @Modifying
@@ -83,4 +85,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE id=:userId"
             , nativeQuery = true)
     int updateSpecialProjectTrack(@Param("userId") Long userId, @Param("projectTrack") String projectTrack);
+
 }

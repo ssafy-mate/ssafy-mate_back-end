@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,16 +17,21 @@ public class ChattingHistory {
     private Long id;
 
     @NotNull
+    @Column(length = 600)
     private String content;
 
     @NotNull
+    @Column(length = 50)
     private String sentTime;
 
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "room_id",referencedColumnName = "room_id")
+    @JoinColumn(name = "room_id", referencedColumnName = "room_id")
     private ChattingRoom chattingRoom;
 
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "sender_id",referencedColumnName = "id")
+    @JoinColumn(name = "sender_id", referencedColumnName = "id")
     private User user;
+
 }

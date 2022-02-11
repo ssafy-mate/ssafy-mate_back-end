@@ -68,6 +68,6 @@ public class RequestMessage {
 
     @CreationTimestamp
     @Column(updatable = false)
-    private LocalDateTime createDateTime;
+    private LocalDateTime createdDateTime;
 
 }

@@ -32,7 +32,7 @@ public class UserStack {
     @Column(length = 5)
     private String techStackLevel;
 
-    @NotNull
+
     @JsonIgnore
     @ManyToOne
     private User user;

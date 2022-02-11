@@ -105,4 +105,9 @@ public class RequestMessageServiceImple implements RequestMessageService {
 
     }
 
+    @Override
+    public RequestMessage findSameRequest(Long senderId, Long teamId, Long receiverId) {
+        return requestMessageRepository.findBySenderIdAndTeamIdAndReceiverIdAndRequestStatus(senderId,teamId,receiverId,"pending").orElse(null);
+    }
+
 }

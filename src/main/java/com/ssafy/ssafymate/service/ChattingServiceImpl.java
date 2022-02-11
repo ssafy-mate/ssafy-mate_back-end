@@ -3,8 +3,10 @@ package com.ssafy.ssafymate.service;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import com.ssafy.ssafymate.entity.ChattingRoom;
+import com.ssafy.ssafymate.entity.User;
 import com.ssafy.ssafymate.repository.ChattingHistoryRepository;
 import com.ssafy.ssafymate.repository.ChattingRoomRepository;
+import com.ssafy.ssafymate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,16 @@ public class ChattingServiceImpl implements ChattingService{
 
     @Autowired
     private ChattingHistoryRepository chattingHistoryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public User getUserInfo(Long userId) {
+
+        return userRepository.findById(userId).orElse(null);
+
+    }
 
     @Override
     public List<RoomList> getRoomList(Long userId) {

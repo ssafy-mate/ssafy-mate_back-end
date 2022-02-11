@@ -3,10 +3,13 @@ package com.ssafy.ssafymate.service;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import com.ssafy.ssafymate.entity.ChattingRoom;
+import com.ssafy.ssafymate.entity.User;
 
 import java.util.List;
 
 public interface ChattingService {
+
+    User getUserInfo(Long userId);
 
     List<RoomList> getRoomList(Long userId);
 

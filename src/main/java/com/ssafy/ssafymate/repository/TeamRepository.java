@@ -83,4 +83,12 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             ,nativeQuery = true)
     String isRecruit(@Param("teamId") Long teamId);
 
+    List<Team> findAllByProject(String project);
+
+    List<Team> findAllByCampusAndProject(String campus, String project);
+
+    List<Team> findAllByCampusAndProjectAndProjectTrack(String campus, String project, String projectTrack);
+
+    List<Team> findAllByProjectAndProjectTrack(String project, String projectTrack);
+
 }

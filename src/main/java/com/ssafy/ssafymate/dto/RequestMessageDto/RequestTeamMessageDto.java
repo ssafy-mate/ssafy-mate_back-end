@@ -16,7 +16,7 @@ public class RequestTeamMessageDto {
     String notice;
     String teamName;
     String campus;
-    String readCheck;
+    String requestStatus;
     String message;
     LocalDateTime creatTime;
 
@@ -29,7 +29,7 @@ public class RequestTeamMessageDto {
         res.setNotice(team.getNotice());
         res.setTeamName(team.getTeamName());
         res.setCampus(team.getCampus());
-        res.setReadCheck(requestMessages.getReadCheck());
+        res.setRequestStatus(requestMessages.getRequestStatus());
         res.setMessage(requestMessages.getMessage());
         res.setCreatTime(requestMessages.getCreateDateTime());
         return res;

@@ -17,7 +17,7 @@ public class RequestUserMessageDto {
     String campus;
     String ssafyTrack;
     String job1;
-    String readCheck;
+    String requestStatus;
     String message;
     LocalDateTime creatTime;
 
@@ -31,7 +31,7 @@ public class RequestUserMessageDto {
         res.setCampus(user.getCampus());
         res.setSsafyTrack(user.getSsafyTrack());
         res.setJob1(user.getJob1());
-        res.setReadCheck(requestMessages.getReadCheck());
+        res.setRequestStatus(requestMessages.getRequestStatus());
         res.setMessage(requestMessages.getMessage());
         res.setCreatTime(requestMessages.getCreateDateTime());
         return res;

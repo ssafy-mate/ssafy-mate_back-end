@@ -19,7 +19,7 @@ public class RequestUserMessageDto {
     String job1;
     String requestStatus;
     String message;
-    LocalDateTime creatTime;
+    LocalDateTime createdTime;
 
     public static RequestUserMessageDto of(RequestMessage requestMessages) {
         RequestUserMessageDto res = new RequestUserMessageDto();
@@ -33,7 +33,7 @@ public class RequestUserMessageDto {
         res.setJob1(user.getJob1());
         res.setRequestStatus(requestMessages.getRequestStatus());
         res.setMessage(requestMessages.getMessage());
-        res.setCreatTime(requestMessages.getCreateDateTime());
+        res.setCreatedTime(requestMessages.getCreatedDateTime());
         return res;
     }
 }

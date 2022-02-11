@@ -49,7 +49,6 @@ public class Team{
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     List<TeamStack> techStacks = new ArrayList<>();
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "owner_id")
     User owner;

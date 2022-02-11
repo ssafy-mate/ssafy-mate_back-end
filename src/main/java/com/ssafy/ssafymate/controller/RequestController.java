@@ -105,7 +105,6 @@ public class RequestController {
             User receiver = userService.getUserById(receiverId);
 
             Team team = teamService.belongToTeam(messageTeamRequestDto.getProject(), senderId);
-            System.out.println(team);
             if (team == null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "팀 생성 후 다시 요청을 시도해주세요."));
             } else if (!Objects.equals(team.getOwner().getId(), senderId)) {
@@ -118,12 +117,10 @@ public class RequestController {
             } else if (userTeamService.isRecruit(team.getId()).equals("false")) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
             }
-            System.out.println(team);
             requestMessageService.teamRequest(sender, messageTeamRequestDto.getUserId(), team, messageTeamRequestDto.getMessage());
 
 
         } catch (Exception exception) {
-            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 팀 지원 요청 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "팀 합류 요청이 완료되었습니다."));
@@ -243,7 +240,7 @@ public class RequestController {
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 실패"));
         }
-        return ResponseEntity.status(200).body("");
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true,"제안 응답 성공"));
     }
 
 }

@@ -249,7 +249,6 @@ public class UserAuthController {
             totalPage = userPage.getTotalPages();
             totalElement = userPage.getTotalElements();
         } catch (Exception exception) {
-            System.out.println(exception);
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 공고 조회 실패"));
         }
 

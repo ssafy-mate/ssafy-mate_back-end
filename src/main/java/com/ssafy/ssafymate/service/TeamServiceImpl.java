@@ -64,7 +64,6 @@ public class TeamServiceImpl implements TeamService {
         }
 
         Team team = teamRepository.save(teamBuilder(teamRequestDto, teamImgUrl, user));
-        System.out.println(team);
 
         UserTeam userTeam = UserTeam.builder()
                 .userId(user.getId())
@@ -137,7 +136,6 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team ownTeam(Long teamId, Long userId) {
-        System.out.println(teamId + " " + userId);
         return teamRepository.findByTeamIdAndUserIdJQL(teamId, userId).orElse(null);
     }
 

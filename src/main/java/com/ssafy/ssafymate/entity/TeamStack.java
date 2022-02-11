@@ -30,6 +30,7 @@ public class TeamStack {
     TechStack techStack;
 
     @ManyToOne
+    @JsonIgnore
     private Team team;
 
     public TeamStack(Long techStackCode) {

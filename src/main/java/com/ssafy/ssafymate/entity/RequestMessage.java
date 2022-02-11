@@ -29,7 +29,6 @@ public class RequestMessage {
     @Column(length = 20)
     private String type;
 
-    @NotNull
     @ColumnDefault("'pending'")
     @Column(length = 20)
     private String requestStatus;

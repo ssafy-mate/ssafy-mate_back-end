@@ -1,6 +1,7 @@
 package com.ssafy.ssafymate.controller;
 
 import com.ssafy.ssafymate.common.ErrorResponseBody;
+import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.common.SuccessMessageBody;
 import com.ssafy.ssafymate.dto.request.MessageTeamRequestDto;
 import com.ssafy.ssafymate.dto.request.MessageUserRequestDto;
@@ -240,7 +241,7 @@ public class RequestController {
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 응답 실패"));
         }
-        return ResponseEntity.status(200).body(SuccessMessageBody.of(true,"제안 응답이 완료되었습니다."));
+        return ResponseEntity.status(200).body(MessageBody.of("제안 응답이 완료되었습니다."));
     }
 
 }

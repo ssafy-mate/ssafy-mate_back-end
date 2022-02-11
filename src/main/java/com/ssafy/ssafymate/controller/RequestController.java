@@ -3,6 +3,7 @@ package com.ssafy.ssafymate.controller;
 import com.ssafy.ssafymate.common.ErrorResponseBody;
 import com.ssafy.ssafymate.common.MessageBody;
 import com.ssafy.ssafymate.common.SuccessMessageBody;
+import com.ssafy.ssafymate.dto.request.MessageResponseRequestDto;
 import com.ssafy.ssafymate.dto.request.MessageTeamRequestDto;
 import com.ssafy.ssafymate.dto.request.MessageUserRequestDto;
 import com.ssafy.ssafymate.dto.response.LoginResponseDto;
@@ -185,10 +186,11 @@ public class RequestController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> requestResponse(
-            @RequestParam Long requestId,
-            @RequestParam String response,
+            @RequestBody MessageResponseRequestDto messageResponseRequestDto,
             @AuthenticationPrincipal final String token) {
         RequestMessage requestMessage;
+        Long requestId = messageResponseRequestDto.getRequestId();
+        String response = messageResponseRequestDto.getResponse();
         User user;
         Team team;
         Integer answer = 0;
@@ -203,13 +205,13 @@ public class RequestController {
             if (response.equals("cancellation")) {
 
                 if (!Objects.equals(requestMessage.getSenderId(), user.getId())) {
-                    return ResponseEntity.status(409).body(ErrorResponseBody.of(403, false, "응답 권한이 없습니다."));
+                    return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "응답 권한이 없습니다."));
                 }
                 answer = requestMessageService.updateReadCheckRejection(requestId, response);
                 message = "요청 취소 완료";
             } else {
                 if (!Objects.equals(requestMessage.getReceiverId(), user.getId())) {
-                    return ResponseEntity.status(409).body(ErrorResponseBody.of(403, false, "응답 권한이 없습니다."));
+                    return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "응답 권한이 없습니다."));
                 } else if (response.equals("rejection")) {
                     answer = requestMessageService.updateReadCheckRejection(requestId, response);
                 } else if (response.equals("approval")) {

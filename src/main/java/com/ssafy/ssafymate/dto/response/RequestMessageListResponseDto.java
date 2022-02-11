@@ -22,7 +22,7 @@ public class RequestMessageListResponseDto {
         RequestMessageListResponseDto res = new RequestMessageListResponseDto();
         for (RequestMessage requestMessage : requestMessages){
             if((type.equals("receiver")&&requestMessage.getType().equals("userRequest")) ||(type.equals("sender")&&requestMessage.getType().equals("teamRequest"))){
-                res.userRequests.add(RequestUserMessageDto.of(requestMessage));
+                res.userRequests.add(RequestUserMessageDto.of(requestMessage,type));
             }
             else if((type.equals("receiver")&&requestMessage.getType().equals("teamRequest")) ||(type.equals("sender")&&requestMessage.getType().equals("userRequest"))){
                 res.teamRequests.add(RequestTeamMessageDto.of(requestMessage));

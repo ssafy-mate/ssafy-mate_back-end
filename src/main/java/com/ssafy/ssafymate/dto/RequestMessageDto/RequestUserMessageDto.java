@@ -19,9 +19,14 @@ public class RequestUserMessageDto {
     String message;
     LocalDateTime createdTime;
 
-    public static RequestUserMessageDto of(RequestMessage requestMessages) {
+    public static RequestUserMessageDto of(RequestMessage requestMessages,String type) {
         RequestUserMessageDto res = new RequestUserMessageDto();
-        User user = requestMessages.getSender();
+        User user;
+        if(type.equals("receiver"))
+            user = requestMessages.getSender();
+        else{
+            user = requestMessages.getReceiver();
+        }
         res.setRequestId(requestMessages.getId());
         res.setUserId(user.getId());
         res.setProfileImgUrl(user.getProfileImg());

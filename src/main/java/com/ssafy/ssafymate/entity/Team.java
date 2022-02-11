@@ -44,7 +44,6 @@ public class Team{
     @Column(length = 2022)
     private String introduction;
 
-    @NotNull
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     List<TeamStack> techStacks = new ArrayList<>();

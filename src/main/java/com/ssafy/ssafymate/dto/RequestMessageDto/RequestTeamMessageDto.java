@@ -13,12 +13,11 @@ public class RequestTeamMessageDto {
     Long requestId;
     Long teamId;
     String teamImgUrl;
-    String notice;
     String teamName;
     String campus;
     String requestStatus;
     String message;
-    LocalDateTime creatTime;
+    LocalDateTime createdTime;
 
     public static RequestTeamMessageDto of(RequestMessage requestMessages){
         RequestTeamMessageDto res = new RequestTeamMessageDto();
@@ -26,12 +25,11 @@ public class RequestTeamMessageDto {
         res.setRequestId(requestMessages.getId());
         res.setTeamId(team.getId());
         res.setTeamImgUrl(team.getTeamImg());
-        res.setNotice(team.getNotice());
         res.setTeamName(team.getTeamName());
         res.setCampus(team.getCampus());
         res.setRequestStatus(requestMessages.getRequestStatus());
         res.setMessage(requestMessages.getMessage());
-        res.setCreatTime(requestMessages.getCreateDateTime());
+        res.setCreatedTime(requestMessages.getCreatedDateTime());
         return res;
     }
 }

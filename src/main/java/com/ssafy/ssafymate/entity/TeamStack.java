@@ -29,7 +29,6 @@ public class TeamStack {
     @JoinColumn(name = "tech_stack_code", insertable = false, updatable = false)
     TechStack techStack;
 
-    @NotNull
     @JsonIgnore
     @ManyToOne
     private Team team;

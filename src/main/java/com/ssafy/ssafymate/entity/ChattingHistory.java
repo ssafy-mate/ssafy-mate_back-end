@@ -24,12 +24,10 @@ public class ChattingHistory {
     @Column(length = 50)
     private String sentTime;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "room_id", referencedColumnName = "room_id")
     private ChattingRoom chattingRoom;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "sender_id", referencedColumnName = "id")
     private User user;

@@ -66,7 +66,7 @@ public class RequestController {
             Team team = teamService.teamFind(messageUserRequestDto.getTeamId());
             if (team == null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 존재하지 않습니다."));
-            }else if(requestMessageService.findSameRequest(senderId, messageUserRequestDto.getTeamId(), team.getOwner().getId())!=null){
+            } else if (requestMessageService.findSameRequest(senderId, messageUserRequestDto.getTeamId(), team.getOwner().getId()) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 제안한 요청입니다."));
             } else if ((team.getProject().equals("공통 프로젝트") && !team.getProjectTrack().equals(sender.getCommonProjectTrack())) ||
                     (team.getProject().equals("특화 프로젝트") && !team.getProjectTrack().equals(sender.getSpecializationProjectTrack()))) {
@@ -109,11 +109,13 @@ public class RequestController {
             User receiver = userService.getUserById(receiverId);
 
             Team team = teamService.belongToTeam(messageTeamRequestDto.getProject(), senderId);
-            if (team == null) {
+            if (receiver == null) {
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "존재하지 않는 교육생 입니다."));
+            } else if (team == null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "팀 생성 후 다시 요청을 시도해주세요."));
             } else if (!Objects.equals(team.getOwner().getId(), senderId)) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 팀 합류 요청 권한이 없습니다."));
-            }else if(requestMessageService.findSameRequest(senderId, team.getId(), receiverId)!=null){
+            } else if (requestMessageService.findSameRequest(senderId, team.getId(), receiverId) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 제안한 요청입니다."));
             } else if ((team.getProject().equals("공통 프로젝트") && !team.getProjectTrack().equals(receiver.getCommonProjectTrack())) ||
                     (team.getProject().equals("특화 프로젝트") && !team.getProjectTrack().equals(receiver.getSpecializationProjectTrack()))) {
@@ -198,7 +200,7 @@ public class RequestController {
         User user;
         Team team;
         Integer answer = 0;
-        String message="응답 완료";
+        String message = "응답 완료";
         try {
             user = userService.getUserByEmail(token);
 

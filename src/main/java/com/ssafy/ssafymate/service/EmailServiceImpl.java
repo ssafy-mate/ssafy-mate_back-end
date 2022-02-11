@@ -1,7 +1,7 @@
 package com.ssafy.ssafymate.service;
 
+import com.ssafy.ssafymate.config.EmailProperties;
 import com.ssafy.ssafymate.exception.EmailCodeException;
-import com.ssafy.ssafymate.repository.properties.EmailProperties;
 import com.ssafy.ssafymate.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -29,6 +29,7 @@ public class EmailServiceImpl implements EmailService {
 
     // 회원가입 2단계 - 이메일 인증
     private MimeMessage createMessage(String to) throws Exception {
+
         emailVerificationCode = createKey();
         System.out.println("보내는 대상 : " + to);
         System.out.println("인증 번호 : " + emailVerificationCode);
@@ -55,10 +56,12 @@ public class EmailServiceImpl implements EmailService {
         message.setFrom(new InternetAddress("ssafymate@gmail.com", "SSAFY MATE"));// 보내는 사람
 
         return message;
+
     }
 
     // 비밀번호 찾기 - 이메일 인증
     private MimeMessage pwSearchMessage(String to) throws Exception {
+
         emailVerificationCode = createKey();
         System.out.println("보내는 대상 : " + to);
         System.out.println("인증 번호 : " + emailVerificationCode);
@@ -85,10 +88,12 @@ public class EmailServiceImpl implements EmailService {
         message.setFrom(new InternetAddress("ssafymate@gmail.com", "SSAFY MATE"));// 보내는 사람
 
         return message;
+
     }
 
     //	인증코드 만들기
     public static String createKey() {
+
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
@@ -111,6 +116,7 @@ public class EmailServiceImpl implements EmailService {
             }
         }
         return key.toString();
+
     }
 
     // 회원가입 이메일 인증
@@ -126,11 +132,13 @@ public class EmailServiceImpl implements EmailService {
             throw new IllegalArgumentException();
         }
         return emailVerificationCode;
+
     }
 
     // 비밀번호 찾기 이메일 인증
     @Override
     public String sendPwSimpleMessage(String to) throws Exception {
+
         MimeMessage message = pwSearchMessage(to);
         try {
             redisUtil.setDataExpire(to, emailVerificationCode, 180); // 인증코드 유효시간 3분
@@ -140,12 +148,13 @@ public class EmailServiceImpl implements EmailService {
             throw new IllegalArgumentException();
         }
         return emailVerificationCode;
+
     }
 
     @Override
     public Long getUserIdByCode(String email, String emailVerificationCode) {
+
         String storedCode = redisUtil.getData(email);
-        System.out.println(storedCode);
 
         if (storedCode==null) {
             throw new NullPointerException();
@@ -154,5 +163,7 @@ public class EmailServiceImpl implements EmailService {
             throw new EmailCodeException();
         }
         return 1L;
+
     }
+
 }

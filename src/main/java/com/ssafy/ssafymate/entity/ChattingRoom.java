@@ -15,12 +15,8 @@ import java.util.List;
 @ToString
 public class ChattingRoom {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-
     @Id
-    @Column(name = "room_id")
+    @Column(name = "room_id", length = 30)
     private String roomId;
 
     @NotNull
@@ -36,4 +32,5 @@ public class ChattingRoom {
     @NotNull
     @OneToMany(mappedBy = "chattingRoom")
     List<ChattingHistory> chattingHistory = new ArrayList<>();
+
 }

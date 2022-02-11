@@ -32,7 +32,6 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
     Optional<Team> findByTeamIdAndUserIdJQL(@Param("teamId") Long teamId,
                                             @Param("userId") Long userId);
 
-
     // 팀 리스트 조회(스택 검색)
     @Query(value = "select t.id ,  t.backend_recruitment, t.create_date_time,  t.campus,   t.frontend_recruitment,  t.notice,  t.project, " +
             "t.project_track,  t.team_img,  t.team_name,  t.total_recruitment, uut.frontend_headcount,  uut.backend_headcount,  uut.total_headcount " +
@@ -70,7 +69,7 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
                                         @Param("total") Integer total,
                                         @Param("teamStacks") List<Long> teamStacks);
 
-    @Query(value = "select " +
+    @Query(value = "SELECT " +
             "   (case when t.total_recruitment > ut.total_headcount then 'true'" +
             "   else 'false' end ) as is_recruit " +
             "from " +
@@ -83,4 +82,5 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             "on t.id = ut.team_id"
             ,nativeQuery = true)
     String isRecruit(@Param("teamId") Long teamId);
+
 }

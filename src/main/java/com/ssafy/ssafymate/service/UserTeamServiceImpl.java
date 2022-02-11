@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service("userTeamService")
 public class UserTeamServiceImpl implements UserTeamService{
 
@@ -18,21 +17,25 @@ public class UserTeamServiceImpl implements UserTeamService{
     @Autowired
     TeamRepository teamRepository;
 
-
     @Override
     public UserTeam userTeamFind(Long userId, Long teamId) {
+
         return userTeamRepository.findByUserIdAndTeamId(userId,teamId).orElse(null);
+
     }
 
     @Modifying
     @Transactional
     @Override
     public Integer userTeamDelete(Long userId, Long teamId) {
+
         return userTeamRepository.deleteByUserIdAndTeamId(userId,teamId);
+
     }
 
     @Override
     public String isRecruit(Long teamId) {
         return teamRepository.isRecruit(teamId);
     }
+
 }

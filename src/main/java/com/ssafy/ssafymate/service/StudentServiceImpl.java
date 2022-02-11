@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 public class StudentServiceImpl implements StudentService {
 
     @Autowired
-    StudentRepository studentRepository;
+    private StudentRepository studentRepository;
 
     @Override
     public Student getStudentByStudentNumber(String studentNumber) {
-        Student student = studentRepository.findByStudentNumber(studentNumber).orElse(null);
-        return student;
+
+        return studentRepository.findByStudentNumber(studentNumber).orElse(null);
+
     }
+
 }

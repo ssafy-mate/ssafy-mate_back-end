@@ -2,10 +2,7 @@ package com.ssafy.ssafymate.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -22,7 +19,9 @@ public class ProjectDeadline {
     private Long id;
 
     @NotNull
+    @Column(length = 20)
     private String project;
 
     private LocalDateTime deadline;
+
 }

@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 public class ProjectDeadlineServiceImpl implements ProjectDeadlineService{
 
     @Autowired
-    ProjectDeadlineRepository projectDeadlineRepository;
+    private ProjectDeadlineRepository projectDeadlineRepository;
 
     @Override
     public ProjectDeadline findProjectDeadline(String project) {
+
         return projectDeadlineRepository.findByProject(project).orElse(null);
+
     }
+
 }

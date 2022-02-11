@@ -1,12 +1,11 @@
 package com.ssafy.ssafymate.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -23,14 +22,20 @@ public class RequestMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 200)
     private String message;
 
     @NotNull
+    @Column(length = 20)
     private String type;
 
+    @NotNull
     @ColumnDefault("'pending'")
+    @Column(length = 20)
     private String readCheck;
 
+    @NotNull
+    @Column(length = 20)
     private String project;
 
     @JsonIgnore

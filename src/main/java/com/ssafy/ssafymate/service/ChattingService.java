@@ -3,7 +3,6 @@ package com.ssafy.ssafymate.service;
 import com.ssafy.ssafymate.dto.ChatDto.ContentList;
 import com.ssafy.ssafymate.dto.ChatDto.RoomList;
 import com.ssafy.ssafymate.entity.ChattingRoom;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -16,4 +15,5 @@ public interface ChattingService {
     ChattingRoom findRoom(String roomId);
 
     int saveRoom(String roomId, Long userId1, Long userId2);
+
 }

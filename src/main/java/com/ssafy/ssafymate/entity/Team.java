@@ -1,6 +1,5 @@
 package com.ssafy.ssafymate.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -23,22 +22,26 @@ public class Team{
     private Long id;
 
     @NotNull
-    @Column(updatable = false)
+    @Column(updatable = false, length = 20)
     private String campus;
 
     @NotNull
-    @Column(updatable = false)
+    @Column(updatable = false, length = 20)
     private String project;
 
     @NotNull
+    @Column(length = 30)
     private String projectTrack;
 
     @NotNull
+    @Column(length = 100)
     private String teamName;
 
     @NotNull
+    @Column(length = 105)
     private String notice;
 
+    @Column(length = 2022)
     private String introduction;
 
     @NotNull
@@ -50,7 +53,6 @@ public class Team{
     @ManyToOne
     @JoinColumn(name = "owner_id")
     User owner;
-
 
     @OneToMany(mappedBy = "team",fetch = FetchType.LAZY)
     List<UserTeam> members = new ArrayList<>();
@@ -81,7 +83,5 @@ public class Team{
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createDateTime;
-
-
 
 }

@@ -37,24 +37,21 @@ public class TeamServiceImpl implements TeamService {
     @Autowired
     private UserTeamRepository userTeamRepository;
 
+    String domainPrefix = "https://i6a402.p.ssafy.io:8082/resources/upload/images/team_image/";
 
     @Override
     public Team teamFind(Long teamId) {
         return teamRepository.findById(teamId).orElse(null);
     }
 
-    String domainPrefix = "https://i6a402.p.ssafy.io:8082/resources/upload/images/team_image/";
-
     @Transactional
     @Override
     public Team teamSave(TeamRequestDto teamRequestDto, MultipartFile multipartFile, User user) throws IOException {
-
 
         String teamImgUrl;
         if (multipartFile == null || multipartFile.isEmpty()) {
             // 기본 이미지 경로 설정
             teamImgUrl = null;
-
         } else {
             String profileImgSaveUrl = "/var/webapps/upload/images/team_image/" + multipartFile.getOriginalFilename();
 
@@ -64,7 +61,6 @@ public class TeamServiceImpl implements TeamService {
         }
 
         Team team = teamRepository.save(teamBuilder(teamRequestDto, teamImgUrl, user));
-        System.out.println(team);
 
         UserTeam userTeam = UserTeam.builder()
                 .userId(user.getId())
@@ -73,8 +69,8 @@ public class TeamServiceImpl implements TeamService {
         userTeamRepository.save(userTeam);
 
         return team;
-    }
 
+    }
 
     @Transactional
     @Modifying
@@ -109,16 +105,16 @@ public class TeamServiceImpl implements TeamService {
             teamImgUrl = domainPrefix + multipartFile.getOriginalFilename();
         }
 
-
         Team modify_team = teamBuilder(teamRequestDto, teamImgUrl, user);
         modify_team.setId(teamId);
 
-
         return teamRepository.save(modify_team);
+
     }
 
     @Override
     public void teamDelete(Long team_id) {
+
         Team team = teamRepository.getById(team_id);
         if(team.getTeamImg() != null){
             File old_file = new File("/var/webapps/upload/images/team_image/"+getFileNameFromURL(team.getTeamImg()));
@@ -128,17 +124,21 @@ public class TeamServiceImpl implements TeamService {
         }
 
         teamRepository.deleteById(team_id);
+
     }
 
     @Override
     public Team belongToTeam(String selectedProject, Long userId) {
+
         return teamRepository.belongToTeam(selectedProject, userId).orElse(null);
+
     }
 
     @Override
     public Team ownTeam(Long teamId, Long userId) {
-        System.out.println(teamId + " " + userId);
+
         return teamRepository.findByTeamIdAndUserIdJQL(teamId, userId).orElse(null);
+
     }
 
     @Override
@@ -165,6 +165,7 @@ public class TeamServiceImpl implements TeamService {
                 back,
                 total,
                 teamstacks);
+
     }
 
     @Override
@@ -175,9 +176,11 @@ public class TeamServiceImpl implements TeamService {
             teams.add(teamTransfer(teamI));
         }
         return teams;
+
     }
 
     public Team teamTransfer(TeamInt teamI) {
+
         Team team = Team.builder()
                 .id(teamI.getId())
                 .teamImg(teamI.getTeam_img())
@@ -198,6 +201,7 @@ public class TeamServiceImpl implements TeamService {
         team.setTechStacks(teamStackRepository.findByTeamId(teamI.getId()));
 
         return team;
+
     }
 
     // teamrequestDto 와 이미지Url을 team 으로 빌드
@@ -223,28 +227,36 @@ public class TeamServiceImpl implements TeamService {
                 .backendRecruitment(teamRequestDto.getBackendRecruitment())
                 .owner(user)
                 .build();
+
     }
 
     // String 형태의 리스트 Long TeamStack 타입의 리스트로 변환하는 메서드
     public List<TeamStack> StringToTechStacks(String jsonString) {
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Type listType = new TypeToken<ArrayList<Long>>() {
         }.getType();
         List<Long> techStackCodes = gson.fromJson(jsonString, listType);
         return techStackCodes.stream().map(TeamStack::new).collect(Collectors.toList());
+
     }
 
     // String 형태의 Long 를 TeamStack 타입의 리스트로 변환하는 메서드
     public List<TeamStack> StringToTechStacks2(String jsonString) {
+
         List<TeamStack> techStacks = new ArrayList<>();
         TeamStack techstack = new TeamStack();
         techstack.setTechStackCode(Long.parseLong(jsonString));
         techStacks.add(techstack);
         return techStacks;
+
     }
 
     // url 에서 파일 이름 추출
     public static String getFileNameFromURL(String url) {
+
         return url.substring(url.lastIndexOf('/') + 1, url.length());
+
     }
+
 }

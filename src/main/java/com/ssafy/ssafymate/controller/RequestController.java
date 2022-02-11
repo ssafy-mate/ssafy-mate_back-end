@@ -216,7 +216,7 @@ public class RequestController {
                     answer = requestMessageService.updateReadCheckRejection(requestId, response);
                 } else if (response.equals("approval")) {
                     Long userId = 0L;
-                    if (team.getTotalHeadcount() >= team.getTotalRecruitment()) {
+                    if (userTeamService.isRecruit(team.getId()).equals("false")) {
                         requestMessageService.updateReadCheckRejection(requestId, "cancellation");
                         return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 팀원 모집이 마감되었습니다."));
                     } else if (requestMessage.getType().equals("teamRequest")) {

@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,7 +27,6 @@ public interface RequestMessageRepository extends JpaRepository<RequestMessage, 
     )
     Integer updateRead(@Param("messageId") Long messageId, @Param("readCheck") String readCheck);
 
-
     @Modifying
     @Query(value = "UPDATE request_message " +
             "SET read_check = 'expiration' " +
@@ -48,4 +46,5 @@ public interface RequestMessageRepository extends JpaRepository<RequestMessage, 
             nativeQuery = true
     )
     Integer updateReadExpirationTeam(@Param("teamId") Long teamId,@Param("project") String project );
+
 }

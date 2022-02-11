@@ -18,16 +18,17 @@ import java.util.List;
 public class RequestMessageServiceImple implements RequestMessageService {
 
     @Autowired
-    RequestMessageRepository requestMessageRepository;
+    private RequestMessageRepository requestMessageRepository;
 
     @Autowired
-    TeamRepository teamRepository;
+    private TeamRepository teamRepository;
 
     @Autowired
-    UserTeamRepository userTeamRepository;
+    private UserTeamRepository userTeamRepository;
 
     @Override
     public RequestMessage userRequest(User sender, Team team, String message) {
+
         RequestMessage requestMessage = RequestMessage.builder()
                 .senderId(sender.getId())
                 .teamId(team.getId())
@@ -37,10 +38,12 @@ public class RequestMessageServiceImple implements RequestMessageService {
                 .type("userRequest")
                 .build();
         return requestMessageRepository.save(requestMessage);
+
     }
 
     @Override
     public RequestMessage teamRequest(User sender, Long receiverId, Team team, String message) {
+
         RequestMessage requestMessage = RequestMessage.builder()
                 .senderId(sender.getId())
                 .teamId(team.getId())
@@ -50,16 +53,21 @@ public class RequestMessageServiceImple implements RequestMessageService {
                 .type("teamRequest")
                 .build();
         return requestMessageRepository.save(requestMessage);
+
     }
 
     @Override
     public List<RequestMessage> receiveList(User user, String project) {
+
         return requestMessageRepository.findAllByReceiverIdAndProject(user.getId(), project);
+
     }
 
     @Override
     public List<RequestMessage> sendList(User user, String project) {
+
         return requestMessageRepository.findAllBySenderIdAndProject(user.getId(), project);
+
     }
 
     @Override
@@ -71,13 +79,16 @@ public class RequestMessageServiceImple implements RequestMessageService {
     @Modifying
     @Override
     public Integer updateReadCheckRejection(Long id, String readCheck) {
+
         return requestMessageRepository.updateRead(id, readCheck);
+
     }
 
     @Transactional
     @Modifying
     @Override
     public Integer updateReadCheckApproval(Long id, String readCheck,Long userId, Team team) {
+
         Integer answer = requestMessageRepository.updateRead(id, readCheck);
         if(answer==1){
             UserTeam userTeam = UserTeam.builder()
@@ -86,11 +97,12 @@ public class RequestMessageServiceImple implements RequestMessageService {
                     .build();
             userTeamRepository.save(userTeam);
             requestMessageRepository.updateReadExpirationUser(userId,team.getProject());
-
         }
         if(teamRepository.isRecruit(team.getId()).equals("false")){
             requestMessageRepository.updateReadExpirationTeam(team.getId(),team.getProject());
         }
         return answer;
+
     }
+
 }

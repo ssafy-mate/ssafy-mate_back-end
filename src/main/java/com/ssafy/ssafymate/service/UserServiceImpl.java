@@ -3,8 +3,8 @@ package com.ssafy.ssafymate.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserBoardDto;
+import com.ssafy.ssafymate.dto.UserDto.UserBoardInterface;
 import com.ssafy.ssafymate.dto.UserDto.UserListStackDto;
 import com.ssafy.ssafymate.dto.request.*;
 import com.ssafy.ssafymate.entity.User;
@@ -32,30 +32,36 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserStackRepository userStackRepository;
+
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    UserRepository userRepository;
+    private final String domainPrefix = "https://i6a402.p.ssafy.io:8082/resources/upload/";
 
-    @Autowired
-    UserStackRepository userStackRepository;
-
-    private String domainPrefix = "https://i6a402.p.ssafy.io:8082/resources/upload/";
-    private String defaultImg = "default_img.jpg";
+    private final String defaultImg = "default_img.jpg";
 
     @Override
     public User getUserById(Long id) {
+
         return userRepository.findById(id).orElse(null);
+
     }
 
     @Override
     public User getUserByEmail(String email) {
+
         return userRepository.findByEmail(email).orElse(null);
+
     }
 
     @Transactional
     @Override
     public User userSave(UserRequestDto userRequestDto, MultipartFile multipartFile) throws IOException{
+
         String profileImgUrl;
         if (multipartFile == null || multipartFile.isEmpty()) {
             profileImgUrl = null;
@@ -87,12 +93,15 @@ public class UserServiceImpl implements UserService {
                 .roles("ROLE_USER")
                 .build();
         return userRepository.save(user);
+
     }
 
     // 아이디 찾기
     @Override
     public User getUserByStudentNumberAndStudentName(String studentNumber, String studentName) {
+
         return userRepository.findByStudentNumberAndStudentName(studentNumber, studentName).orElse(null);
+
     }
 
     // 비밀번호 재설정
@@ -100,8 +109,10 @@ public class UserServiceImpl implements UserService {
     @Modifying
     @Override
     public User passwordModify(PwModifyRequestDto pwModifyRequestDto, User user) {
+
         user.setPassword(passwordEncoder.encode(pwModifyRequestDto.getPassword()));
         return userRepository.save(user);
+
     }
 
     // 유저 수정
@@ -158,6 +169,7 @@ public class UserServiceImpl implements UserService {
 
         }
         return userRepository.save(user);
+
     }
 
     @Override
@@ -173,7 +185,7 @@ public class UserServiceImpl implements UserService {
             techStacks.add(notin);
         }
         List<Long> userStacks = techStacks.stream().map(e -> e.getTechStackId()).collect(Collectors.toList());
-        Page<UserBoardInterface> users = userRepository.findStudentListJPQL(pageable,
+        return userRepository.findStudentListJPQL(pageable,
                 user.getCampus(),
                 user.getSsafy_track(),
                 user.getJob1(),
@@ -182,12 +194,12 @@ public class UserServiceImpl implements UserService {
                 user.getProject_track(),
                 userStacks,
                 user.getExclusion());
-        System.out.println(1);
-        return users;
+
     }
 
     @Override
     public List<UserBoardDto> userBoarConvert(List<UserBoardInterface> users, String project){
+
         List<UserBoardDto> userBoards = new ArrayList<>();
         for (UserBoardInterface user : users){
             UserBoardDto userBoardDto = new UserBoardDto();
@@ -209,12 +221,14 @@ public class UserServiceImpl implements UserService {
 
         }
         return userBoards;
+
     }
 
     @Transactional
     @Modifying
     @Override
     public String selectProjectTrack(User user, UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto) {
+
         if(userSelectProjectTrackRequestDto.getProject().equals("공통 프로젝트")){
             userRepository.updateCommonProjectTrack(user.getId(), userSelectProjectTrackRequestDto.getProjectTrack());
         }
@@ -222,13 +236,16 @@ public class UserServiceImpl implements UserService {
             userRepository.updateSpecialProjectTrack(user.getId(), userSelectProjectTrackRequestDto.getProjectTrack());
         }
         return userSelectProjectTrackRequestDto.getProject();
+
     }
 
     // String 형태의 techStacks를 UserStack 타입의 리스트로 변환하는 메서드
     public List<UserStack> StringToTechStacks(String jsonString) {
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Type listType = new TypeToken<ArrayList<UserStack>>(){}.getType();
         return gson.fromJson(jsonString, listType);
+
     }
 
     // String 형태의 Long 를 UserStack 타입의 리스트로 변환하는 메서드
@@ -239,11 +256,14 @@ public class UserServiceImpl implements UserService {
         techStack.setTechStackId(Long.parseLong(jsonString));
         techStacks.add(techStack);
         return techStacks;
+
     }
 
     // url 에서 파일 이름 추출
     public static String getFileNameFromURL(String url) {
+
         return url.substring(url.lastIndexOf('/') + 1, url.length());
+
     }
 
 }

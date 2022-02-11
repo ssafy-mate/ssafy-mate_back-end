@@ -9,8 +9,10 @@ import java.util.Optional;
 
 @Repository
 public interface UserTeamRepository extends JpaRepository<UserTeam,Long> {
+
     @Transactional
     Integer deleteByUserIdAndTeamId(Long userId, Long teamId);
 
     Optional<UserTeam> findByUserIdAndTeamId(Long userId, Long teamId);
+
 }

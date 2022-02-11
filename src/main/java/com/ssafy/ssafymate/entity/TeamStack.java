@@ -29,8 +29,8 @@ public class TeamStack {
     @JoinColumn(name = "tech_stack_code", insertable = false, updatable = false)
     TechStack techStack;
 
-    @JsonIgnore
     @ManyToOne
+    @JsonIgnore
     private Team team;
 
     public TeamStack(Long techStackCode) {

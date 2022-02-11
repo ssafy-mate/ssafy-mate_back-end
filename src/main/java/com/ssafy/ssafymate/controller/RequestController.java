@@ -175,7 +175,7 @@ public class RequestController {
         return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages, "sender"));
     }
 
-    @PutMapping("/requests/response")
+    @PutMapping("/requests/responses")
     @ApiOperation(value = "제안 수락/거절/취소", notes = "제안 수락/거절/취소")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
@@ -201,12 +201,12 @@ public class RequestController {
             if (response.equals("cancellation")) {
 
                 if (!Objects.equals(message.getSenderId(), user.getId())) {
-                    return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "응답 권한이 없습니다."));
+                    return ResponseEntity.status(409).body(ErrorResponseBody.of(403, false, "응답 권한이 없습니다."));
                 }
                 answer = requestMessageService.updateReadCheckRejection(requestId, response);
             } else {
                 if (!Objects.equals(message.getReceiverId(), user.getId())) {
-                    return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "응답 권한이 없습니다."));
+                    return ResponseEntity.status(409).body(ErrorResponseBody.of(403, false, "응답 권한이 없습니다."));
                 } else if (response.equals("rejection")) {
                     answer = requestMessageService.updateReadCheckRejection(requestId, response);
                 } else if (response.equals("approval")) {
@@ -238,9 +238,9 @@ public class RequestController {
 
 
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 응답 실패"));
         }
-        return ResponseEntity.status(200).body(SuccessMessageBody.of(true,"제안 응답 성공"));
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true,"제안 응답이 완료되었습니다."));
     }
 
 }

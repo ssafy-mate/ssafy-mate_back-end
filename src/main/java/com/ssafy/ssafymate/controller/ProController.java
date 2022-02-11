@@ -25,11 +25,11 @@ public class ProController {
     private ProService proService;
 
     @GetMapping("/findTeam")
-    @ApiOperation(value = "로그인", notes = "이메일과 비밀번호를 받아서 확인한 뒤 토큰 생성")
+    @ApiOperation(value = "팀원 현황 파악", notes = "캠퍼스 별 트랙 별 팀원 현황 파악")
     public ResponseEntity<?> findTeam(
-            @RequestParam String campus,
+            @RequestParam(required = false) String campus,
             @RequestParam String project,
-            @RequestParam String projectTrack
+            @RequestParam(required = false) String projectTrack
     ){
         List<Team> teams = proService.findTeam(campus, project, projectTrack);
 

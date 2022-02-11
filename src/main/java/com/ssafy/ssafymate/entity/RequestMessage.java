@@ -32,7 +32,7 @@ public class RequestMessage {
     @NotNull
     @ColumnDefault("'pending'")
     @Column(length = 20)
-    private String readCheck;
+    private String requestStatus;
 
     @NotNull
     @Column(length = 20)

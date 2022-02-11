@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserTeam {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -82,10 +82,10 @@ public class TeamController {
         try {
             String project = teamRequestDto.getProject();
 
-//            ResponseEntity<?> check =this.checkDeadline(project);
-//            if(check!=null){
-//                return check;
-//            }
+            ResponseEntity<?> check =this.checkDeadline(project);
+            if(check!=null){
+                return check;
+            }
 
             user = userService.getUserByEmail(token);
             team = teamService.belongToTeam(project, user.getId());
@@ -121,6 +121,14 @@ public class TeamController {
         try {
             user = userService.getUserByEmail(token);
             team = teamService.teamFind(teamId);
+
+            if(team!=null) {
+                ResponseEntity<?> check = this.checkDeadline(team.getProject());
+                if (check != null) {
+                    return check;
+                }
+            }
+
             if (team == null) {
                 return ResponseEntity.status(405).body(ErrorResponseBody.of(405, false, "해당 팀 정보가 존재하지 않습니다."));
             } else if (!Objects.equals(team.getOwner().getId(), user.getId())) {
@@ -150,6 +158,14 @@ public class TeamController {
             user = userService.getUserByEmail(token);
             Long userId = user.getId();
             team = teamService.ownTeam(teamId, userId);
+
+            if(team!=null) {
+                ResponseEntity<?> check = this.checkDeadline(team.getProject());
+                if (check != null) {
+                    return check;
+                }
+            }
+
             if (team == null || !team.getOwner().getEmail().equals(token)) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "팀 수정 권한이 없습니다."));
             }
@@ -174,6 +190,14 @@ public class TeamController {
             User user = userService.getUserByEmail(token);
             Long userId = user.getId();
             Team team = teamService.ownTeam(teamId, userId);
+
+            if(team!=null) {
+                ResponseEntity<?> check = this.checkDeadline(team.getProject());
+                if (check != null) {
+                    return check;
+                }
+            }
+
             if (team == null || !team.getOwner().getEmail().equals(token)) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "팀을 삭제할 수 있는 권한이 없습니다."));
             }
@@ -199,6 +223,14 @@ public class TeamController {
             User user = userService.getUserByEmail(token);
             Long userId = user.getId();
             Team team = teamService.teamFind(teamId);
+
+            if(team!=null) {
+                ResponseEntity<?> check = this.checkDeadline(team.getProject());
+                if (check != null) {
+                    return check;
+                }
+            }
+
             if (team == null) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "팀이 없습니다."));
             } else if (userTeamService.userTeamFind(userId, teamId) == null) {

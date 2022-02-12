@@ -54,7 +54,39 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "ON U.id = UT.user_id " +
             "WHERE 1=(CASE WHEN :exclusion=true THEN " +
             "       (CASE WHEN UT.team_id IS NULL THEN 1 ELSE 0 END) " +
-            "   ELSE 1 END)"
+            "   ELSE 1 END)",
+            countQuery = "SELECT " +
+                    " (CASE WHEN UT.team_id IS NULL THEN 'False' ELSE 'True' END) AS belong_to_team," +
+                    " U.id, U.profile_img, U.campus, U.ssafy_track, U.student_name, U.job1, U.job2, U.github_url, U.common_project_track, U.specialization_project_track   " +
+                    "FROM " +
+                    "   (SELECT * FROM user " +
+                    "   WHERE campus LIKE %:campus% " +
+                    "   AND ssafy_track LIKE %:ssafyTrack% " +
+                    "   AND (CASE WHEN (:project='공통 프로젝트') " +
+                    "       THEN (common_project_track LIKE %:projectTrack% ) " +
+                    "       WHEN (:project='특화 프로젝트') " +
+                    "       THEN (specialization_project_track LIKE %:projectTrack% )" +
+                    "       ELSE " +
+                    "       1 " +
+                    "       END " +
+                    "       )" +
+                    "   AND job1 LIKE %:job% " +
+                    "   AND student_name LIKE %:studentName% " +
+                    "   AND CASE WHEN 0 NOT IN (:userStacks) " +
+                    "   THEN (id IN (SELECT user_id FROM user_stack WHERE tech_stack_code IN (:userStacks))) " +
+                    "       " +
+                    "   ELSE 1 END " +
+                    " ) U "     +
+                    "LEFT JOIN " +
+                    "   (select * from user_team " +
+                    "   WHERE team_id IN " +
+                    "       (SELECT id FROM team " +
+                    "       WHERE project=:project)) " +
+                    "UT " +
+                    "ON U.id = UT.user_id " +
+                    "WHERE 1=(CASE WHEN :exclusion=true THEN " +
+                    "       (CASE WHEN UT.team_id IS NULL THEN 1 ELSE 0 END) " +
+                    "   ELSE 1 END)"
             ,
             nativeQuery = true
     )

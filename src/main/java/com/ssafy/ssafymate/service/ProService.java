@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface ProService {
 
+    // 팀 현황 파악
     List<Team> findTeam(String campus, String project, String projectTrack);
+
 }

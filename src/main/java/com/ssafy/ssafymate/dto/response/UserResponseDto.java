@@ -13,8 +13,10 @@ public class UserResponseDto {
     UserDetailDto userData;
 
     public static UserResponseDto of(User user){
+
         UserResponseDto res = new UserResponseDto();
         res.setUserData(UserDetailDto.of(user));
         return res;
     }
+
 }

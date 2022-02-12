@@ -29,11 +29,13 @@ public interface TeamService {
     // 팀 참여 여부 조회
     Team belongToTeam(String selectedProject,Long userId);
 
-    //팀장 여부 조회
+    // 팀장 여부 조회
     Team ownTeam(Long teamId, Long userId);
 
+    // 팀 리스트 검색
     Page<TeamInt> teamSearch(Pageable pageable, TeamListRequestDto teamListRequestDto, int front, int back, int total);
 
+    // 팀 리스트 변환
     List<Team> teamListTransfer(List<TeamInt> teamIs);
 
 }

@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageTeamRequestDto {
+
     @ApiModelProperty(value = "프로젝트", example = "특화 프로젝트")
     private String project;
 
@@ -18,4 +19,5 @@ public class MessageTeamRequestDto {
 
     @ApiModelProperty(value = "메세지", example = " 같이 하고 싶습니다. ")
     private String message;
+
 }

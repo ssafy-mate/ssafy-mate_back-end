@@ -52,4 +52,5 @@ public class TeamRequestDto {
 
     @ApiModelProperty(value = "팀 이미지", example = ".jpg")
     private String teamImgUrl;
+
 }

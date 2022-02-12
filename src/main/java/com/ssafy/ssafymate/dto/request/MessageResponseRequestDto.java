@@ -17,4 +17,5 @@ public class MessageResponseRequestDto {
 
     @ApiModelProperty(value = "응답", example = "approval")
     private String response;
+
 }

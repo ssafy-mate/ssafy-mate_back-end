@@ -57,7 +57,32 @@ public interface TeamRepository extends JpaRepository<Team,Long> {
             "on t.id = uut.team_id " +
             "where t.backend_recruitment - uut.backend_headcount >= :back " +
             "and t.frontend_recruitment - uut.frontend_headcount >= :front " +
-            "and t.total_recruitment - uut.total_headcount >= :total"
+            "and t.total_recruitment - uut.total_headcount >= :total",
+            countQuery = "select t.id ,  t.backend_recruitment, t.create_date_time,  t.campus,   t.frontend_recruitment,  t.notice,  t.project, " +
+                    "t.project_track,  t.team_img,  t.team_name,  t.total_recruitment, uut.frontend_headcount,  uut.backend_headcount,  uut.total_headcount " +
+                    "from (select * from team where campus LIKE %:campus% " +
+                    "           AND project=:project " +
+                    "           AND project_track Like %:projectTrack% " +
+                    "           AND team_name like %:teamName% " +
+                    "           AND " +
+                    "           CASE WHEN 0 NOT IN (:teamStacks) " +
+                    "           THEN " +
+                    "               id in (select team_id from team_stack where tech_stack_code in (:teamStacks)) " +
+                    "           ELSE 1 END " +
+                    "           ) t " +
+                    "JOIN \n" +
+                    "           (SELECT ut.team_id, \n" +
+                    "           count(case when u.job1 like '%Front%' then 1 end) as frontend_headcount,\n" +
+                    "           count(case when u.job1 like '%Back%' then 1 end) as backend_headcount,\n" +
+                    "           count(*) as total_headcount \n" +
+                    "           from user u \n" +
+                    "           join (select * from user_team ) ut\n" +
+                    "           on u.id = ut.user_id\n" +
+                    "           group by ut.team_id) uut \n" +
+                    "on t.id = uut.team_id " +
+                    "where t.backend_recruitment - uut.backend_headcount >= :back " +
+                    "and t.frontend_recruitment - uut.frontend_headcount >= :front " +
+                    "and t.total_recruitment - uut.total_headcount >= :total"
             ,nativeQuery = true)
     Page<TeamInt> findALLByTeamStackJQL(Pageable pageable,
                                         @Param("campus") String campus,

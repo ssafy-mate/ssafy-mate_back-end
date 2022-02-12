@@ -9,6 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 public class TeamListRequestDto {
+
     @ApiModelProperty(value = "캠퍼스", example = "서울")
     private String campus="";
 
@@ -32,6 +33,5 @@ public class TeamListRequestDto {
 
     @ApiModelProperty(value = "가입 가능 팀", example = "false")
     private Boolean exclusion=false;
-
 
 }

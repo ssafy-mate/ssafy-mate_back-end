@@ -21,4 +21,5 @@ public class PwModifyRequestDto {
     @ApiModelProperty(value = "비밀번호", example = "a12345")
     @Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{6,}$", message = "비밀번호는 영어와 숫자를 포함해서 6자리 이상 입력해주세요.")
     private String password;
+
 }

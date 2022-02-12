@@ -32,20 +32,20 @@ public enum ErrorCode {
     ALARM_NOT_FOUND_ERROR(400, "N001", "Alarm is not Exist"),
 
     // Email
-    EMAIL_SEND_ERROR(500, "P001", "Email Send Error"),
-
-    // AWS
-    AWS_S3_ERROR(500, "A001", "AWS S3 Error");
-
+    EMAIL_SEND_ERROR(500, "P001", "Email Send Error");
 
     private final String code;
+
     private final String message;
+
     private int status;
 
     ErrorCode(final int status, final String code, final String message) {
+
         this.status = status;
         this.message = message;
         this.code = code;
+
     }
 
     public String getMessage() {
@@ -59,4 +59,5 @@ public enum ErrorCode {
     public int getStatus() {
         return status;
     }
+
 }

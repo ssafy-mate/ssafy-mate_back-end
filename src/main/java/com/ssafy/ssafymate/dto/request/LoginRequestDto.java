@@ -17,4 +17,5 @@ public class LoginRequestDto {
 
     @ApiModelProperty(value = "비밀번호", example = "a123123a")
     private String password;
+
 }

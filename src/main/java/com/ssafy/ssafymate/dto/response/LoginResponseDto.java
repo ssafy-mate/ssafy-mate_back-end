@@ -13,33 +13,33 @@ import java.util.List;
 @ApiModel("LoginResponseDto")
 @Getter
 @Setter
-public class LoginResponseDto{
+public class LoginResponseDto {
 
-    @ApiModelProperty(name="access-token", example = "akslndasujndoiw.asdfnjdaifnklfegsg2134.fsdfsadfsd")
+    @ApiModelProperty(name = "access-token", example = "akslndasujndoiw.asdfnjdaifnklfegsg2134.fsdfsadfsd")
     private String token;
 
-    @ApiModelProperty(name="message", example = "로그인 하였습니다.")
+    @ApiModelProperty(name = "message", example = "로그인 하였습니다.")
     private String message;
 
-    @ApiModelProperty(name="user-id", example = "1")
+    @ApiModelProperty(name = "user-id", example = "1")
     private Long userId;
 
-    @ApiModelProperty(name="user-email", example = "ssafymate@gmail.com")
+    @ApiModelProperty(name = "user-email", example = "ssafymate@gmail.com")
     private String userEmail;
 
-    @ApiModelProperty(name="user-name", example = "김싸피")
+    @ApiModelProperty(name = "user-name", example = "김싸피")
     private String userName;
 
-    @ApiModelProperty(name="student-number", example = "0648223")
+    @ApiModelProperty(name = "student-number", example = "0648223")
     private String studentNumber;
 
-    @ApiModelProperty(name="campus", example = "서울")
+    @ApiModelProperty(name = "campus", example = "서울")
     private String campus;
 
-    @ApiModelProperty(name="ssafy-track", example = "Java Track")
+    @ApiModelProperty(name = "ssafy-track", example = "Java Track")
     private String ssafyTrack;
 
-    @ApiModelProperty(name="projects")
+    @ApiModelProperty(name = "projects")
     List<UserProjectLoginDto> projects = new ArrayList<>();
 
     public static LoginResponseDto of(String message, User user, String token) {
@@ -51,8 +51,10 @@ public class LoginResponseDto{
         body.setStudentNumber(user.getStudentNumber());
         body.setCampus(user.getCampus());
         body.setSsafyTrack(user.getSsafyTrack());
-        body.setProjects(UserProjectLoginDto.of(user.getTeams(),user));
+        body.setProjects(UserProjectLoginDto.of(user.getTeams(), user));
         body.setToken(token);
         return body;
+
     }
+
 }

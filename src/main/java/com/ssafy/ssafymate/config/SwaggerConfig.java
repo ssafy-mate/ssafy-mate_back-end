@@ -20,6 +20,7 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
+
         return new Docket(DocumentationType.OAS_30) // open api spec 3.0
                 .select()
                 .apis(RequestHandlerSelectors.any())
@@ -28,15 +29,17 @@ public class SwaggerConfig {
                 .apiInfo(metaData())
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()));
+
     }
 
     private ApiInfo metaData() {
+
         return new ApiInfoBuilder()
                 .title("SSAFY MATE REST API")
                 .description("싸피인들을 위한 팀 빌딩 플랫폼")
                 .version("1.0.0")
-//                .contact(new Contact("Jeonghwan, Yeojin, Jeongeun, Wonbin, Youngbae, Jeonghun", "https://github.com/ssafy-mate", "ssafymate@gmail.com"))
                 .build();
+
     }
 
     private ApiKey apiKey() {
@@ -44,6 +47,7 @@ public class SwaggerConfig {
     }
 
     private SecurityContext securityContext() {
+
         return springfox
                 .documentation
                 .spi.service
@@ -51,12 +55,16 @@ public class SwaggerConfig {
                 .SecurityContext
                 .builder()
                 .securityReferences(defaultAuth()).forPaths(PathSelectors.any()).build();
+
     }
 
     List<SecurityReference> defaultAuth() {
+
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
+
     }
+
 }

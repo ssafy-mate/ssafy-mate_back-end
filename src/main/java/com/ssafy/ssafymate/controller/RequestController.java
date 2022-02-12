@@ -47,7 +47,7 @@ public class RequestController {
     @PostMapping("/requests/users")
     @ApiOperation(value = "팀 지원 요청", notes = "팀 지원 요청 (사용자 -> 팀)")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 200, message = "성공", response = SuccessMessageBody.class),
             @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
             @ApiResponse(code = 409, message = "요청 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
@@ -83,12 +83,13 @@ public class RequestController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 팀 지원 요청 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "팀 지원이 완료되었습니다."));
+
     }
 
     @PostMapping("/requests/teams")
     @ApiOperation(value = "팀 합류 요청", notes = "팀 합류 요청 (팀 (팀장) -> 사용자)")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 200, message = "성공", response = SuccessMessageBody.class),
             @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
             @ApiResponse(code = 409, message = "요청 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
@@ -132,12 +133,13 @@ public class RequestController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 팀 지원 요청 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "팀 합류 요청이 완료되었습니다."));
+
     }
 
     @GetMapping("/users/{userId}/receive-requests")
     @ApiOperation(value = "받은 제안", notes = "사용자가 받은 팀/사용자 요청들")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 200, message = "성공", response = RequestMessageListResponseDto.class),
             @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
             @ApiResponse(code = 409, message = "요청 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
@@ -145,6 +147,7 @@ public class RequestController {
     public ResponseEntity<?> receiveRequest(
             @RequestParam String project,
             @AuthenticationPrincipal final String token, @PathVariable String userId) {
+
         System.out.println(project);
         List<RequestMessage> messages;
         try {
@@ -156,12 +159,13 @@ public class RequestController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 받은 제안 요청 실패"));
         }
         return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages, "receiver"));
+
     }
 
     @GetMapping("/users/{userId}/send-requests")
     @ApiOperation(value = "보낸 제안", notes = "사용자가 받은 팀/사용자 요청들")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 200, message = "성공", response = RequestMessageListResponseDto.class),
             @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
             @ApiResponse(code = 409, message = "요청 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
@@ -169,6 +173,7 @@ public class RequestController {
     public ResponseEntity<?> sendRequest(
             @RequestParam String project,
             @AuthenticationPrincipal final String token, @PathVariable String userId) {
+
         System.out.println(project);
         List<RequestMessage> messages;
         try {
@@ -181,12 +186,13 @@ public class RequestController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 실패"));
         }
         return ResponseEntity.status(200).body(RequestMessageListResponseDto.of(messages, "sender"));
+
     }
 
     @PutMapping("/requests/responses")
     @ApiOperation(value = "제안 수락/거절/취소", notes = "제안 수락/거절/취소")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
+            @ApiResponse(code = 200, message = "성공", response = MessageBody.class),
             @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
             @ApiResponse(code = 409, message = "요청 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
@@ -194,6 +200,7 @@ public class RequestController {
     public ResponseEntity<?> requestResponse(
             @RequestBody MessageResponseRequestDto messageResponseRequestDto,
             @AuthenticationPrincipal final String token) {
+
         RequestMessage requestMessage;
         Long requestId = messageResponseRequestDto.getRequestId();
         String response = messageResponseRequestDto.getResponse();
@@ -252,6 +259,7 @@ public class RequestController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 제안 요청 응답 실패"));
         }
         return ResponseEntity.status(200).body(MessageBody.of(message));
+
     }
 
 }

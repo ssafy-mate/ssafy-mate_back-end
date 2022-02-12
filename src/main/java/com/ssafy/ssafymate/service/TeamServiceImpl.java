@@ -179,6 +179,7 @@ public class TeamServiceImpl implements TeamService {
 
     }
 
+    // 팀 출력 형태 변환
     public Team teamTransfer(TeamInt teamI) {
 
         Team team = Team.builder()

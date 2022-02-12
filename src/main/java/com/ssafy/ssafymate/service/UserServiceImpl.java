@@ -42,8 +42,6 @@ public class UserServiceImpl implements UserService {
 
     private final String domainPrefix = "https://i6a402.p.ssafy.io:8082/resources/upload/";
 
-    private final String defaultImg = "default_img.jpg";
-
     @Override
     public User getUserById(Long id) {
 
@@ -96,7 +94,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    // 아이디 찾기
     @Override
     public User getUserByStudentNumberAndStudentName(String studentNumber, String studentName) {
 
@@ -104,7 +101,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    // 비밀번호 재설정
     @Transactional
     @Modifying
     @Override
@@ -115,7 +111,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    // 유저 수정
     @Transactional
     @Modifying
     @Override
@@ -248,7 +243,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    // String 형태의 Long 를 UserStack 타입의 리스트로 변환하는 메서드
+    // String 형태의 Long을 UserStack 타입의 리스트로 변환하는 메서드
     public List<UserStack> StringToTechStacks2(String jsonString) {
 
         List<UserStack> techStacks = new ArrayList<>();
@@ -259,7 +254,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    // url 에서 파일 이름 추출
+    // URL 에서 파일 이름 추출
     public static String getFileNameFromURL(String url) {
 
         return url.substring(url.lastIndexOf('/') + 1, url.length());

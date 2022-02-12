@@ -52,20 +52,22 @@ public class UserController {
     })
     public ResponseEntity<?> studentVerify(
             @RequestParam("campus") String campus, @RequestParam("studentNumber") String studentNumber, @RequestParam("userName") String userName) throws UnsupportedEncodingException {
+
         Student student;
         try {
             student = studentService.getStudentByStudentNumber(studentNumber);
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 인증 실패"));
         }
-        if (student==null || !((campus.equals(student.getCampus())) && (studentNumber.equals(student.getStudentNumber())) && (userName.equals(student.getStudentName())))) {
+        if (student == null || !((campus.equals(student.getCampus())) && (studentNumber.equals(student.getStudentNumber())) && (userName.equals(student.getStudentName())))) {
             return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "해당 교육생 정보가 없습니다."));
         }
-        User user = userService.getUserByStudentNumberAndStudentName(studentNumber,userName);
-        if (user!=null) {
+        User user = userService.getUserByStudentNumberAndStudentName(studentNumber, userName);
+        if (user != null) {
             return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 가입된 교육생 입니다."));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "교육생 인증이 완료되었습니다."));
+
     }
 
     // 회원가입 2단계 - 이메일 인증
@@ -79,8 +81,9 @@ public class UserController {
     })
     public ResponseEntity<?> emailConfirm(
             @RequestParam("userEmail") String userEmail) throws Exception {
+
         String confirm;
-        User user ;
+        User user;
         try {
             user = userService.getUserByEmail(userEmail);
             if (user != null) {
@@ -91,6 +94,7 @@ public class UserController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 이메일 전송 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "입력한 이메일로 인증 메일을 발송했습니다.\n 이메일에 표시된 인증코드를 입력해주세요."));
+
     }
 
     // 회원가입 2단계 - 이메일 인증 확인
@@ -104,19 +108,21 @@ public class UserController {
     })
     public ResponseEntity<?> emailAuth(
             @RequestBody EmailRequestDto emailRequestDto) throws Exception {
+
         Long emailAuth;
         String userEmail = emailRequestDto.getUserEmail();
         String code = emailRequestDto.getCode();
         try {
             emailAuth = emailService.getUserIdByCode(userEmail, code);
         } catch (EmailCodeException exception) {
-            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false,  "올바른 인증 코드가 아닙니다."));
+            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "올바른 인증 코드가 아닙니다."));
         } catch (NullPointerException exception) {
-            return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false,  "인증코드가 만료되었습니다."));
-        } catch (Exception exception){
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 인증 코드 확인 실패"));
+            return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "인증코드가 만료되었습니다."));
+        } catch (Exception exception) {
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 인증 코드 확인 실패"));
         }
         return ResponseEntity.status(200).body(SuccessBody.of(true));
+
     }
 
     // 회원가입 3단계
@@ -130,15 +136,17 @@ public class UserController {
     })
     public ResponseEntity<?> signUp(
             @Valid UserRequestDto userRequestDto, BindingResult bindingResult) throws Exception {
+
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false,  "계정 생성이 실패하였습니다."));
+            return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "계정 생성이 실패하였습니다."));
         }
         try {
             userService.userSave(userRequestDto, userRequestDto.getProfileImg());
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 계정 생성 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 계정 생성 실패"));
         }
         return ResponseEntity.status(200).body(MessageBody.of("계정 생성이 완료되었습니다."));
+
     }
 
     // 아이디 찾기
@@ -152,6 +160,7 @@ public class UserController {
     })
     public ResponseEntity<?> idSearch(
             @RequestParam("studentNumber") String studentNumber, @RequestParam("userName") String userName) {
+
         User user;
         try {
             user = userService.getUserByStudentNumberAndStudentName(studentNumber, userName);
@@ -162,6 +171,7 @@ public class UserController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 아이디 찾기 실패"));
         }
         return ResponseEntity.status(200).body(EmailResponseDto.of(true, "%s님의 싸피메이트 계정을 찾았습니다.", user.getStudentName(), user.getEmail()));
+
     }
 
     // 비밀번호 재설정 - 이메일 인증
@@ -175,6 +185,7 @@ public class UserController {
     })
     public ResponseEntity<?> pwSearch(
             @RequestParam("userEmail") String userEmail) throws Exception {
+
         try {
             String pwVerification;
             User user = userService.getUserByEmail(userEmail);
@@ -186,6 +197,7 @@ public class UserController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 이메일 전송 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "입력한 이메일로 인증 메일을 발송했습니다.\n 이메일에 표시된 인증코드를 입력해주세요."));
+
     }
 
     // 비밀번호 재설정 - 이메일 인증 코드 확인
@@ -199,17 +211,19 @@ public class UserController {
     })
     public ResponseEntity<?> pwSearchEmailAuth(
             @RequestBody PwSearchRequestDto pwSearchRequestDto) throws Exception {
+
         Long emailAuth;
         try {
             emailAuth = emailService.getUserIdByCode(pwSearchRequestDto.getUserEmail(), pwSearchRequestDto.getCode());
         } catch (EmailCodeException exception) {
-            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false,  "올바른 인증 코드가 아닙니다."));
+            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "올바른 인증 코드가 아닙니다."));
         } catch (NullPointerException exception) {
-            return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false,  "인증코드가 만료되었습니다."));
+            return ResponseEntity.status(403).body(ErrorResponseBody.of(403, false, "인증코드가 만료되었습니다."));
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 인증 코드 확인 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 인증 코드 확인 실패"));
         }
         return ResponseEntity.status(200).body(SuccessBody.of(true));
+
     }
 
     // 비밀번호 재설정
@@ -223,15 +237,18 @@ public class UserController {
     })
     public ResponseEntity<?> modifyPassword(
             @RequestBody @Valid PwModifyRequestDto pwModifyRequestDto, BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server Error, 비밀번호 재설정 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 비밀번호 재설정 실패"));
         }
         User user = userService.getUserByEmail(pwModifyRequestDto.getUserEmail());
         try {
             userService.passwordModify(pwModifyRequestDto, user);
         } catch (Exception exception) {
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false,  "Internal Server, 비밀번호 재설정 실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 비밀번호 재설정 실패"));
         }
-        return ResponseEntity.status(200).body(SuccessMessageBody.of(true,  "비밀번호 재설정이 완료되었습니다."));
+        return ResponseEntity.status(200).body(SuccessMessageBody.of(true, "비밀번호 재설정이 완료되었습니다."));
+
     }
+
 }

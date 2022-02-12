@@ -18,40 +18,36 @@ public class CustomUserDetails implements UserDetails {
     private User user;
 
     boolean accountNonExpired = true;
+
     boolean accountNonLocked = true;
+
     boolean credentialNonExpired = true;
+
     boolean enabled = true;
 
     private Collection<? extends GrantedAuthority> authorities;
-    // List<GrantedAuthority> roles = new ArrayList<>();
 
     public CustomUserDetails (User user){
+
         super();
         this.user=user;
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRoles().toString()));
 
-//        return new CustomUserDetails(
-//                user.getId(),
-//                user.getEmail(),
-//                user.getEmail(),
-//                user.getPassword(),
-//                authorities);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         user.getRoleList().forEach(r-> {
             authorities.add(() -> r);
         });
-        return authorities;
-    }
 
-//    public void setAuthorities(List<GrantedAuthority> roles) {
-//        this.roles = roles;
-//    }
+        return authorities;
+
+    }
 
     public User getUser(){
         return this.user;

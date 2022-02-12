@@ -35,8 +35,8 @@ public class EmailServiceImpl implements EmailService {
         System.out.println("인증 번호 : " + emailVerificationCode);
         MimeMessage message = emailSender.createMimeMessage();
 
-        message.addRecipients(RecipientType.TO, to);// 보내는 대상
-        message.setSubject("SSAFY MATE 인증번호가 도착했습니다.");// 제목
+        message.addRecipients(RecipientType.TO, to); // 보내는 대상
+        message.setSubject("SSAFY MATE 인증번호가 도착했습니다."); // 제목
 
         String msgg = "";
         msgg += "<div style='margin:100px;'>";
@@ -52,8 +52,8 @@ public class EmailServiceImpl implements EmailService {
         msgg += "CODE : <strong>";
         msgg += emailVerificationCode + "</strong><div><br/> ";
         msgg += "</div>";
-        message.setText(msgg, "utf-8", "html");// 내용
-        message.setFrom(new InternetAddress("ssafymate@gmail.com", "SSAFY MATE"));// 보내는 사람
+        message.setText(msgg, "utf-8", "html"); // 내용
+        message.setFrom(new InternetAddress("ssafymate@gmail.com", "SSAFY MATE")); // 보내는 사람
 
         return message;
 
@@ -67,8 +67,8 @@ public class EmailServiceImpl implements EmailService {
         System.out.println("인증 번호 : " + emailVerificationCode);
         MimeMessage message = emailSender.createMimeMessage();
 
-        message.addRecipients(RecipientType.TO, to);// 보내는 대상
-        message.setSubject("SSAFY MATE 인증번호가 도착했습니다.");// 제목
+        message.addRecipients(RecipientType.TO, to); // 보내는 대상
+        message.setSubject("SSAFY MATE 인증번호가 도착했습니다."); // 제목
 
         String msgg = "";
         msgg += "<div style='margin:100px;'>";
@@ -84,8 +84,8 @@ public class EmailServiceImpl implements EmailService {
         msgg += "CODE : <strong>";
         msgg += emailVerificationCode + "</strong><div><br/> ";
         msgg += "</div>";
-        message.setText(msgg, "utf-8", "html");// 내용
-        message.setFrom(new InternetAddress("ssafymate@gmail.com", "SSAFY MATE"));// 보내는 사람
+        message.setText(msgg, "utf-8", "html"); // 내용
+        message.setFrom(new InternetAddress("ssafymate@gmail.com", "SSAFY MATE")); // 보내는 사람
 
         return message;
 
@@ -97,8 +97,8 @@ public class EmailServiceImpl implements EmailService {
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
-        for (int i = 0; i < 8; i++) { // 인증코드 8자리
-            int index = rnd.nextInt(3); // 0~2 까지 랜덤
+        for (int i = 0; i < 8; i++) {
+            int index = rnd.nextInt(3);
 
             switch (index) {
                 case 0:
@@ -119,7 +119,6 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
-    // 회원가입 이메일 인증
     @Override
     public String sendSimpleMessage(String to) throws Exception {
 
@@ -135,7 +134,6 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
-    // 비밀번호 찾기 이메일 인증
     @Override
     public String sendPwSimpleMessage(String to) throws Exception {
 

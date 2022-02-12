@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,18 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 
-/* 
-    토큰을 생성하고, 유효성 검사하는 클래스
-
-    @RequiredArgsConstructor
-    => 초기화 되지않은 final 필드나, @NotNull 이 붙은 필드에 대해 생성자를 생성함
-    주로 의존성 주입(Dependency Injection) 편의성을 위해서 사용.
- */
 @RequiredArgsConstructor
 @Component
 public class TokenProvider {
 
-    private String secretKey = "tkvlapdlxmvmfhwprxmfmfwlsgodgkaustjtlzbflxltlzmfltzlfmfaksemfrhwkgksek";
+    @Value("${jwt.secret}")
+    private String secretKey;
 
     // 토큰 유효 시간 72시간
     private long tokenValidTime = 72 * 60 * 60 * 1000L;

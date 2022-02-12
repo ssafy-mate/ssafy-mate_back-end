@@ -16,8 +16,10 @@ public class MessageBody {
     String message = null;
 
     public static MessageBody of(String message) {
+
         MessageBody res = new MessageBody();
         res.setMessage(message);
         return res;
+
     }
 }

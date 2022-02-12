@@ -13,25 +13,25 @@ import java.util.List;
 @Setter
 public class MyInfoResponseDto {
 
-    @ApiModelProperty(name="user-id", example = "1")
+    @ApiModelProperty(name = "user-id", example = "1")
     private Long userId;
 
-    @ApiModelProperty(name="user-name", example = "김싸피")
+    @ApiModelProperty(name = "user-name", example = "김싸피")
     private String userName;
 
-    @ApiModelProperty(name="user-email", example = "ssafymate@gmail.com")
+    @ApiModelProperty(name = "user-email", example = "ssafymate@gmail.com")
     private String userEmail;
 
-    @ApiModelProperty(name="student-number", example = "0648223")
+    @ApiModelProperty(name = "student-number", example = "0648223")
     private String studentNumber;
 
-    @ApiModelProperty(name="campus", example = "서울")
+    @ApiModelProperty(name = "campus", example = "서울")
     private String campus;
 
-    @ApiModelProperty(name="ssafy-track", example = "Java Track")
+    @ApiModelProperty(name = "ssafy-track", example = "Java Track")
     private String ssafyTrack;
 
-    @ApiModelProperty(name="projects")
+    @ApiModelProperty(name = "projects")
     List<UserProjectLoginDto> projects = new ArrayList<>();
 
     public static MyInfoResponseDto of(User user) {
@@ -42,7 +42,9 @@ public class MyInfoResponseDto {
         body.setStudentNumber(user.getStudentNumber());
         body.setCampus(user.getCampus());
         body.setSsafyTrack(user.getSsafyTrack());
-        body.setProjects(UserProjectLoginDto.of(user.getTeams(),user));
+        body.setProjects(UserProjectLoginDto.of(user.getTeams(), user));
         return body;
+
     }
+
 }

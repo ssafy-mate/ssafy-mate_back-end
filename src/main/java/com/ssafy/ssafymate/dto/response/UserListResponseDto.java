@@ -23,7 +23,7 @@ public class UserListResponseDto {
     @ApiModelProperty(name="엘리멘탈 개수", example = "45")
     Long totalElement;
 
-    public static UserListResponseDto of(List<UserBoardDto> users, String project, Integer totalPage, Integer nowPage, Long totalElement){
+    public static UserListResponseDto of(List<UserBoardDto> users, String project, Integer nowPage, Integer totalPage, Long totalElement){
 
         UserListResponseDto res = new UserListResponseDto();
         res.setUsers(users);

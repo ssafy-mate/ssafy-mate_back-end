@@ -15,17 +15,16 @@ public class ProServiceImpl implements ProService {
 
     @Override
     public List<Team> findTeam(String campus, String project, String projectTrack) {
-        if(campus==null && projectTrack==null){
+        if (campus == null && projectTrack == null) {
             return teamRepository.findAllByProject(project);
-        }
-        else if(campus!=null && projectTrack==null){
+        } else if (campus != null && projectTrack == null) {
             return teamRepository.findAllByCampusAndProject(campus, project);
-        }
-        else if(campus==null && projectTrack!=null){
+        } else if (campus == null && projectTrack != null) {
             return teamRepository.findAllByProjectAndProjectTrack(project, projectTrack);
-        }
-        else {
+        } else {
             return teamRepository.findAllByCampusAndProjectAndProjectTrack(campus, project, projectTrack);
         }
+
     }
+
 }

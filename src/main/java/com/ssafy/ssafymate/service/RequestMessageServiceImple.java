@@ -87,19 +87,19 @@ public class RequestMessageServiceImple implements RequestMessageService {
     @Transactional
     @Modifying
     @Override
-    public Integer updateReadCheckApproval(Long id, String readCheck,Long userId, Team team) {
+    public Integer updateReadCheckApproval(Long id, String readCheck, Long userId, Team team) {
 
         Integer answer = requestMessageRepository.updateRead(id, readCheck);
-        if(answer==1){
+        if (answer == 1) {
             UserTeam userTeam = UserTeam.builder()
                     .userId(userId)
                     .teamId(team.getId())
                     .build();
             userTeamRepository.save(userTeam);
-            requestMessageRepository.updateReadExpirationUser(userId,team.getProject());
+            requestMessageRepository.updateReadExpirationUser(userId, team.getProject());
         }
-        if(teamRepository.isRecruit(team.getId()).equals("false")){
-            requestMessageRepository.updateReadExpirationTeam(team.getId(),team.getProject());
+        if (teamRepository.isRecruit(team.getId()).equals("false")) {
+            requestMessageRepository.updateReadExpirationTeam(team.getId(), team.getProject());
         }
         return answer;
 
@@ -107,7 +107,9 @@ public class RequestMessageServiceImple implements RequestMessageService {
 
     @Override
     public RequestMessage findSameRequest(Long senderId, Long teamId, Long receiverId) {
-        return requestMessageRepository.findBySenderIdAndTeamIdAndReceiverIdAndRequestStatus(senderId,teamId,receiverId,"pending").orElse(null);
+
+        return requestMessageRepository.findBySenderIdAndTeamIdAndReceiverIdAndRequestStatus(senderId, teamId, receiverId, "pending").orElse(null);
+
     }
 
 }

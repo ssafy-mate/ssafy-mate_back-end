@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageTeamRequestDto {
+
     @ApiModelProperty(value = "프로젝트", example = "특화 프로젝트")
     private String project;
 

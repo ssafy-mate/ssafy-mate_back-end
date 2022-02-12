@@ -11,9 +11,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TeamDetailResponseDto {
-    @ApiModelProperty(name="팀 상세정보", example = "team :{}")
+
+    @ApiModelProperty(name="팀 상세정보", example = "{}")
     TeamDetail teamData;
 
+    @ApiModelProperty(value = "팀과 유저 관계", example = "owner | member | outsider")
     String role;
 
     public static TeamDetailResponseDto of(Team team, User user){

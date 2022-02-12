@@ -35,7 +35,6 @@ public class TeamListController {
     @ApiOperation(value = "팀 리스트 조회", notes = "프로젝트, 프로젝트 트랙, 기술스택을 가지고 팀 리스트 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 400, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> SearchTeam(

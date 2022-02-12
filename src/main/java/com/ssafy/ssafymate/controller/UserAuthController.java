@@ -219,7 +219,7 @@ public class UserAuthController {
     })
     public ResponseEntity<?> searchUserList(
             @Valid UserListRequestDto userListRequestDto, BindingResult bindingResult,
-            @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage) {
+            @RequestParam(required = false, defaultValue = "1", value = "page") Integer page) {
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "잘못된 입력"));
@@ -240,13 +240,13 @@ public class UserAuthController {
         int totalPage;
         long totalElement;
         int size = 9;
-        Pageable pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "id");
 
         if (userListRequestDto.getSort() != null) {
             if (userListRequestDto.getSort().equals("recent")) {
-                pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.DESC, "id");
+                pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "id");
             } else if (userListRequestDto.getSort().equals("name")) {
-                pageable = PageRequest.of(nowPage - 1, size, Sort.Direction.ASC, "student_name");
+                pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, "student_name");
             }
         }
         Page<UserBoardInterface> userPage;
@@ -264,7 +264,7 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 공고 조회 실패"));
         }
 
-        return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListRequestDto.getProject(), nowPage, totalPage, totalElement));
+        return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListRequestDto.getProject(), page, totalPage, totalElement));
 
     }
 

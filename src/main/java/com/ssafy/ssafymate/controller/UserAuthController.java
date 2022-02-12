@@ -52,6 +52,7 @@ public class UserAuthController {
     public ResponseEntity<?> belongToTeam(
             @RequestParam final String project,
             @AuthenticationPrincipal final String token, @PathVariable String userId) {
+
         Boolean belongToTeam = false;
         try {
             User user = userService.getUserByEmail(token);
@@ -63,6 +64,7 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 참여 여부 조회 실패"));
         }
         return ResponseEntity.status(200).body(BelongToTeam.of(belongToTeam));
+
     }
 
     @GetMapping("/{userId}/team-id")
@@ -74,6 +76,7 @@ public class UserAuthController {
     public ResponseEntity<?> myTeamId(
             @RequestParam final String project,
             @AuthenticationPrincipal final String token, @PathVariable String userId) {
+
         User user;
         Team team;
         Long teamId = null;
@@ -81,13 +84,14 @@ public class UserAuthController {
             user = userService.getUserByEmail(token);
             team = teamService.belongToTeam(project, user.getId());
 
-            if(team != null){
+            if (team != null) {
                 teamId = team.getId();
             }
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 참여 여부 조회 실패"));
         }
         return ResponseEntity.status(200).body(UserTeamIdResponseDto.of(teamId));
+
     }
 
     @GetMapping("/{userId}/my-team")
@@ -99,6 +103,7 @@ public class UserAuthController {
     public ResponseEntity<?> myTeam(
             @RequestParam final String project,
             @AuthenticationPrincipal final String token, @PathVariable String userId) {
+
         User user;
         Team team;
         try {
@@ -108,7 +113,8 @@ public class UserAuthController {
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server, 팀 참여 여부 조회 실패"));
         }
-        return ResponseEntity.status(200).body(TeamDetailResponseDto.of(team,user));
+        return ResponseEntity.status(200).body(TeamDetailResponseDto.of(team, user));
+
     }
 
     // 나의 정보 받기
@@ -121,6 +127,7 @@ public class UserAuthController {
     })
     public ResponseEntity<?> getMyInfo(
             @PathVariable final Long userId) {
+
         User user;
         try {
             user = userService.getUserById(userId);
@@ -131,6 +138,7 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 응답 실패"));
         }
         return ResponseEntity.status(200).body(MyInfoResponseDto.of(user));
+
     }
 
     // 교육생 상세 정보 조회
@@ -144,6 +152,7 @@ public class UserAuthController {
     })
     public ResponseEntity<?> userDetail(
             @PathVariable final Long userId) {
+
         User user;
         try {
             user = userService.getUserById(userId);
@@ -154,6 +163,7 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 상세 정보 조회 실패"));
         }
         return ResponseEntity.status(200).body(UserResponseDto.of(user));
+
     }
 
     // 교육생 상세 정보 수정
@@ -170,6 +180,7 @@ public class UserAuthController {
             @PathVariable final String profileInfo,
             UserModifyRequestDto userModifyRequestDto,
             @AuthenticationPrincipal final String token) {
+
         try {
             User user = userService.getUserByEmail(token);
             Long reqUserId = user.getId();
@@ -180,6 +191,7 @@ public class UserAuthController {
         } catch (Exception exception) {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 교육생 상세 정보 수정 실패"));
         }
+
         String profileInfoName = "";
         if (profileInfo.equals("ssafy-track")) {
             profileInfoName = "교육 트랙";
@@ -195,6 +207,7 @@ public class UserAuthController {
             profileInfoName = "SNS 링크";
         }
         return ResponseEntity.status(200).body(MessageBody.of(profileInfoName + " 수정이 완료되었습니다."));
+
     }
 
     @GetMapping("")
@@ -207,7 +220,6 @@ public class UserAuthController {
     public ResponseEntity<?> searchUserList(
             @Valid UserListRequestDto userListRequestDto, BindingResult bindingResult,
             @RequestParam(required = false, defaultValue = "1", value = "nowPage") Integer nowPage) {
-
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "잘못된 입력"));
@@ -253,6 +265,7 @@ public class UserAuthController {
         }
 
         return ResponseEntity.status(200).body(UserListResponseDto.of(userBoards2, userListRequestDto.getProject(), nowPage, totalPage, totalElement));
+
     }
 
     @PostMapping("/{userId}/project-tracks")
@@ -266,6 +279,7 @@ public class UserAuthController {
             @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
             @AuthenticationPrincipal final String token,
             @PathVariable String userId) {
+
         String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
@@ -284,6 +298,7 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 트랙 선택 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 선택이 완료되었습니다."));
+
     }
 
     @PutMapping("/{userId}/project-tracks")
@@ -296,6 +311,7 @@ public class UserAuthController {
     public ResponseEntity<?> modifyProjectTrack(
             @RequestBody @Valid UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto,
             @AuthenticationPrincipal final String token, @PathVariable String userId) {
+
         String project = userSelectProjectTrackRequestDto.getProject();
         try {
             User user = userService.getUserByEmail(token);
@@ -308,6 +324,7 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 트랙 수정 실패"));
         }
         return ResponseEntity.status(200).body(SuccessMessageBody.of(true, project + " 트랙 수정이 완료되었습니다."));
+
     }
 
     // 교육생 프로젝트 정보 받기
@@ -322,6 +339,7 @@ public class UserAuthController {
     public ResponseEntity<?> userProjects(
             @AuthenticationPrincipal final String token,
             @PathVariable String userId) {
+
         User user;
         try {
             user = userService.getUserByEmail(token);
@@ -329,5 +347,7 @@ public class UserAuthController {
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 내 프로젝트 정보 갱신 실패"));
         }
         return ResponseEntity.status(200).body(UserProjectResponseDto.of(UserProjectLoginDto.of(user.getTeams(), user)));
+
     }
+
 }

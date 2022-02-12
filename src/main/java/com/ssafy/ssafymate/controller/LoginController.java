@@ -37,12 +37,13 @@ public class LoginController {
     @ApiOperation(value = "로그인", notes = "이메일과 비밀번호를 받아서 확인한 뒤 토큰 생성")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LoginResponseDto.class),
-            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class ,responseContainer = "List"),
+            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<?> userCheckAndSendToken(
             @RequestBody LoginRequestDto loginRequestDto) {
+
         User user;
         try {
             user = userService.getUserByEmail(loginRequestDto.getUserEmail());
@@ -57,5 +58,7 @@ public class LoginController {
         }
         String token = tokenProvider.createToken(loginRequestDto.getUserEmail());
         return ResponseEntity.status(200).body(LoginResponseDto.of("로그인 하였습니다.", user, token));
+
     }
+
 }

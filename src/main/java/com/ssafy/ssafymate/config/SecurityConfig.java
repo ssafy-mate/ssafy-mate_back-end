@@ -34,9 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     public SecurityConfig(TokenProvider tokenProvider, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtAccessDeniedHandler jwtAccessDeniedHandler) {
+
         this.tokenProvider = tokenProvider;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+
     }
 
     @Override
@@ -68,7 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // h2 관련된 건 차단 무시
     @Override
     public void configure(WebSecurity web) throws Exception {
+
         web.ignoring().antMatchers("/h2-console/**", "/favicon.ico");
+
     }
 
     @Bean

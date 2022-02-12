@@ -14,9 +14,11 @@ public class SuccessMessageBody extends MessageBody{
     Boolean success = false;
 
     public static SuccessMessageBody of(Boolean success, String message) {
+
         SuccessMessageBody res = new SuccessMessageBody();
         res.setSuccess(success);
         res.setMessage(message);
         return res;
+
     }
 }

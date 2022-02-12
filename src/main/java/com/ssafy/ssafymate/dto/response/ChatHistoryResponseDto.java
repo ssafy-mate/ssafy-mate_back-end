@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.swing.text.AbstractDocument;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,16 +14,22 @@ import java.util.List;
 @ApiModel("ChatHistoryResponseDto")
 public class ChatHistoryResponseDto {
 
+    @ApiModelProperty(name = "채팅 인덱스", example = "12")
     private Long id;
 
+    @ApiModelProperty(name = "채팅방 인덱스", example = "56-68")
     private String roomId;
 
+    @ApiModelProperty(name = "채팅 내용", example = "안녕하세요.")
     private String content;
 
+    @ApiModelProperty(name = "채팅 보낸 시간", example = "2022-02-10T~~")
     private String sentTime;
 
+    @ApiModelProperty(name = "채팅 보낸 사람 이름", example = "김길동")
     private String userName;
 
+    @ApiModelProperty(name = "채팅 보낸 사람 고유 아이디", example = "56")
     private Long senderId;
 
     public static List<ChatHistoryResponseDto> of(List<ContentList> contentList) {
@@ -44,5 +49,7 @@ public class ChatHistoryResponseDto {
         }
 
         return res;
+
     }
+
 }

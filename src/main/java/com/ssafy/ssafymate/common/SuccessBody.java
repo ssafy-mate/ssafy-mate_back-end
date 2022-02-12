@@ -14,8 +14,10 @@ public class SuccessBody {
     Boolean success = false;
 
     public static SuccessBody of(Boolean success) {
+
         SuccessBody res = new SuccessBody();
         res.setSuccess(success);
         return res;
+
     }
 }

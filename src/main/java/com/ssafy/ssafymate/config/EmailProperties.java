@@ -10,7 +10,11 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "application")
 @Configuration
 public class EmailProperties {
+
     private String name;
+
     private String link;
+
     private Long validTime;
+
 }

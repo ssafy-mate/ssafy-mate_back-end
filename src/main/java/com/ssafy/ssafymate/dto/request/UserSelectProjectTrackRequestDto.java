@@ -8,5 +8,7 @@ import lombok.Setter;
 public class UserSelectProjectTrackRequestDto {
 
     private String project;
+
     private String projectTrack;
+
 }

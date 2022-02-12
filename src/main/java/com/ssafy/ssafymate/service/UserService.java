@@ -37,6 +37,7 @@ public interface UserService {
     // 유저 리스트 변환
     List<UserBoardDto> userBoarConvert(List<UserBoardInterface> users, String project);
 
+    // 유저 프로젝트 트랙 선택
     String selectProjectTrack(User user, UserSelectProjectTrackRequestDto userSelectProjectTrackRequestDto);
 
 }

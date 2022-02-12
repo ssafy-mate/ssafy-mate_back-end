@@ -18,4 +18,5 @@ public class MessageTeamRequestDto {
 
     @ApiModelProperty(value = "메세지", example = " 같이 하고 싶습니다. ")
     private String message;
+
 }

@@ -10,11 +10,13 @@ import lombok.Setter;
 @Setter
 public class EmailResponseDto {
 
-    @ApiModelProperty(name="응답 메시지", example = "정상")
+    @ApiModelProperty(name = "응답 메시지", example = "정상")
     String message = null;
-    @ApiModelProperty(name="응답 상태", example = "true")
+
+    @ApiModelProperty(name = "응답 상태", example = "true")
     Boolean success = false;
-    @ApiModelProperty(name="아이디", example = "ssafymate@gmail.com")
+
+    @ApiModelProperty(name = "아이디", example = "ssafymate@gmail.com")
     private String userEmail;
 
     public static EmailResponseDto of(Boolean success, String message, String userName, String email) {
@@ -23,5 +25,7 @@ public class EmailResponseDto {
         body.success = success;
         body.userEmail = email;
         return body;
+
     }
+
 }

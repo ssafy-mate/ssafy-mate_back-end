@@ -18,4 +18,5 @@ public class PwSearchRequestDto {
 
     @ApiModelProperty(value = "인증코드", example = "Axzdkj11")
     private String code;
+
 }

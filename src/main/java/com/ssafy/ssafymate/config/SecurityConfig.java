@@ -57,8 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .formLogin().disable()
                     .authorizeRequests()
-                    .antMatchers("/api/auth/teams/**").access("hasRole('USER')")
-                    .antMatchers("/api/auth/users/**").access("hasRole('USER')")
+                    .antMatchers("/api/auth/**").access("hasRole('USER')")
                     .antMatchers("/api/chats/rooms/**").access("hasRole('USER')")
                     .antMatchers("/api/chats/logs/**").access("hasRole('USER')")
                     .anyRequest().permitAll()    // 그 외 나머지 요청 다 허용

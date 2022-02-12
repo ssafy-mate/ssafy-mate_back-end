@@ -34,13 +34,21 @@ public class ChattingController {
     public ResponseEntity<?> getUserInfo(@PathVariable("userId") Long userId) {
 
         try {
+
             User user = chattingService.getUserInfo(userId);
+
             if (user == null) {
+
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "해당 사용자가 존재하지 않습니다."));
+
             }
+
             return ResponseEntity.status(200).body(ChatUserResponseDto.of(user));
+
         } catch (Exception e) {
+
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "서버 에러가 발생했습니다."));
+
         }
 
     }
@@ -57,12 +65,17 @@ public class ChattingController {
 
         try {
             List<RoomList> roomList = chattingService.getRoomList(userId);
+
             if (roomList == null) {
                 return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "방이 비어있습니다."));
             }
+
             return ResponseEntity.status(200).body(ChatRoomResponseDto.of(roomList));
+
         } catch (Exception e) {
+
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "서버 에러가 발생했습니다."));
+
         }
 
     }
@@ -79,20 +92,23 @@ public class ChattingController {
             @PathVariable("roomId") String roomId,
             @RequestParam("nextCursor") Long messageId
     ) {
+
         try {
 
-            // 스트링 파싱하기
             String[] ids = roomId.split("-");
 
-            // 채팅방의 존재 여부 확인
             if (chattingService.findRoom(roomId) == null) {
-                // 채팅방이 없으면 채팅방 개설
+
                 int temp = chattingService.saveRoom(roomId, Long.parseLong(ids[0]), Long.parseLong(ids[1]));
+
                 if (temp == 0) {
+
                     return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "방 생성에 실패하였습니다."));
+
                 }
+
             }
-            // 20개씩 전송
+
             int size = 20;
 
             List<ContentList> contentList = chattingService.getHistoryList(roomId, messageId, size);
@@ -100,7 +116,11 @@ public class ChattingController {
             return ResponseEntity.status(200).body(ChatHistoryCursorPagingResponseDto.of(contentList));
 
         } catch (Exception e) {
+
             return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "서버 에러가 발생했습니다."));
+
         }
+
     }
+
 }

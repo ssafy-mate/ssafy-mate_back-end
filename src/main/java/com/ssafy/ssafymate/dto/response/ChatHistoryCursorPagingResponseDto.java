@@ -20,6 +20,7 @@ public class ChatHistoryCursorPagingResponseDto {
     Long nextCursor;
 
     public static ChatHistoryCursorPagingResponseDto of(List<ContentList> contentList) {
+
         ChatHistoryCursorPagingResponseDto res = new ChatHistoryCursorPagingResponseDto();
         res.setContentList(ChatHistoryResponseDto.of(contentList));
 
@@ -29,6 +30,9 @@ public class ChatHistoryCursorPagingResponseDto {
             nextCursor = contentList.get(lastIndex-1).getId();
         }
         res.setNextCursor(nextCursor);
+
         return res;
+
     }
+
 }

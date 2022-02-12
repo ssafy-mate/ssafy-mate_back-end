@@ -85,7 +85,7 @@ public class ChattingController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 400, message = "방 생성 실패"),
-            @ApiResponse(code = 401, message = "대화 내용 없음"),
+            @ApiResponse(code = 401, message = "선택된 대화 내용 없음"),
             @ApiResponse(code = 403, message = "토큰 인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
@@ -95,7 +95,9 @@ public class ChattingController {
     ) {
 
         if(roomId.equals("null")){
-            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "대화 내용이 없습니다."));
+
+            return ResponseEntity.status(401).body(ErrorResponseBody.of(401, false, "선택된 대화 내용이 없습니다."));
+
         }
 
         try {

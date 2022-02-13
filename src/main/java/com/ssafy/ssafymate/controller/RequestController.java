@@ -6,7 +6,6 @@ import com.ssafy.ssafymate.common.SuccessMessageBody;
 import com.ssafy.ssafymate.dto.request.MessageResponseRequestDto;
 import com.ssafy.ssafymate.dto.request.MessageTeamRequestDto;
 import com.ssafy.ssafymate.dto.request.MessageUserRequestDto;
-import com.ssafy.ssafymate.dto.response.LoginResponseDto;
 import com.ssafy.ssafymate.dto.response.RequestMessageListResponseDto;
 import com.ssafy.ssafymate.entity.RequestMessage;
 import com.ssafy.ssafymate.entity.Team;
@@ -68,6 +67,8 @@ public class RequestController {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 팀은 존재하지 않습니다."));
             } else if (requestMessageService.findSameRequest(senderId, messageUserRequestDto.getTeamId(), team.getOwner().getId()) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 제안한 요청입니다."));
+            } else if (!sender.getCampus().equals(team.getCampus())) {
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생의 캠퍼스가 팀의 프로젝트 캠퍼스와 일치하지 않습니다."));
             } else if ((team.getProject().equals("공통 프로젝트") && !team.getProjectTrack().equals(sender.getCommonProjectTrack())) ||
                     (team.getProject().equals("특화 프로젝트") && !team.getProjectTrack().equals(sender.getSpecializationProjectTrack()))) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자 프로젝트 트랙과 해당 팀 트랙이 일치하지 않습니다."));
@@ -118,6 +119,8 @@ public class RequestController {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "사용자는 팀 합류 요청 권한이 없습니다."));
             } else if (requestMessageService.findSameRequest(senderId, team.getId(), receiverId) != null) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "이미 제안한 요청입니다."));
+            } else if (!receiver.getCampus().equals(team.getCampus())) {
+                return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생의 캠퍼스가 팀의 프로젝트 캠퍼스와 일치하지 않습니다."));
             } else if ((team.getProject().equals("공통 프로젝트") && !team.getProjectTrack().equals(receiver.getCommonProjectTrack())) ||
                     (team.getProject().equals("특화 프로젝트") && !team.getProjectTrack().equals(receiver.getSpecializationProjectTrack()))) {
                 return ResponseEntity.status(409).body(ErrorResponseBody.of(409, false, "해당 교육생의 프로젝트 트랙이 팀의 프로젝트 트랙과 일치하지 않습니다."));

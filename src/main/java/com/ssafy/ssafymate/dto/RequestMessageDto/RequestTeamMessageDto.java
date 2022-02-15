@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Setter
 @Getter
@@ -29,7 +30,7 @@ public class RequestTeamMessageDto {
         res.setCampus(team.getCampus());
         res.setRequestStatus(requestMessages.getRequestStatus());
         res.setMessage(requestMessages.getMessage());
-        res.setCreatedTime(requestMessages.getCreatedDateTime());
+        res.setCreatedTime(requestMessages.getCreatedDateTime().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
         return res;
     }
 }

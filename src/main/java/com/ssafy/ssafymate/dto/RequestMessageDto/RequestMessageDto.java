@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Setter
 @Getter
@@ -25,7 +26,7 @@ public class RequestMessageDto {
     public static RequestMessageDto of(RequestMessage requestMessage, String message_type, String board_type){
         RequestMessageDto res = new RequestMessageDto();
         if(board_type.equals("user")) {
-            res.setOriginType("userRequest");
+            res.setOriginType("user");
             User user;
             if (message_type.equals("receiver")) {
 //                res.setRead(requestMessage.getReceiverRead());
@@ -39,12 +40,9 @@ public class RequestMessageDto {
             res.setOriginImgUrl(user.getProfileImg());
             res.setOriginName(user.getStudentName());
             res.setOriginInfo(user.getJob1());
-            res.setRequestStatus(requestMessage.getRequestStatus());
-            res.setMessage(requestMessage.getMessage());
-            res.setCreatedTime(requestMessage.getCreatedDateTime());
         }
         else if(board_type.equals("team")){
-            res.setOriginType("teamRequest");
+            res.setOriginType("team");
 //            if(message_type.equals("receiver")) {
 //                res.setRead(requestMessage.getReceiverRead());
 //            }
@@ -57,10 +55,11 @@ public class RequestMessageDto {
             res.setOriginImgUrl(team.getTeamImg());
             res.setOriginName(team.getTeamName());
             res.setOriginInfo(team.getCampus());
-            res.setRequestStatus(requestMessage.getRequestStatus());
-            res.setMessage(requestMessage.getMessage());
-            res.setCreatedTime(requestMessage.getCreatedDateTime());
+
         }
+        res.setRequestStatus(requestMessage.getRequestStatus());
+        res.setMessage(requestMessage.getMessage());
+        res.setCreatedTime(requestMessage.getCreatedDateTime().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime());
         return res;
     }
 }

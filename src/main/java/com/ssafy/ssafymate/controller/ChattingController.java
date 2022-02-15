@@ -87,7 +87,6 @@ public class ChattingController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 400, message = "방 생성 실패"),
             @ApiResponse(code = 401, message = "선택된 대화 내용 없음"),
-            @ApiResponse(code = 402, message = "잘못된 요청"),
             @ApiResponse(code = 403, message = "토큰 인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
@@ -104,15 +103,9 @@ public class ChattingController {
 
         try {
 
-            String[] ids = roomId.split("-");
-
             if (chattingService.findRoom(roomId) == null) {
 
-                if(ids[0].equals(ids[1])){
-
-                    return ResponseEntity.status(402).body(ErrorResponseBody.of(402, false, "올바른 요청이 아닙니다."));
-
-                }
+                String[] ids = roomId.split("-");
 
                 int temp = chattingService.saveRoom(roomId, Long.parseLong(ids[0]), Long.parseLong(ids[1]));
 

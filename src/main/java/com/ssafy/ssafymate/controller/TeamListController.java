@@ -72,7 +72,7 @@ public class TeamListController {
             if (teamListRequestDto.getSort().equals("recent")) {
                 pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "t.create_date_time");
             } else if (teamListRequestDto.getSort().equals("headcount")) {
-                pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, "t.total_headcount");
+                pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, "uut.total_headcount");
             }
         }
 

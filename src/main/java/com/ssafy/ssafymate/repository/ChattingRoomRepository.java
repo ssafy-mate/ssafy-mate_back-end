@@ -36,7 +36,8 @@ public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Stri
             "        FROM chatting_history \n" +
             "        GROUP BY room_id) CH2\n" +
             "    ON CH1.room_id = CH2.room_id AND  CH1.sent_time =  CH2.sent_time) CH\n" +
-            "ON UR.room_id = CH.room_id"
+            "ON UR.room_id = CH.room_id\n" +
+            "ORDER BY CH.sent_time DESC"
     , nativeQuery = true)
     Optional<List<RoomList>> getChattingRoom(@Param("userId") Long userId);
 

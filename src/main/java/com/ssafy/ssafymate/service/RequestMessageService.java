@@ -32,4 +32,7 @@ public interface RequestMessageService {
     // 과거에 같은 요청 보냈는지 확인
     RequestMessage findSameRequest(Long senderId, Long teamId, Long receiverId);
 
+    // 읽지 않음 처리
+    Integer updateReadCheck(Long requestId, Long userId);
+
 }

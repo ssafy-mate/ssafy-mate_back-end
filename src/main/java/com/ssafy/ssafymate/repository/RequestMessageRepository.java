@@ -17,9 +17,9 @@ public interface RequestMessageRepository extends JpaRepository<RequestMessage, 
 
     Optional<RequestMessage> findBySenderIdAndTeamIdAndReceiverIdAndRequestStatus(Long senderId, Long teamId, Long receiverId, String requestStatus);
 
-    List<RequestMessage> findAllByReceiverIdAndProject(Long receiverId,String Project);
+    List<RequestMessage> findAllByReceiverIdAndProjectOrderByCreatedDateTimeDesc(Long receiverId, String Project);
 
-    List<RequestMessage> findAllBySenderIdAndProject(Long senderId,String Project);
+    List<RequestMessage> findAllBySenderIdAndProjectOrderByCreatedDateTimeDesc(Long senderId, String Project);
 
     @Modifying
     @Query(value = "UPDATE request_message " +
@@ -49,5 +49,19 @@ public interface RequestMessageRepository extends JpaRepository<RequestMessage, 
             nativeQuery = true
     )
     Integer updateReadExpirationTeam(@Param("teamId") Long teamId,@Param("project") String project );
+
+    @Modifying
+    @Query(value = "UPDATE request_message " +
+            "SET receiver_read = false " +
+            "WHERE id=:id ",
+            nativeQuery = true)
+    Integer updateReceiverRead(@Param("id") Long id);
+
+    @Modifying
+    @Query(value = "UPDATE request_message " +
+            "SET sender_read = false " +
+            "WHERE id=:id ",
+            nativeQuery = true)
+    Integer updateSenderRead(@Param("id") Long id);
 
 }

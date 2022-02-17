@@ -283,9 +283,9 @@ public class RequestController {
             requestMessageService.updateReadCheck(requestId,user.getId());
 
         }catch (Exception exception){
-            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error,  실패"));
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 삭제 실패"));
         }
-        return ResponseEntity.status(200).body(MessageBody.of("제안 안보기 성공"));
+        return ResponseEntity.status(200).body(MessageBody.of("삭제 완료"));
 
     }
 

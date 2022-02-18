@@ -69,4 +69,12 @@ public class RequestMessage {
     @Column(updatable = false)
     private LocalDateTime createdDateTime;
 
+    @ColumnDefault("true")
+    @Column(length = 20)
+    private Boolean senderRead;
+
+    @ColumnDefault("true")
+    @Column(length = 20)
+    private Boolean receiverRead;
+
 }

@@ -265,4 +265,28 @@ public class RequestController {
 
     }
 
+    @PutMapping("/requests/read-check/{requestId}")
+    @ApiOperation(value = "제안 안보기", notes = "제안 안보기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = MessageBody.class),
+            @ApiResponse(code = 401, message = "인증 실패", response = ErrorResponseBody.class, responseContainer = "List"),
+            @ApiResponse(code = 409, message = "요청 불가"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<?> requestResponse(
+            @AuthenticationPrincipal final String token, @PathVariable Long requestId) {
+
+        User user;
+        try {
+            user = userService.getUserByEmail(token);
+
+            requestMessageService.updateReadCheck(requestId,user.getId());
+
+        }catch (Exception exception){
+            return ResponseEntity.status(500).body(ErrorResponseBody.of(500, false, "Internal Server Error, 삭제 실패"));
+        }
+        return ResponseEntity.status(200).body(MessageBody.of("삭제 완료"));
+
+    }
+
 }

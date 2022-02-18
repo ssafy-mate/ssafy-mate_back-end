@@ -59,14 +59,14 @@ public class RequestMessageServiceImple implements RequestMessageService {
     @Override
     public List<RequestMessage> receiveList(User user, String project) {
 
-        return requestMessageRepository.findAllByReceiverIdAndProject(user.getId(), project);
+        return requestMessageRepository.findAllByReceiverIdAndProjectOrderByCreatedDateTimeDesc(user.getId(), project);
 
     }
 
     @Override
     public List<RequestMessage> sendList(User user, String project) {
 
-        return requestMessageRepository.findAllBySenderIdAndProject(user.getId(), project);
+        return requestMessageRepository.findAllBySenderIdAndProjectOrderByCreatedDateTimeDesc(user.getId(), project);
 
     }
 
@@ -109,6 +109,21 @@ public class RequestMessageServiceImple implements RequestMessageService {
     public RequestMessage findSameRequest(Long senderId, Long teamId, Long receiverId) {
 
         return requestMessageRepository.findBySenderIdAndTeamIdAndReceiverIdAndRequestStatus(senderId, teamId, receiverId, "pending").orElse(null);
+
+    }
+
+    @Transactional
+    @Modifying
+    @Override
+    public Integer updateReadCheck(Long requestId, Long userId) {
+        RequestMessage requestMessage = requestMessageRepository.findById(requestId);
+        if(requestMessage.getSenderId().equals(userId)){
+            return requestMessageRepository.updateSenderRead(requestId);
+        }
+        else if(requestMessage.getReceiverId().equals(userId)){
+            return requestMessageRepository.updateReceiverRead(requestId);
+        }
+        return null;
 
     }
 

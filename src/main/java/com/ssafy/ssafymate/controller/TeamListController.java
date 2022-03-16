@@ -43,8 +43,8 @@ public class TeamListController {
     ) {
         List<Team> teams;
         System.out.println(teamListRequestDto);
-        int front = 0;
-        int back = 0;
+        int front = -6;
+        int back = -6;
         int total = 0;
         if (teamListRequestDto.getJob1() != null) {
             if (teamListRequestDto.getJob1().contains("프론트엔드")) {

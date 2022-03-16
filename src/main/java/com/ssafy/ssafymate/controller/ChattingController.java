@@ -107,9 +107,9 @@ public class ChattingController {
 
                 String[] ids = roomId.split("-");
 
-                int temp = chattingService.saveRoom(roomId, Long.parseLong(ids[0]), Long.parseLong(ids[1]));
+                int saveRoomFlag = chattingService.saveRoom(roomId, Long.parseLong(ids[0]), Long.parseLong(ids[1]));
 
-                if (temp == 0) {
+                if (saveRoomFlag == 0) {
 
                     return ResponseEntity.status(400).body(ErrorResponseBody.of(400, false, "방 생성에 실패하였습니다."));
 

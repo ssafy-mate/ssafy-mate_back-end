@@ -42,7 +42,7 @@ public class ChattingServiceImpl implements ChattingService{
     public List<ContentList> getHistoryList(String roomId, Long id, int size) {
 
         List<ContentList> list;
-        if(id == 0){
+        if(id == -1){
             list = chattingHistoryRepository.getLatestHistoryList(roomId, size);
         }else{
             list = chattingHistoryRepository.getHistoryList(roomId, id, size);

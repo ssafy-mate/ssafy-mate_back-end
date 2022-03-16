@@ -56,7 +56,6 @@ public class EmailServiceImpl implements EmailService {
         message.setFrom(new InternetAddress("ssafymate@gmail.com", "SSAFY MATE")); // 보내는 사람
 
         return message;
-
     }
 
     // 비밀번호 찾기 - 이메일 인증

@@ -25,7 +25,8 @@ public class TokenProvider {
     private String secretKey;
 
     // 토큰 유효 시간 72시간
-    private long tokenValidTime = 72 * 60 * 60 * 1000L;
+//    private long tokenValidTime = 72 * 60 * 60 * 1000L;
+    private long tokenValidTime = 5 * 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
 
@@ -62,7 +63,6 @@ public class TokenProvider {
 
     // Request의 Header에서 token 값을 가져온다. "Authorization" : Bearer + "TOKEN 값'
     public String resolveToken(HttpServletRequest request) {
-//        return request.getHeader("Authorization").substring(7);
         return request.getHeader("Authorization");
     }
 

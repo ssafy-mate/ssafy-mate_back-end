@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final String domainPrefix = "https://i6a402.p.ssafy.io:8082/resources/upload/";
+    private final String domainPrefix = "https://ssafymate.site:8082/resources/upload/";
 
     @Override
     public User getUserById(Long id) {

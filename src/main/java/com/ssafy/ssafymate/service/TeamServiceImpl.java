@@ -37,7 +37,7 @@ public class TeamServiceImpl implements TeamService {
     @Autowired
     private UserTeamRepository userTeamRepository;
 
-    String domainPrefix = "https://i6a402.p.ssafy.io:8082/resources/upload/images/team_image/";
+    String domainPrefix = "https://ssafymate.site:8082/resources/upload/images/team_image/";
 
     @Override
     public Team teamFind(Long teamId) {

@@ -25,8 +25,7 @@ public class TokenProvider {
     private String secretKey;
 
     // 토큰 유효 시간 72시간
-//    private long tokenValidTime = 72 * 60 * 60 * 1000L;
-    private long tokenValidTime = 5 * 60 * 1000L;
+    private long tokenValidTime = 72 * 60 * 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
 
